@@ -1,0 +1,20 @@
+{
+  "name": "Hex Modifications",
+  "handle": "001hex",
+  "tagline": "Graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus tools for Mac and Windows.",
+  "description": "Hex Modifications is a studio making graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, and quality-of-life software for macOS and Windows. Developed by 001hex.",
+  "email": "hello@hexmodifications.com",
+  "yearsScripting": 6,
+  "links": {
+    "patreon": "https://www.patreon.com/001hex",
+    "kofi": "https://ko-fi.com/001hex",
+    "fiverr": "https://www.fiverr.com/001hex",
+    "tebex": "https://hexmodifications.tebex.io",
+    "shopify": "https://shop.hexmodifications.com",
+    "discord": "https://discord.gg/your-invite",
+    "youtube": "https://www.youtube.com/@001hex",
+    "github": "https://github.com/001hex",
+    "x": "https://x.com/001hex"
+  },
+  "discordUser": "001hex"
+}

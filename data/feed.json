@@ -1,0 +1,23 @@
+[
+  {
+    "title": "HEX VISUALS 2.0: fog pass preview",
+    "excerpt": "First look at the new volumetric fog. Patrons get the beta build this Friday.",
+    "url": "https://www.patreon.com/001hex",
+    "date": "2026-10-12",
+    "public": true
+  },
+  {
+    "title": "HexTune macOS dev log #3",
+    "excerpt": "Power profiles are working on Apple Silicon. Next up: the DNS switcher.",
+    "url": "https://www.patreon.com/001hex",
+    "date": "2026-10-05",
+    "public": false
+  },
+  {
+    "title": "Neon Noir 1.4 is live",
+    "excerpt": "Reworked bloom and fixed the colour banding around Vinewood at night.",
+    "url": "https://www.patreon.com/001hex",
+    "date": "2026-09-27",
+    "public": true
+  }
+]

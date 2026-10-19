@@ -1,0 +1,16 @@
+[
+  {
+    "title": "NEON NOIR",
+    "game": "GTA V",
+    "before": "img/scene.svg",
+    "after": "img/scene.svg",
+    "demo": true
+  },
+  {
+    "title": "HEX VISUALS",
+    "game": "GTA V / FiveM",
+    "before": "img/scene.svg",
+    "after": "img/scene.svg",
+    "demo": true
+  }
+]

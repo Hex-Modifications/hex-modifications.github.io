@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hex Control</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/img/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin">
+<header class="a-head">
+  <a class="brand" href="/"><img src="/img/logo-badge.png" alt="" width="36" height="36" style="border-radius:9px"><span class="brand-bot">HEX CONTROL</span></a>
+  <span class="mono a-live" id="live">—</span>
+  <button class="btn btn-ghost a-out" id="logout" hidden>LOCK</button>
+</header>
+
+<section class="a-login" id="login">
+  <form id="loginForm">
+    <p class="eyebrow mono"><span class="sq"></span>Restricted</p>
+    <h1>Admin token</h1>
+    <input type="password" id="token" autocomplete="current-password" placeholder="Paste ADMIN_TOKEN" required>
+    <button class="btn" type="submit">UNLOCK</button>
+    <p class="mono a-err" id="loginErr"></p>
+  </form>
+</section>
+
+<main class="a-main" id="dash" hidden>
+  <nav class="a-tabs mono" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="traffic">Traffic</button>
+    <button role="tab" aria-selected="false" data-tab="inbox">Inbox</button>
+    <button role="tab" aria-selected="false" data-tab="security">Security</button>
+    <button role="tab" aria-selected="false" data-tab="content">Content</button>
+  </nav>
+
+  <section class="a-panel" data-panel="traffic">
+    <div class="kpis" id="kpis"></div>
+    <div class="a-card"><h2 class="mono">Views, last 30 days</h2><div id="chart" class="chart"></div></div>
+    <div class="a-grid">
+      <div class="a-card"><h2 class="mono">Top pages</h2><ol id="paths" class="bars"></ol></div>
+      <div class="a-card"><h2 class="mono">Referrers</h2><ol id="refs" class="bars"></ol></div>
+      <div class="a-card"><h2 class="mono">Platform click-throughs</h2><ol id="events" class="bars"></ol></div>
+      <div class="a-card"><h2 class="mono">Countries · devices</h2><ol id="geo" class="bars"></ol></div>
+    </div>
+  </section>
+
+  <section class="a-panel" data-panel="inbox" hidden>
+    <div id="inbox" class="inbox"></div>
+  </section>
+
+  <section class="a-panel" data-panel="security" hidden>
+    <div class="a-grid">
+      <div class="a-card"><h2 class="mono">Active bans</h2><ul id="bans" class="list"></ul></div>
+      <div class="a-card"><h2 class="mono">Recent blocks</h2><ul id="blocks" class="list"></ul></div>
+      <div class="a-card"><h2 class="mono">Response codes</h2><ol id="codes" class="bars"></ol></div>
+    </div>
+  </section>
+
+  <section class="a-panel" data-panel="content" hidden>
+    <div class="a-card">
+      <div class="ed-bar mono">
+        <select id="edName" aria-label="Content file"><option>products</option><option>roadmap</option><option>feed</option><option>showcase</option><option>site</option></select>
+        <button class="btn btn-ghost" id="edLoad">LOAD</button>
+        <button class="btn" id="edSave">SAVE</button>
+        <span id="edMsg"></span>
+      </div>
+      <textarea id="editor" spellcheck="false" aria-label="JSON editor"></textarea>
+      <p class="mono a-hint">Edits go live instantly. JSON is validated before saving. Tebex and Shopify items are pulled live once their keys are set in .env.</p>
+    </div>
+  </section>
+</main>
+<script src="/js/admin.js" defer></script>
+</body>
+</html>

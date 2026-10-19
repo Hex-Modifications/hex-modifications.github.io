@@ -1,0 +1,7 @@
+node_modules
+.env
+data/messages.jsonl
+data/analytics.json
+data/bans.json
+dist/
+*.tmp

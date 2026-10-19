@@ -1,0 +1,19 @@
+# Optional: run the full Node backend (contact inbox, admin, live integrations) on Render's free tier.
+# Render dashboard → New → Blueprint → pick this repo. URL: https://hex-modifications.onrender.com
+services:
+  - type: web
+    name: hex-modifications
+    runtime: node
+    plan: free
+    buildCommand: "true"
+    startCommand: node server.js
+    healthCheckPath: /robots.txt
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: TRUST_PROXY
+        value: proxy
+      - key: SITE_URL
+        value: https://hex-modifications.onrender.com

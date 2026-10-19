@@ -1,0 +1,102 @@
+# Hex Modifications
+
+The home of Hex Modifications: graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus QoL software for macOS and Windows. Developed by 001hex. It brings Patreon, Ko-fi, Fiverr, Tebex, Shopify and Discord into one site.
+
+- **Frontend:** editorial layout, Apple-style glass UI, the GTA VI sunset palette, time-of-day lighting, and real-time 3D glass objects rendered with three.js (transmission, dispersion and iridescence).
+- **Backend:** a Node server with **zero dependencies**, so there's nothing to `npm install` and no supply-chain risk.
+- **Figma brand system:** https://www.figma.com/design/Dw8XzjKaxBXq7JNZyfWjcJ
+
+## Run it
+
+```bash
+node server.js            # http://localhost:8080
+```
+
+Requires Node 20 or newer. On the first run the server creates a `.env` file with secure random keys and prints your admin token. Admin dashboard: `http://localhost:8080/admin` (paste that token). Add your platform keys to `.env` later (see below).
+
+## Design system
+
+- **Palette (GTA VI sunset):** coral `#E89898`, indigo `#5D549C`, slate `#6F70A2`, plum `#7E3A63`, lilac `#A373D3`.
+- **Timecycle:** the site's lighting follows each visitor's local time: dawn 05–08, day 08–17, dusk 17–20, night 20–05. Night is the dark theme. Clicking the clock in the hero skips ahead. You can preview a phase with `?phase=dawn|day|dusk|night`.
+- **Hero objects:** bubbly glass pistol, rifle, sports car, police cruiser (flashing light bar), wanted star or heist cash stack. One is picked at random per visit, never the same as the visitor's last one. Clicking the object swaps it. Preview one with `?model=car` etc.
+
+### Easter eggs
+Type these anywhere on the page (not inside a form field):
+
+| Code | Effect |
+|---|---|
+| `MAKEITRAIN` | toggles rain |
+| `FUGITIVE` | raises the wanted level (stars, top right) |
+| `LAWYERUP` | clears the wanted level |
+| `SLOWMO` | slow motion |
+| `SKYFALL` | drops in a new 3D object |
+| `TIMECYCLE` | skips the time of day |
+
+Also:
+- Sending the contact form shows "mission passed".
+- Spamming the form raises the wanted level.
+- The 404 page is a "wasted" screen that respawns visitors on the homepage.
+
+## Edit your content
+
+Everything lives in `data/`. You can edit it from **/admin → Content** (validated, goes live instantly) or by editing the files directly:
+
+| File | What it controls |
+|---|---|
+| `site.json` | Your links (Patreon, Ko-fi, Fiverr, Tebex, Shopify, Discord server invite, YouTube, GitHub, X), `discordUser` (the username visitors copy, currently `001hex`), years scripting, email. The "join the server" button only appears once `links.discord` is a real invite |
+| `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
+| `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
+| `showcase.json` | Before/after sliders. Put real screenshots in `public/img/` and set `"demo": false` |
+| `feed.json` | Fallback updates, shown until Patreon is connected |
+
+**All current products, prices and roadmap items are placeholders.** Replace them with your real ones.
+
+## Connect your platforms (`.env`)
+
+| Platform | What it does | How to get the key |
+|---|---|---|
+| **Patreon** | Live "Updates" feed of your posts (patron-only posts show as locked teasers) | patreon.com/portal → Clients → Create client → copy the *Creator's Access Token*. Campaign ID: `GET https://www.patreon.com/api/oauth2/v2/campaigns` with that token |
+| **Tebex** | Pulls your Tebex packages into the store automatically | Tebex panel → Integrations → API Keys → *Public token* (Headless API) |
+| **Shopify** | Pulls your software products into the store | Shopify admin → Sales channels → *Headless* → Storefront API token. `SHOPIFY_DOMAIN=yourstore.myshopify.com` |
+| **Discord** | The contact form posts to a private channel, and the site shows a live online count | Channel settings → Integrations → Webhooks (`DISCORD_WEBHOOK_URL`). Server settings → Widget → enable it and copy the Server ID (`DISCORD_GUILD_ID`) |
+
+Live Tebex and Shopify listings replace the sample items for that platform. Results are cached for 10–15 minutes, and if a platform goes down the site keeps serving the last good copy.
+
+## Security
+
+- **Headers:** strict CSP, HSTS, `X-Frame-Options: DENY`, `nosniff`, COOP/CORP, and a locked-down Permissions-Policy
+- **Contact form:** HMAC-signed CSRF tokens (these also reject bots that submit in under 2.5 seconds), a honeypot field, origin checks, validation, length caps and a link-spam limit. Discord pings are disabled for user content
+- **Admin:** Bearer token with a constant-time compare. The token is refused outright if shorter than 24 characters, and failed attempts count as strikes
+- **Hardening:** path-traversal-safe static serving, a 32 KB body limit, slowloris timeouts, and atomic writes for content files
+
+## Traffic manager
+
+- Per-IP token-bucket rate limits for each route class (pages, assets, API, contact, admin)
+- A strike system: rate-limit hits, failed admin logins, scanner paths (`/.env`, `wp-admin`, …) and attack tools (sqlmap, nikto…) add up to an automatic 1-hour ban. You can unban from /admin → Security
+- **Privacy-friendly analytics:** no cookies and no raw IPs stored. Visitors are hashed with a salt that rotates daily. Tracks views, uniques, referrers, countries (via Cloudflare), devices, response times, and **which platform links people click**
+
+## SEO
+
+- Server-rendered JSON-LD (Organization, Person "001hex", WebSite, ItemList)
+- Each product gets its own crawlable page at `/p/<slug>` with Product/SoftwareApplication schema
+- Auto-generated `/sitemap.xml` and `/robots.txt`, plus canonical URLs, Open Graph and Twitter cards, and `img/og.png`
+- Set `SITE_URL` to your real domain
+
+## Deploying
+
+1. Host on any Node host (Railway, Render, Fly.io or a small VPS) and run `node server.js`.
+2. Put **Cloudflare** in front of it (free plan) for DNS, SSL, DDoS protection and caching, then set `TRUST_PROXY=cloudflare`.
+3. Add the site to Google Search Console and submit `/sitemap.xml`.
+
+## Structure
+
+```
+server.js              HTTP server, routes, static files, admin API
+lib/security.js        headers, CSRF, auth, sanitising
+lib/traffic.js         rate limiting, bans, analytics
+lib/integrations.js    Patreon, Tebex, Shopify, Discord
+lib/seo.js             JSON-LD, sitemap, robots, product pages
+public/                index.html, admin.html, css/, js/ (app.js, glass3d.js, timecycle.js, admin.js), img/
+brand/                 official Hex Modifications images (transparent, sunset, night) + the script that makes them
+data/                  editable content (JSON)
+```

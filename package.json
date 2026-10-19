@@ -1,0 +1,14 @@
+{
+  "name": "hex-modifications",
+  "version": "1.0.0",
+  "description": "Hex Modifications by 001hex: mods, ReShade presets, QoL software. Zero-dependency Node backend with security, traffic management and SEO.",
+  "type": "module",
+  "main": "server.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

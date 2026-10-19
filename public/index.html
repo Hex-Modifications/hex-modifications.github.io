@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en-GB" data-phase="day">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hex Modifications: GTA V, GTA VI &amp; FiveM Mods, ReShade Presets and PC Tools</title>
+<meta name="description" content="Hex Modifications makes graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus quality-of-life software for Mac and Windows. Shop, roadmap, updates and support.">
+<meta name="keywords" content="Hex Modifications, GTA V mods, GTA 6 mods, GTA VI ReShade, FiveM graphics, FiveM scripts, Tebex, ReShade presets, timecycle mod, Windows tweaks, macOS utilities">
+<link rel="canonical" href="__SITE_URL__/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hex Modifications">
+<meta property="og:title" content="Hex Modifications">
+<meta property="og:description" content="Graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus tools for Mac and Windows.">
+<meta property="og:url" content="__SITE_URL__/">
+<meta property="og:image" content="__SITE_URL__/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#E8E7EC">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="img/favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/timecycle.js"></script>
+<!--SEO_JSONLD-->
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Ambient light field. Colours follow the visitor's local time of day. -->
+<div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i><i class="a4"></i></div>
+<svg class="noise" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+<div class="rain" id="rain" aria-hidden="true"></div>
+
+<header class="nav" id="top">
+  <a class="wordmark" href="#top" aria-label="Hex Modifications home"><img class="wm-badge" src="img/logo-badge.png" alt="" width="42" height="42"><span class="wm-text"><span class="wm-hex">hex</span><span class="wm-sub">modifications</span></span></a>
+  <nav class="pill glass" aria-label="Primary">
+    <a href="#work">showcase</a>
+    <a href="#store">store</a>
+    <a href="#software">software</a>
+    <a href="#roadmap">roadmap</a>
+    <a href="#feed">updates</a>
+    <a href="#contact">contact</a>
+  </nav>
+  <button class="orb-btn glass" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="sheet">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="currentColor"><path d="M16 2.5 22 6v7l-6 3.5L10 13V6Z"/><path d="M16 15.5 22 19v7l-6 3.5L10 26v-7Z" opacity=".55"/><path d="M6.5 9 12 12.2v6.6L6.5 22 1 18.8v-6.6Z" opacity=".8"/><path d="M25.5 9 31 12.2v6.6L25.5 22 20 18.8v-6.6Z" opacity=".8"/></g></svg>
+  </button>
+</header>
+
+<div class="wanted" id="wanted" aria-hidden="true"></div>
+<div class="toast glass" id="toast" role="status" aria-live="polite" hidden><strong id="toastTitle"></strong><span id="toastBody"></span></div>
+
+<div class="sheet glass" id="sheet" hidden>
+  <nav class="sheet-nav" aria-label="Menu">
+    <a href="#work">showcase</a><a href="#store">store</a><a href="#software">software</a>
+    <a href="#roadmap">roadmap</a><a href="#feed">updates</a><a href="#contact">contact</a>
+  </nav>
+  <p class="label">find hex modifications on</p>
+  <ul class="sheet-plats" id="sheetPlats"></ul>
+</div>
+
+<main id="main">
+  <!-- ═════════ HERO ═════════ -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <canvas id="glass" class="hero-canvas" aria-label="Rotating 3D glass object. Click it to swap." role="img"></canvas>
+    <div class="hero-fallback" aria-hidden="true"></div>
+
+    <div class="hero-copy">
+      <h1 id="heroTitle" class="hero-title"><span>render</span><span>better</span></h1>
+      <p class="hero-lede">graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus tools that make Mac and Windows run the way they should.</p>
+    </div>
+
+    <div class="hero-ctas">
+      <a class="btn-pill dark" href="#store">shop hex</a>
+      <button class="btn-pill glass" type="button" data-copy-discord data-track="discord-hero">discord · <span data-discord-user>001hex</span></button>
+    </div>
+
+    <div class="hero-bar">
+      <p class="hero-games"><span>gta v</span><i></i><span>gta vi</span><i></i><span>fivem</span><i></i><span>macos</span><i></i><span>windows</span></p>
+      <button class="timecycle" id="timecycle" type="button" title="The site's lighting follows your local time. Click to skip ahead.">
+        <span class="tc-dot" aria-hidden="true"></span><span id="tcClock">--:--</span><span class="tc-phase" id="tcPhase">day</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- platform ribbon -->
+  <div class="ribbon" aria-label="Platforms">
+    <ul class="ribbon-track" id="ribbon"></ul>
+  </div>
+
+  <!-- ═════════ INTRO / STATS ═════════ -->
+  <section class="intro" aria-label="About Hex Modifications">
+    <p class="intro-text reveal">Hex Modifications is a small studio making ReShade presets, graphics overhauls and FiveM scripts for <em>GTA V</em> and <em>GTA VI</em>, and quality-of-life software for Mac &amp; Windows. every release is tuned by hand.</p>
+    <dl class="stats">
+      <div class="glass stat"><dt>years of scripting</dt><dd><span data-count id="statYears">6</span>+</dd></div>
+      <div class="glass stat"><dt>releases</dt><dd><span data-count id="statReleases">8</span></dd></div>
+      <div class="glass stat"><dt>platforms</dt><dd><span data-count id="statPlatforms">6</span></dd></div>
+      <div class="glass stat"><dt>latest release</dt><dd class="small" id="latestRelease">…</dd></div>
+    </dl>
+  </section>
+
+  <!-- ═════════ SHOWCASE ═════════ -->
+  <section class="section" id="work" aria-labelledby="workTitle">
+    <header class="sec-head reveal">
+      <p class="label">(01) showcase</p>
+      <h2 id="workTitle" class="sec-title">before<span class="slash">/</span><span class="grad">after</span></h2>
+      <p class="sec-note">drag the divider. every preset is tuned scene by scene, from Vinewood at night to the docks at dawn, never one global LUT.</p>
+    </header>
+    <div class="showcase" id="showcase"></div>
+  </section>
+
+  <!-- ═════════ STORE ═════════ -->
+  <section class="section" id="store" aria-labelledby="storeTitle">
+    <header class="sec-head reveal">
+      <p class="label">(02) store</p>
+      <h2 id="storeTitle" class="sec-title">the<br><span class="grad">catalogue</span></h2>
+      <p class="sec-note">everything Hex Modifications ships, in one place. checkout happens wherever each item lives: Tebex, Ko-fi, Patreon, Shopify or Fiverr.</p>
+    </header>
+    <div class="filters glass" role="tablist" aria-label="Filter products">
+      <span class="filter-thumb" aria-hidden="true"></span>
+      <button role="tab" aria-selected="true" data-filter="all">all</button>
+      <button role="tab" aria-selected="false" data-filter="reshade">reshade</button>
+      <button role="tab" aria-selected="false" data-filter="graphics">graphics</button>
+      <button role="tab" aria-selected="false" data-filter="scripts">scripts</button>
+      <button role="tab" aria-selected="false" data-filter="software">software</button>
+      <button role="tab" aria-selected="false" data-filter="services">commissions</button>
+    </div>
+    <div class="products" id="products" aria-live="polite"></div>
+  </section>
+
+  <!-- ═════════ SOFTWARE / EXPERTISE ═════════ -->
+  <section class="section" id="software" aria-labelledby="swTitle">
+    <div class="night">
+      <header class="sec-head reveal">
+        <p class="label">(03) software &amp; systems</p>
+        <h2 id="swTitle" class="sec-title">tools for<br>mac <span class="grad">&amp;</span> windows</h2>
+        <p class="sec-note">built by 001hex, the developer behind Hex Modifications, with <span id="yearsInline">6</span>+ years of scripting and deep knowledge of networking and system internals. every change is reversible.</p>
+      </header>
+      <div class="skills">
+        <article class="skill glass-dark reveal"><span class="skill-i" style="--h1:#E89898;--h2:#7E3A63"></span><h3>scripting</h3><p>Lua, Python, PowerShell, Bash, AppleScript and JS. automation that removes the boring parts of using a computer.</p><ul><li>FiveM / Lua</li><li>PowerShell</li><li>Python</li></ul></article>
+        <article class="skill glass-dark reveal"><span class="skill-i" style="--h1:#6F70A2;--h2:#5D549C"></span><h3>networking</h3><p>TCP/IP, DNS, routing, latency diagnostics, firewalls and traffic shaping. tools that show where the lag actually comes from.</p><ul><li>DNS</li><li>Routing</li><li>QoS</li></ul></article>
+        <article class="skill glass-dark reveal"><span class="skill-i" style="--h1:#A373D3;--h2:#5D549C"></span><h3>systems</h3><p>Windows internals, registry, services and scheduler tuning. macOS launch agents and native Swift utilities.</p><ul><li>Win32</li><li>launchd</li><li>Swift</li></ul></article>
+        <article class="skill glass-dark reveal"><span class="skill-i" style="--h1:#E89898;--h2:#A373D3"></span><h3>graphics</h3><p>ReShade shader chains, colour science, timecycles and lighting, tuned by eye and checked on scopes.</p><ul><li>ReShade FX</li><li>Timecycle</li><li>HDR</li></ul></article>
+      </div>
+      <div class="terminal glass-dark reveal" aria-label="Example terminal output">
+        <div class="term-bar"><i></i><i></i><i></i><span>hextune — zsh</span></div>
+        <pre id="termOut"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ ROADMAP ═════════ -->
+  <section class="section" id="roadmap" aria-labelledby="rmTitle">
+    <header class="sec-head reveal">
+      <p class="label">(04) roadmap</p>
+      <h2 id="rmTitle" class="sec-title">what's<br><span class="grad">loading</span></h2>
+      <p class="sec-note">mods, scripts and software in the pipeline. patrons get early builds of everything here.</p>
+    </header>
+    <ol class="roadmap" id="roadmapList"></ol>
+  </section>
+
+  <!-- ═════════ FEED ═════════ -->
+  <section class="section" id="feed" aria-labelledby="feedTitle">
+    <header class="sec-head reveal">
+      <p class="label">(05) updates <span class="feed-src" id="feedSrc"></span></p>
+      <h2 id="feedTitle" class="sec-title">from the<br><span class="grad">patreon</span></h2>
+      <p class="sec-note">dev logs, previews and releases, pulled live from Patreon. locked posts are for patrons.</p>
+    </header>
+    <div class="feed" id="feedList"></div>
+    <div class="feed-cta"><a class="btn-pill dark" href="#" data-link="patreon" data-track="patreon-feed" target="_blank" rel="noopener">become a patron</a><a class="btn-pill glass" href="#" data-link="kofi" data-track="kofi-feed" target="_blank" rel="noopener">tip on ko-fi</a></div>
+  </section>
+
+  <!-- ═════════ CONTACT ═════════ -->
+  <section class="section" id="contact" aria-labelledby="ctTitle">
+    <header class="sec-head reveal">
+      <p class="label">(06) contact</p>
+      <h2 id="ctTitle" class="sec-title">get in<br><span class="grad">touch</span></h2>
+      <p class="sec-note">the fastest way to reach Hex Modifications is Discord. for commissions, collabs and business, the form works too.</p>
+    </header>
+    <div class="contact">
+      <div class="contact-side">
+        <div class="link-card glass discord">
+          <span class="label">support · discord</span>
+          <strong>message <span data-discord-user>001hex</span></strong>
+          <span class="lc-sub" id="dcOnline2">add <b data-discord-user>001hex</b> on Discord for support, previews and commissions.</span>
+          <div class="lc-actions">
+            <button class="mini glass" type="button" data-copy-discord data-track="discord-copy">copy username</button>
+            <a class="mini glass" href="https://discord.com/app" target="_blank" rel="noopener" data-track="discord-open">open discord ↗</a>
+            <a class="mini glass" href="#" data-link="discord" data-server-invite hidden target="_blank" rel="noopener" data-track="discord-server">join the server ↗</a>
+          </div>
+        </div>
+        <a class="link-card glass" href="#" data-link="fiverr" data-track="fiverr-contact" target="_blank" rel="noopener">
+          <span class="label">commissions · fiverr</span>
+          <strong>order a custom build</strong>
+          <span class="lc-sub">custom presets and scripts, with Fiverr's buyer protection</span>
+          <span class="lc-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <form class="form glass" id="contactForm" novalidate>
+        <div class="field"><label for="f-name">name</label><input id="f-name" name="name" autocomplete="name" maxlength="80" required></div>
+        <div class="field"><label for="f-email">email</label><input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+        <fieldset class="field topics">
+          <legend>topic</legend>
+          <label><input type="radio" name="topic" value="support" checked><span>support</span></label>
+          <label><input type="radio" name="topic" value="commission"><span>commission</span></label>
+          <label><input type="radio" name="topic" value="business"><span>business</span></label>
+          <label><input type="radio" name="topic" value="bug"><span>bug report</span></label>
+        </fieldset>
+        <div class="field"><label for="f-msg">message</label><textarea id="f-msg" name="message" rows="5" maxlength="4000" required></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="f-web">Website</label><input id="f-web" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="form-foot">
+          <button class="btn-pill dark" type="submit">send message</button>
+          <p class="form-status" id="formStatus" role="status"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-row">
+    <p class="foot-tag">graphics, scripts and software for GTA V, GTA VI, FiveM, macOS and Windows.</p>
+    <nav class="foot-links" id="footLinks" aria-label="Platforms"></nav>
+  </div>
+  <p class="foot-word" aria-hidden="true">hex<span>modifications</span></p>
+  <p class="foot-legal">© <span id="yr">2026</span> Hex Modifications · developed by 001hex · <a href="/sitemap.xml">sitemap</a></p>
+</footer>
+
+<div class="progress glass" aria-hidden="true"><span>scroll down</span><i><b id="progBar"></b></i><span id="progPct">0%</span></div>
+
+<script type="module" src="js/glass3d.js"></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>
