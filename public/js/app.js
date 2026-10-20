@@ -7,8 +7,10 @@
   const safeUrl = (u) => (/^https?:\/\//i.test(u || '') ? u : '#');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let apiOnline = false;
+  let discordUser = '001hex';
+  let email = '';
 
-  // API first, static JSON fallback (lets the frontend run on any static host or preview).
+  // API first (Node backend), static JSON fallback (GitHub Pages / any static host).
   async function load(api, fallback) {
     try {
       const r = await fetch(api, { headers: { Accept: 'application/json' } });
@@ -19,21 +21,7 @@
     return null;
   }
 
-  const PLATFORMS = {
-    patreon: { name: 'Patreon', label: 'early access' },
-    kofi: { name: 'Ko-fi', label: 'tips & presets' },
-    tebex: { name: 'Tebex', label: 'fivem store' },
-    shopify: { name: 'Shopify', label: 'software' },
-    fiverr: { name: 'Fiverr', label: 'commissions' },
-    discord: { name: 'Discord', label: 'support' },
-    youtube: { name: 'YouTube', label: 'showcases' },
-    github: { name: 'GitHub', label: 'open source' },
-  };
-  const CAT_LABEL = { reshade: 'reshade', graphics: 'graphics', scripts: 'script', software: 'software', services: 'commission' };
-  const PALETTE = ['#E89898', '#A373D3', '#6F70A2', '#7E3A63', '#5D549C']; // GTA VI sunset
-  const hash = (s) => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
-
-  // ── Glass specular: highlight follows the pointer across any glass surface ──
+  // ── Glass specular follows the pointer ─────────────
   document.addEventListener('pointermove', (e) => {
     const g = e.target.closest?.('.glass, .glass-dark');
     if (!g) return;
@@ -42,188 +30,201 @@
     g.style.setProperty('--my', `${e.clientY - r.top}px`);
   }, { passive: true });
 
-  // ── Links & platforms ──────────────────────────────
+  // ── Toast ──────────────────────────────────────────
+  let toastTimer;
+  function toast(title, body) {
+    const el = $('#toast');
+    $('#toastTitle').textContent = title; $('#toastBody').textContent = body;
+    el.hidden = false; el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 4200);
+  }
+
+  // ── Site, links, platforms ─────────────────────────
   function applySite(site) {
     if (!site) return;
     const links = site.links || {};
-    $$('[data-link]').forEach((a) => { if (links[a.dataset.link]) a.href = safeUrl(links[a.dataset.link]); });
     discordUser = site.discordUser || discordUser;
-    siteEmail = site.email || siteEmail;
-    $$('[data-discord-user]').forEach((el) => { el.textContent = discordUser; });
-    const invite = links.discord || '';
-    const hasServer = /^https:\/\/(discord\.gg|discord\.com\/invite)\/(?!your-invite)/.test(invite);
-    $$('[data-server-invite]').forEach((el) => { el.hidden = !hasServer; });
-    const years = site.yearsScripting || 6;
-    $('#statYears').textContent = years; $('#yearsInline').textContent = years;
-
-    const order = ['patreon', 'kofi', 'tebex', 'shopify', 'fiverr', 'discord', 'youtube', 'github'].filter((k) => links[k]);
-    $('#statPlatforms').textContent = order.length;
-    const item = (k, track) => `<li><a href="${esc(safeUrl(links[k]))}" target="_blank" rel="noopener" data-track="${k}-${track}">${esc(PLATFORMS[k].name)}<small>${esc(PLATFORMS[k].label)}</small></a><span class="hexdot" aria-hidden="true"></span></li>`;
-    const row = order.map((k) => item(k, 'ribbon')).join('');
-    $('#ribbon').innerHTML = row + row.replace(/<li>/g, '<li aria-hidden="true">'); // doubled for a seamless loop
-    $('#sheetPlats').innerHTML = order.map((k) => `<li><a href="${esc(safeUrl(links[k]))}" target="_blank" rel="noopener" data-track="${k}-menu">${esc(PLATFORMS[k].name)}<small>${esc(PLATFORMS[k].label)}</small></a></li>`).join('');
-    $('#footLinks').innerHTML = order.map((k) => `<a href="${esc(safeUrl(links[k]))}" target="_blank" rel="noopener" data-track="${k}-foot">${esc(PLATFORMS[k].name.toLowerCase())}</a>`).join('');
-  }
-
-  // Glass hexagon artwork, unique gradient per product
-  function productArt(p) {
-    if (p.image) return `<img src="${esc(safeUrl(p.image))}" alt="" loading="lazy">`;
-    const h = hash(p.slug);
-    const c1 = PALETTE[h % 5], c2 = PALETTE[(h >> 3) % 5 === h % 5 ? (h + 2) % 5 : (h >> 3) % 5];
-    const id = `g${h}`;
-    const hex = (r) => Array.from({ length: 6 }, (_, k) => { const a = Math.PI / 3 * k - Math.PI / 2; return `${(50 + r * Math.cos(a)).toFixed(1)},${(50 + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
-    return `<svg class="glyph" viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>
-        <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      </defs>
-      <polygon points="${hex(46)}" fill="url(#${id}a)" opacity=".9"/>
-      <polygon points="${hex(46)}" fill="url(#${id}b)" opacity=".55"/>
-      <polygon points="${hex(46)}" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="1"/>
-      <circle cx="50" cy="50" r="${14 + (h % 6)}" fill="#fff" fill-opacity=".35" stroke="#fff" stroke-opacity=".9"/>
-    </svg>`;
-  }
-  const artBg = (p) => { const h = hash(p.slug + 'bg'); return `linear-gradient(${120 + (h % 90)}deg, ${PALETTE[h % 5]}33, ${PALETTE[(h + 2) % 5]}40)`; };
-
-  // ── Store ──────────────────────────────────────────
-  let products = [];
-  function renderProducts(filter = 'all') {
-    const list = filter === 'all' ? products : products.filter((p) => p.category === filter);
-    const fmt = (p) => Number(p.price) > 0 ? new Intl.NumberFormat('en-GB', { style: 'currency', currency: p.currency || 'GBP' }).format(p.price) : 'included';
-    $('#products').innerHTML = list.length ? list.map((p, i) => `
-      <article class="card glass" style="animation-delay:${i * 60}ms">
-        <a class="detail-link" href="${apiOnline ? `/p/${esc(p.slug)}` : esc(safeUrl(p.url))}" aria-label="${esc(p.title)} details"></a>
-        <div class="card-art" style="--art:${artBg(p)}">
-          <div class="card-tags"><span class="chip">${esc(CAT_LABEL[p.category] || p.category)} · ${esc(p.game)}</span><span class="chip ${p.featured ? 'feat' : ''}">${esc(PLATFORMS[p.platform]?.name || p.platform)}</span></div>
-          ${productArt(p)}
-        </div>
-        <div class="card-body">
-          <h3>${esc(p.title)}</h3>
-          <p class="sub">${esc(p.subtitle)}</p>
-          <p class="desc">${esc(p.description)}</p>
-          <div class="card-foot"><span class="price">${esc(fmt(p))}</span><a class="card-go" href="${esc(safeUrl(p.url))}" target="_blank" rel="noopener" data-track="buy-${esc(p.platform)}">get it ↗</a></div>
-        </div>
-      </article>`).join('') : '<p class="label">nothing here yet. check the roadmap.</p>';
-  }
-  const thumb = $('.filter-thumb');
-  function moveThumb(btn) { thumb.style.width = `${btn.offsetWidth}px`; thumb.style.transform = `translateX(${btn.offsetLeft}px)`; }
-  $$('.filters button').forEach((b) => b.addEventListener('click', () => {
-    $$('.filters button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-    moveThumb(b); renderProducts(b.dataset.filter);
-  }));
-  addEventListener('resize', () => moveThumb($('.filters [aria-selected="true"]')));
-
-  // ── Showcase compare sliders ───────────────────────
-  function renderShowcase(items) {
-    if (!items?.length) return;
-    $('#showcase').innerHTML = items.map((s) => `
-      <article class="cmp-card glass reveal">
-        <div class="cmp ${s.demo ? 'demo' : ''}">
-          <img class="before" src="${esc(s.before)}" alt="${esc(s.title)} vanilla" loading="lazy">
-          <img class="after" src="${esc(s.after)}" alt="${esc(s.title)} with Hex preset" loading="lazy">
-          <div class="vignette"></div>
-          <span class="cmp-label l">vanilla</span><span class="cmp-label r">hex</span>
-          <div class="cmp-handle"></div><div class="cmp-knob" aria-hidden="true">‹ ›</div>
-          <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Compare ${esc(s.title)} before and after">
-        </div>
-        <div class="cmp-meta"><strong>${esc(String(s.title).toLowerCase())}</strong><span>${esc(s.game)}${s.demo ? ' · demo image' : ''}</span></div>
-      </article>`).join('');
-    $$('.cmp').forEach((c) => {
-      const range = $('.cmp-range', c);
-      const set = (v) => c.style.setProperty('--pos', `${v}%`);
-      range.addEventListener('input', () => set(range.value));
-      c.addEventListener('pointermove', (e) => {
-        if (e.pointerType !== 'mouse' && !e.buttons) return;
-        const r = c.getBoundingClientRect();
-        const v = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
-        range.value = v; set(v);
-      });
+    email = site.email || '';
+    $$('[data-link]').forEach((a) => {
+      const url = links[a.dataset.link];
+      if (url) a.href = safeUrl(url); else a.hidden = true;     // never show a dead link
     });
+    $$('[data-discord-user]').forEach((el) => { el.textContent = discordUser; });
+    $$('[data-email]').forEach((a) => { a.textContent = email; a.href = `mailto:${email}`; });
+    if (!email) $$('[data-email], [data-copy-email]').forEach((el) => el.closest('.link-card')?.remove());
+    $('#yearsInline').textContent = site.yearsScripting || 6;
+
+    const plats = (site.platforms || []).filter((p) => links[p.key]);
+    $('#platGrid').innerHTML = plats.map((p, i) => `
+      <a class="plat glass reveal ${i < 3 ? 'major' : ''}" href="${esc(safeUrl(links[p.key]))}" target="_blank" rel="noopener" data-track="${esc(p.key)}-platform">
+        <span class="plat-label">${esc(p.label)}</span>
+        <strong>${esc(p.name)}</strong>
+        ${p.highlights?.length ? `<ul>${p.highlights.map((h) => `<li>${esc(h)}</li>`).join('')}</ul>` : ''}
+        <span class="lc-arrow" aria-hidden="true">↗</span>
+      </a>`).join('');
+    $('#sheetPlats').innerHTML = plats.map((p) => `<li><a href="${esc(safeUrl(links[p.key]))}" target="_blank" rel="noopener" data-track="${esc(p.key)}-menu">${esc(p.name)}<small>${esc(p.label)}</small></a></li>`).join('');
+    $('#footLinks').innerHTML = plats.map((p) => `<a href="${esc(safeUrl(links[p.key]))}" target="_blank" rel="noopener" data-track="${esc(p.key)}-foot">${esc(p.name.toLowerCase())}</a>`).join('')
+      + (email ? `<a href="mailto:${esc(email)}">email</a>` : '');
     observeReveal();
   }
 
-  // ── Roadmap ────────────────────────────────────────
+  // ── Technology showcase ────────────────────────────
+  function renderTech(data) {
+    if (!data?.slides?.length) { $('#tech').hidden = true; return; }
+    const tabs = $('#techTabs'), cmp = $('#techCmp'), range = $('.cmp-range', cmp);
+    const before = $('#techBefore'), after = $('#techAfter'), btn = $('#bufferBtn');
+    before.src = data.before;
+    $('#techNote').textContent = data.note || '';
+    tabs.insertAdjacentHTML('beforeend', data.slides.map((s, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(s.title)}</button>`).join(''));
+    // warm the cache so tab switches are instant
+    data.slides.forEach((s) => { new Image().src = s.after; if (s.buffer) new Image().src = s.buffer; });
+    let current = 0, buffer = false;
+    const show = () => {
+      const s = data.slides[current];
+      after.src = buffer && s.buffer ? s.buffer : s.after;
+      after.alt = `${s.title}${buffer ? ' buffer view' : ''}`;
+      $('#techName').textContent = s.title;
+      $('#techText').textContent = s.text;
+      $('#techLabelR').textContent = buffer ? 'buffer' : 'reshade';
+      btn.textContent = buffer ? 'back to image' : 'view buffer';
+      btn.setAttribute('aria-pressed', String(buffer));
+      btn.hidden = !s.buffer;
+    };
+    tabs.addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      current = Number(b.dataset.i); buffer = false;
+      $$('button', tabs).forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+      moveThumb(tabs, b); show();
+    });
+    btn.addEventListener('click', () => { buffer = !buffer; show(); });
+    const set = (v) => cmp.style.setProperty('--pos', `${v}%`);
+    range.addEventListener('input', () => set(range.value));
+    cmp.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' && !e.buttons) return;
+      const r = cmp.getBoundingClientRect();
+      const v = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+      range.value = v; set(v);
+    });
+    show();
+    requestAnimationFrame(() => moveThumb(tabs, $('[aria-selected="true"]', tabs)));
+  }
+
+  function moveThumb(group, btn) {
+    const thumb = $('.filter-thumb', group);
+    if (!thumb || !btn) return;
+    thumb.style.width = `${btn.offsetWidth}px`; thumb.style.transform = `translateX(${btn.offsetLeft}px)`;
+  }
+  addEventListener('resize', () => $$('.filters').forEach((g) => moveThumb(g, $('[aria-selected="true"]', g))));
+
+  // ── Store ──────────────────────────────────────────
+  const PLATFORM_NAMES = { tebex: 'Tebex', kofi: 'Ko-fi', patreon: 'Patreon', shopify: 'Shopify', fiverr: 'Fiverr', gumroad: 'Gumroad', payhip: 'Payhip' };
+  const PALETTE = ['#E89898', '#A373D3', '#6F70A2', '#7E3A63', '#5D549C'];
+  const hash = (s) => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+  let products = [];
+  function productArt(p) {
+    if (p.image) return `<img src="${esc(safeUrl(p.image))}" alt="" loading="lazy">`;
+    const h = hash(p.slug), c1 = PALETTE[h % 5], c2 = PALETTE[(h + 2) % 5], id = `g${h}`;
+    const hex = (r) => Array.from({ length: 6 }, (_, k) => { const a = Math.PI / 3 * k - Math.PI / 2; return `${(50 + r * Math.cos(a)).toFixed(1)},${(50 + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
+    return `<svg class="glyph" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>
+      <polygon points="${hex(46)}" fill="url(#${id})" opacity=".9"/><circle cx="50" cy="50" r="16" fill="#fff" fill-opacity=".35" stroke="#fff" stroke-opacity=".9"/></svg>`;
+  }
+  function renderProducts(filter = 'all') {
+    const list = filter === 'all' ? products : products.filter((p) => p.category === filter);
+    const fmt = (p) => Number(p.price) > 0 ? new Intl.NumberFormat('en-GB', { style: 'currency', currency: p.currency || 'GBP' }).format(p.price) : 'free';
+    $('#products').innerHTML = list.map((p, i) => `
+      <article class="card glass" style="animation-delay:${i * 60}ms">
+        <a class="detail-link" href="${apiOnline ? `/p/${esc(p.slug)}` : esc(safeUrl(p.url))}" aria-label="${esc(p.title)} details"></a>
+        <div class="card-art"><div class="card-tags"><span class="chip">${esc(p.game || '')}</span><span class="chip feat">${esc(PLATFORM_NAMES[p.platform] || p.platform || '')}</span></div>${productArt(p)}</div>
+        <div class="card-body">
+          <h3>${esc(p.title)}</h3><p class="sub">${esc(p.subtitle || '')}</p><p class="desc">${esc(p.description || '')}</p>
+          <div class="card-foot"><span class="price">${esc(fmt(p))}</span><a class="card-go" href="${esc(safeUrl(p.url))}" target="_blank" rel="noopener" data-track="buy-${esc(p.platform)}">get it ↗</a></div>
+        </div>
+      </article>`).join('');
+  }
+  function setupStore(list) {
+    products = Array.isArray(list) ? list : [];
+    const has = products.length > 0;
+    $('#storeEmpty').hidden = has;
+    $('#storeFilters').hidden = products.length < 5;              // filters only once there's something to filter
+    renderProducts();
+    observeReveal();
+  }
+  $$('#storeFilters button').forEach((b) => b.addEventListener('click', () => {
+    $$('#storeFilters button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+    moveThumb($('#storeFilters'), b); renderProducts(b.dataset.filter);
+  }));
+
+  // ── Roadmap + updates: only shown when they have content ──
   function renderRoadmap(items) {
-    if (!items) return;
+    if (!items?.length) return;
     const label = { shipped: 'shipped', 'in-progress': 'in development', planned: 'planned', research: 'research' };
     $('#roadmapList').innerHTML = items.map((r) => `
       <li class="rm glass reveal">
-        <div class="rm-meta"><span class="status ${esc(r.status)}">${esc(label[r.status] || r.status)}</span><span>${esc(String(r.type).toLowerCase())} · ${esc(r.eta)}</span></div>
-        <div><span class="rm-title">${esc(String(r.title).toLowerCase())}</span><span class="rm-notes">${esc(r.notes)}</span></div>
+        <div class="rm-meta"><span class="status ${esc(r.status)}">${esc(label[r.status] || r.status)}</span><span>${esc(String(r.type || '').toLowerCase())} · ${esc(r.eta || '')}</span></div>
+        <div><span class="rm-title">${esc(String(r.title).toLowerCase())}</span><span class="rm-notes">${esc(r.notes || '')}</span></div>
         <div class="rm-bar"><span>${Number(r.progress) || 0}%</span><div class="bar"><b data-w="${Math.max(0, Math.min(100, Number(r.progress) || 0))}"></b></div></div>
       </li>`).join('');
-    observeReveal();
-    const shipped = items.find((r) => r.status === 'shipped');
-    $('#latestRelease').textContent = shipped ? String(shipped.title).toLowerCase() : '…';
+    $('#roadmap').hidden = false; observeReveal();
   }
-
-  // ── Patreon feed ───────────────────────────────────
   function renderFeed(data) {
     const posts = Array.isArray(data) ? data : data?.posts || [];
-    if (data?.source === 'patreon') $('#feedSrc').textContent = 'LIVE';
+    if (!posts.length) return;
+    const fmt = (d) => { const t = new Date(d); return isNaN(t) ? '' : t.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toLowerCase(); };
     $('#feedList').innerHTML = posts.slice(0, 6).map((p) => `
       <a class="post glass reveal" href="${esc(safeUrl(p.url))}" target="_blank" rel="noopener" data-track="patreon-post">
-        <div class="post-top"><span>${esc(formatDate(p.date))}</span><span class="${p.public ? '' : 'lock'}">${p.public ? 'public' : 'patrons only'}</span></div>
-        <h3>${esc(p.title)}</h3>
-        <p>${esc(p.excerpt)}</p>
-        <span class="post-go">read on patreon ↗</span>
+        <div class="post-top"><span>${esc(fmt(p.date))}</span><span class="${p.public ? '' : 'lock'}">${p.public ? 'public' : 'patrons only'}</span></div>
+        <h3>${esc(p.title)}</h3><p>${esc(p.excerpt)}</p><span class="post-go">read on patreon ↗</span>
       </a>`).join('');
-    observeReveal();
-  }
-  const formatDate = (d) => { const t = new Date(d); return isNaN(t) ? '' : t.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).toLowerCase(); };
-
-  // ── Discord online count ───────────────────────────
-  async function discord() {
-    const d = await load('/api/discord');
-    if (d?.online != null) $('#dcOnline2').insertAdjacentText('beforeend', ` ${d.online} people online in the server right now.`);
+    $('#feed').hidden = false; observeReveal();
   }
 
-  // ── Contact form ───────────────────────────────────
+  // ── Contact ────────────────────────────────────────
+  async function copy(text, title, body) {
+    try { await navigator.clipboard.writeText(text); toast(title, body); }
+    catch { toast(text, body); }
+  }
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-copy-discord]')) copy(discordUser, 'username copied', `add ${discordUser} on Discord to get in touch.`);
+    if (e.target.closest('[data-copy-email]') && email) copy(email, 'email copied', email);
+  });
+
+  // The form only appears when the Node backend is running (it needs the API to deliver messages).
   let csrf = null;
-  async function getCsrf() { const d = await load('/api/csrf'); csrf = d?.token || null; }
+  async function setupForm() {
+    const d = await load('/api/csrf');
+    csrf = d?.token || null;
+    if (csrf) { $('#contactForm').hidden = false; $('#contactGrid').classList.add('with-form'); }
+  }
   $('#contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const status = $('#formStatus');
-    const btn = $('button[type=submit]', form);
+    const form = e.currentTarget, status = $('#formStatus'), btn = $('button[type=submit]', form);
     $$('.field', form).forEach((f) => { f.classList.remove('err'); $('.msg', f)?.remove(); });
-    const data = Object.fromEntries(new FormData(form));
-    if (!csrf) {
-      status.className = 'form-status bad';
-      status.innerHTML = `the inbox isn't connected yet. message <b>${esc(discordUser)}</b> on Discord, or <a href="mailto:${esc(siteEmail)}">send an email</a>.`;
-      return;
-    }
     btn.disabled = true; status.className = 'form-status'; status.textContent = 'sending…';
     try {
-      const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, csrf }) });
+      const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), csrf }) });
       const out = await r.json().catch(() => ({}));
-      if (r.ok) {
-        form.reset(); status.className = 'form-status ok'; status.textContent = 'message delivered. expect a reply on Discord or by email.'; getCsrf();
-        toast('mission passed', 'your message reached Hex Modifications.');
-      } else if (r.status === 429 || r.status === 403) {
-        status.className = 'form-status bad'; status.textContent = 'too many messages. take a breather and try again later.';
-        wanted.raise(2); toast('wanted level raised', 'too many requests. lie low for a bit.');
-      }
+      if (r.ok) { form.reset(); status.className = 'form-status ok'; status.textContent = 'message delivered.'; toast('mission passed', 'your message reached Hex Modifications.'); setupForm(); }
+      else if (r.status === 429 || r.status === 403) { status.className = 'form-status bad'; status.textContent = 'too many messages. try again later.'; wanted.raise(2); }
       else {
         status.className = 'form-status bad'; status.textContent = (out.error || 'something went wrong.').toLowerCase();
         for (const [k, v] of Object.entries(out.fields || {})) {
           const f = form.elements[k]?.closest('.field');
           if (f) { f.classList.add('err'); f.insertAdjacentHTML('beforeend', `<span class="msg">${esc(v)}</span>`); }
         }
-        if (r.status === 400) getCsrf();
+        if (r.status === 400) setupForm();
       }
-    } catch { status.className = 'form-status bad'; status.textContent = `network error. try again, or message ${discordUser} on Discord.`; }
+    } catch { status.className = 'form-status bad'; status.textContent = `network error. message ${discordUser} on Discord instead.`; }
     btn.disabled = false;
   });
 
-  // ── Outbound click analytics ───────────────────────
+  // ── Outbound click analytics (backend only) ────────
   document.addEventListener('click', (e) => {
     const a = e.target.closest('[data-track]');
     if (!a || !apiOnline) return;
     try { navigator.sendBeacon('/api/track', JSON.stringify({ type: 'outbound', target: a.dataset.track })); } catch { /* ignore */ }
   });
 
-  // ── Nav: menu sheet + active section ───────────────
+  // ── Nav sheet, active link, scroll progress, reveal ──
   const sheet = $('#sheet'), menuBtn = $('#menuBtn');
   const setSheet = (open) => { sheet.hidden = !open; menuBtn.setAttribute('aria-expanded', String(open)); };
   menuBtn.addEventListener('click', (e) => { e.stopPropagation(); setSheet(sheet.hidden); });
@@ -236,7 +237,6 @@
   }), { rootMargin: '-45% 0px -50% 0px' });
   $$('main section[id]').forEach((s) => navObs.observe(s));
 
-  // Scroll progress
   const bar = $('#progBar'), pct = $('#progPct');
   const onScroll = () => {
     const max = document.documentElement.scrollHeight - innerHeight;
@@ -246,7 +246,6 @@
   };
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  // Reveal + progress bars
   const revObs = new IntersectionObserver((ents) => ents.forEach((en) => {
     if (!en.isIntersecting) return;
     en.target.classList.add('in');
@@ -256,84 +255,27 @@
   function observeReveal() { $$('.reveal:not(.in)').forEach((el) => revObs.observe(el)); }
   observeReveal();
 
-  // Terminal typing
-  const TERM = [
-    '<span class="d">~</span> <span class="k">$</span> hextune --profile gaming',
-    '<span class="d">[scan]</span> timer resolution ...... 15.6ms <span class="c">→</span> 0.5ms',
-    '<span class="d">[scan]</span> background services ... 41 found, 17 non-essential',
-    '<span class="d">[net ]</span> dns resolver .......... 38ms <span class="c">→</span> 9ms',
-    '<span class="d">[net ]</span> nagle on game ports ... <span class="g">disabled</span>',
-    '<span class="d">[snap]</span> restore point ......... <span class="g">created</span>',
-    '<span class="g">✓ profile "gaming" applied.</span> run <span class="k">hextune --revert</span> to undo.',
-  ];
-  new IntersectionObserver(([en], obs) => {
-    if (!en.isIntersecting) return;
-    obs.disconnect();
-    const out = $('#termOut'); let html = '';
-    TERM.forEach((line, i) => setTimeout(() => {
-      html += line + '\n'; out.innerHTML = html + (i === TERM.length - 1 ? '<span class="caret"></span>' : '');
-    }, reduced ? 0 : 380 * i));
-  }, { threshold: .3 }).observe($('.terminal'));
-
-  // Count-up
-  new IntersectionObserver(([en], obs) => {
-    if (!en.isIntersecting) return; obs.disconnect();
-    if (reduced) return;
-    $$('[data-count]').forEach((el) => {
-      const end = Number(el.textContent) || 0;
-      const t0 = performance.now();
-      const step = (t) => { const k = Math.min(1, (t - t0) / 1200); el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
-      requestAnimationFrame(step);
-    });
-  }).observe($('.stats'));
-
-  $('#yr').textContent = new Date().getFullYear();
-
-  // ── Toast: small help box, top-left ────────────────
-  let toastTimer;
-  function toast(title, body) {
-    const el = $('#toast');
-    $('#toastTitle').textContent = title; $('#toastBody').textContent = body;
-    el.hidden = false; el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 4200);
-  }
-
-  // ── Discord username copy ──────────────────────────
-  let discordUser = '001hex';
-  let siteEmail = 'hello@hexmodifications.com';
-  document.addEventListener('click', async (e) => {
-    if (!e.target.closest('[data-copy-discord]')) return;
-    try { await navigator.clipboard.writeText(discordUser); toast('username copied', `add ${discordUser} on Discord to get in touch.`); }
-    catch { toast(`discord: ${discordUser}`, 'add this username on Discord to get in touch.'); }
-  });
-
-  // ── Wanted level (FUGITIVE / LAWYERUP, or spamming the form) ──
+  // ── Easter eggs: wanted level, timecycle skip, cheat codes ──
   const wanted = (() => {
     const el = $('#wanted');
-    const star = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z"/></svg>';
-    el.innerHTML = star.repeat(5);
+    el.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z"/></svg>'.repeat(5);
     let level = 0, decay;
-    const render = () => {
-      $$('svg', el).forEach((s, i) => s.classList.toggle('lit', i < level));
-      el.classList.toggle('on', level > 0);
-    };
     const set = (n) => {
-      level = Math.max(0, Math.min(5, n)); render();
-      clearTimeout(decay); el.classList.remove('flash');
-      if (level > 0) decay = setTimeout(() => { el.classList.add('flash'); decay = setTimeout(() => { el.classList.remove('flash'); set(0); }, 4000); }, 16000);
+      level = Math.max(0, Math.min(5, n));
+      $$('svg', el).forEach((s, i) => s.classList.toggle('lit', i < level));
+      el.classList.toggle('on', level > 0); el.classList.remove('flash'); clearTimeout(decay);
+      if (level > 0) decay = setTimeout(() => { el.classList.add('flash'); decay = setTimeout(() => set(0), 4000); }, 16000);
     };
     return { raise: (n = 1) => set(level + n), clear: () => set(0) };
   })();
 
-  // ── Timecycle control: click to skip ahead ─────────
   $('#timecycle').addEventListener('click', () => {
     const p = window.hexTimecycle?.skip();
     if (p) toast(`time skipped to ${p}`, 'reload the page to sync back to your local time.');
   });
 
-  // ── Cheat codes (type them anywhere outside a form field) ──
   const CHEATS = {
-    MAKEITRAIN: () => { const r = $('#rain'); const on = !r.classList.contains('on'); r.classList.toggle('on', on); return on ? 'weather: rain' : 'weather: clear'; },
+    MAKEITRAIN: () => { const on = $('#rain').classList.toggle('on'); return on ? 'weather: rain' : 'weather: clear'; },
     FUGITIVE: () => { wanted.raise(1); return 'wanted level raised'; },
     LAWYERUP: () => { wanted.clear(); return 'wanted level cleared'; },
     SLOWMO: () => {
@@ -343,16 +285,15 @@
       return on ? 'slow motion on' : 'slow motion off';
     },
     SKYFALL: () => { document.dispatchEvent(new CustomEvent('hex:model')); scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); return 'new object dropped in'; },
-    TIMECYCLE: () => `time skipped to ${window.hexTimecycle?.skip()}`,
   };
   let typed = '';
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.key.length !== 1) return;
     typed = (typed + e.key.toUpperCase()).slice(-12);
-    for (const [code, fn] of Object.entries(CHEATS)) {
-      if (typed.endsWith(code)) { typed = ''; toast('cheat activated', fn()); break; }
-    }
+    for (const [code, fn] of Object.entries(CHEATS)) if (typed.endsWith(code)) { typed = ''; toast('cheat activated', fn()); break; }
   });
+
+  $('#yr').textContent = new Date().getFullYear();
 
   // ── Go ─────────────────────────────────────────────
   (async () => {
@@ -364,14 +305,10 @@
       load('/api/showcase', 'data/showcase.json'),
     ]);
     applySite(site);
-    products = prods || [];
-    $('#statReleases').textContent = products.length;
-    renderProducts();
-    moveThumb($('.filters [aria-selected="true"]'));
-    renderShowcase(show);
+    renderTech(show);
+    setupStore(prods);
     renderRoadmap(road);
     renderFeed(feed);
-    discord();
-    getCsrf();
+    setupForm();
   })();
 })();

@@ -2,19 +2,73 @@
   "name": "Hex Modifications",
   "handle": "001hex",
   "tagline": "Graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus tools for Mac and Windows.",
-  "description": "Hex Modifications is a studio making graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, and quality-of-life software for macOS and Windows. Developed by 001hex.",
-  "email": "hello@hexmodifications.com",
+  "description": "Hex Modifications makes GTA V mods, LSPDFR add-ons, FiveM scripts, ReShade presets and quality-of-life software for macOS and Windows. Developed by 001hex.",
+  "email": "hexmodifications@icloud.com",
+  "discordUser": "001hex",
   "yearsScripting": 6,
   "links": {
-    "patreon": "https://www.patreon.com/001hex",
-    "kofi": "https://ko-fi.com/001hex",
-    "fiverr": "https://www.fiverr.com/001hex",
-    "tebex": "https://hexmodifications.tebex.io",
-    "shopify": "https://shop.hexmodifications.com",
-    "discord": "https://discord.gg/your-invite",
-    "youtube": "https://www.youtube.com/@001hex",
-    "github": "https://github.com/001hex",
-    "x": "https://x.com/001hex"
+    "gta5mods": "https://www.gta5-mods.com/users/Hex%20Spyderz",
+    "lcpdfr": "https://www.lcpdfr.com/profile/440664-hex-modifications/",
+    "fivem": "https://forum.cfx.re/u/HexModifications/summary",
+    "github": "https://github.com/001Hex",
+    "patreon": "https://www.patreon.com/untilhex",
+    "discord": "https://discord.gg/j4P2arJXFp",
+    "twitch": "https://www.twitch.tv/001_hex"
   },
-  "discordUser": "001hex"
+  "platforms": [
+    {
+      "key": "gta5mods",
+      "name": "GTA5-Mods",
+      "label": "gta v mods \u00b7 as Hex Spyderz",
+      "highlights": [
+        "Advanced Helicopter UI",
+        "Vaporwave HUD",
+        "Alternative Handgun Animations",
+        "LSPDFR Vinewood Sign"
+      ]
+    },
+    {
+      "key": "lcpdfr",
+      "name": "LCPDFR",
+      "label": "lspdfr add-ons",
+      "highlights": [
+        "Advanced Helicopter UI",
+        "Vaporwave HUD"
+      ]
+    },
+    {
+      "key": "fivem",
+      "name": "Cfx.re forum",
+      "label": "fivem releases",
+      "highlights": [
+        "Hex Report System",
+        "Advanced Night Vision",
+        "Time, Date & Stopwatch"
+      ]
+    },
+    {
+      "key": "github",
+      "name": "GitHub",
+      "label": "open source",
+      "highlights": []
+    },
+    {
+      "key": "patreon",
+      "name": "Patreon",
+      "label": "support the work",
+      "highlights": []
+    },
+    {
+      "key": "discord",
+      "name": "Discord",
+      "label": "community server",
+      "highlights": []
+    },
+    {
+      "key": "twitch",
+      "name": "Twitch",
+      "label": "live dev streams",
+      "highlights": []
+    }
+  ]
 }

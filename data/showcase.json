@@ -1,16 +1,48 @@
-[
-  {
-    "title": "NEON NOIR",
-    "game": "GTA V",
-    "before": "img/scene.svg",
-    "after": "img/scene.svg",
-    "demo": true
-  },
-  {
-    "title": "HEX VISUALS",
-    "game": "GTA V / FiveM",
-    "before": "img/scene.svg",
-    "after": "img/scene.svg",
-    "demo": true
-  }
-]
+{
+  "before": "img/tech/vanilla.webp",
+  "note": "technique lab scene, rendered with the same screen-space passes ReShade uses",
+  "slides": [
+    {
+      "key": "full",
+      "title": "full preset",
+      "after": "img/tech/full.webp",
+      "buffer": "img/tech/depth_buffer.webp",
+      "text": "every pass below, stacked in order: occlusion, light scattering, bloom, depth of field, then the colour grade. ReShade runs this after the game draws each frame, reading the game's own depth buffer."
+    },
+    {
+      "key": "scatter",
+      "title": "light scattering",
+      "after": "img/tech/scatter.webp",
+      "buffer": "img/tech/scatter_buffer.webp",
+      "text": "bright sky around the sun is isolated using depth, then every pixel samples 120 times along a line toward the sun. palms, poles and buildings block samples, and those gaps become rays."
+    },
+    {
+      "key": "ao",
+      "title": "ambient occlusion",
+      "after": "img/tech/ao.webp",
+      "buffer": "img/tech/ao_buffer.webp",
+      "text": "24 points in a hemisphere around each surface are tested against depth. corners, contact points and creases that can't see the open sky get darker, so objects sit in the world instead of floating."
+    },
+    {
+      "key": "dof",
+      "title": "depth of field",
+      "after": "img/tech/dof.webp",
+      "buffer": "img/tech/dof_buffer.webp",
+      "text": "distance from the focus plane sets each pixel's blur radius. samples closer than the pixel are weighted down, so sharp foreground edges don't smear into the background."
+    },
+    {
+      "key": "bloom",
+      "title": "bloom",
+      "after": "img/tech/bloom.webp",
+      "buffer": "img/tech/bloom_buffer.webp",
+      "text": "only light above a brightness threshold is kept: lamps, tail lights and the sun's core. it's blurred at three sizes and added back, the way a real lens glows."
+    },
+    {
+      "key": "grade",
+      "title": "colour grading",
+      "after": "img/tech/grade.webp",
+      "buffer": "img/tech/grade_buffer.webp",
+      "text": "the HDR frame is tonemapped (ACES), then pushed through a lookup table: indigo shadows, coral highlights and a gentle S-curve. the whole look lives in one small texture."
+    }
+  ]
+}

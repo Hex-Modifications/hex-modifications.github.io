@@ -46,10 +46,10 @@ Everything lives in `data/`. You can edit it from **/admin → Content** (valida
 | `site.json` | Your links (Patreon, Ko-fi, Fiverr, Tebex, Shopify, Discord server invite, YouTube, GitHub, X), `discordUser` (the username visitors copy, currently `001hex`), years scripting, email. The "join the server" button only appears once `links.discord` is a real invite |
 | `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
 | `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
-| `showcase.json` | Before/after sliders. Put real screenshots in `public/img/` and set `"demo": false` |
-| `feed.json` | Fallback updates, shown until Patreon is connected |
+| `showcase.json` | The technology viewer: one `before` image plus slides (`title`, `after`, `buffer`, `text`). The current images come from the technique lab scene; swap in your own in-game ReShade screenshots any time |
+| `feed.json` | Updates section. Hidden while empty; fills automatically once Patreon is connected |
 
-**All current products, prices and roadmap items are placeholders.** Replace them with your real ones.
+The store, roadmap and updates start empty and stay hidden (the store shows a "coming soon" card) until you add entries.
 
 ## Connect your platforms (`.env`)
 

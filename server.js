@@ -182,7 +182,7 @@ const routes = {
     const name = q.get('name');
     if (!CONTENT.includes(name)) return json(req, res, 400, { error: 'unknown content' });
     const body = await readJsonBody(req);
-    const expectArray = name !== 'site';
+    const expectArray = ['products', 'roadmap', 'feed'].includes(name);
     if (expectArray !== Array.isArray(body) || (expectArray && body.length > 200)) return json(req, res, 422, { error: `${name} must be ${expectArray ? 'an array' : 'an object'}.` });
     writeJson(path.join(DATA, `${name}.json`), body);
     json(req, res, 200, { ok: true });
