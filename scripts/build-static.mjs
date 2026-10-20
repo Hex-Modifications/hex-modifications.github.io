@@ -47,17 +47,23 @@ if (failed.length) {
     releases.items = [...releases.items, ...kept].sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0)).slice(0, 12);
   } catch { /* first deploy, or the live site is down: show what we have */ }
 }
-// cover images are saved next to the page, so visitors never load anything from third-party CDNs
+// cover images are saved next to the page, so visitors never load anything from third-party CDNs.
+// With sharp available (the deploy workflow installs it) they're also resized to 1200px WebP.
 fs.mkdirSync(path.join(DIST, 'img', 'releases'), { recursive: true });
 const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+const sharp = await import('sharp').then((m) => m.default).catch(() => null);
 await Promise.all(releases.items.map(async (it) => {
   if (!it.image || !/^https:\/\//.test(it.image)) return;
   try {
     const res = await fetch(it.image, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) });
     const ext = EXT[(res.headers.get('content-type') || '').split(';')[0]];
-    const buf = Buffer.from(await res.arrayBuffer());
-    if (!res.ok || !ext || buf.length > 4e6) return;
-    const name = `${crypto.createHash('sha1').update(it.image).digest('hex').slice(0, 12)}.${ext}`;
+    let buf = Buffer.from(await res.arrayBuffer()), type = ext;
+    if (!res.ok || !ext || buf.length > 12e6) return;
+    if (sharp) {
+      try { buf = await sharp(buf).resize({ width: 1200, withoutEnlargement: true }).webp({ quality: 80 }).toBuffer(); type = 'webp'; } catch { /* keep the original */ }
+    }
+    if (buf.length > 4e6) return;
+    const name = `${crypto.createHash('sha1').update(it.image).digest('hex').slice(0, 12)}.${type}`;
     fs.writeFileSync(path.join(DIST, 'img', 'releases', name), buf);
     it.imageSrc = it.image; it.image = `img/releases/${name}`;
   } catch { /* leave the remote URL; the CSP allows https images */ }

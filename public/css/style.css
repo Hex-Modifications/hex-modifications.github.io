@@ -167,7 +167,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ── NAV ── */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px var(--gut); pointer-events: none; }
 .nav > * { pointer-events: auto; }
-.wordmark { display: flex; align-items: center; gap: 12px; }
+.wordmark { display: flex; align-items: center; gap: 12px; margin-left: -6px; padding: 5px 16px 5px 5px; border-radius: 16px; border: 1px solid transparent; transition: background-color .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease); }
+.nav.scrolled .wordmark { background: var(--glass-bg); border-color: var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
 .wm-badge { width: 42px; height: 42px; border-radius: 11px; box-shadow: 0 6px 18px -6px rgba(20,19,26,.55), inset 0 0 0 1px rgba(255,255,255,.12); transition: transform .5s var(--ease); }
 .wordmark:hover .wm-badge { transform: rotate(-6deg) scale(1.06); }
 .wm-text { display: flex; align-items: baseline; gap: 7px; }

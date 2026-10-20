@@ -279,11 +279,12 @@
   }), { rootMargin: '-45% 0px -50% 0px' });
   $$('main section[id]').forEach((s) => navObs.observe(s));
 
-  const bar = $('#progBar'), pct = $('#progPct');
+  const bar = $('#progBar'), pct = $('#progPct'), nav = $('.nav');
   const onScroll = () => {
     const max = document.documentElement.scrollHeight - innerHeight;
     const p = max > 0 ? Math.round((scrollY / max) * 100) : 0;
     bar.style.width = `${p}%`; pct.textContent = `${p}%`;
+    nav.classList.toggle('scrolled', scrollY > 60);          // wordmark gets a glass backing once content passes under it
     if (scrollY < innerHeight * 0.6) $$('.pill a.active').forEach((a) => a.classList.remove('active'));
   };
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
