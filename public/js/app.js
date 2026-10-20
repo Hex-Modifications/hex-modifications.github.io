@@ -208,8 +208,16 @@
           <div class="rel-foot"><span class="rel-meta">${[...(it.tags || []).slice(0, 3).map((t) => String(t).toLowerCase()), ...meta].map((m) => `<span>${esc(m)}</span>`).join('')}</span><span class="rel-go" aria-hidden="true">↗</span></div></div>
       </a>`;
     }).join('');
-    // a cover that fails to load falls back to the platform mark
-    $$('#relGrid img').forEach((img) => img.addEventListener('error', () => img.remove(), { once: true }));
+    // a cover that fails to load falls back to the platform mark; wide banners are shown whole over a blurred copy
+    $$('#relGrid img').forEach((img) => {
+      img.addEventListener('error', () => img.remove(), { once: true });
+      const fit = () => {
+        if (img.naturalWidth / img.naturalHeight < 1.9) return;
+        const bg = img.cloneNode(); bg.className = 'rel-bg'; bg.setAttribute('aria-hidden', 'true');
+        img.before(bg); img.closest('.rel').classList.add('wide');
+      };
+      if (img.complete && img.naturalWidth) fit(); else img.addEventListener('load', fit, { once: true });
+    });
     const more = $('#relMore');
     if (items.length > SHOWN) {
       more.hidden = false;

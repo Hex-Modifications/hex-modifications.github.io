@@ -562,7 +562,9 @@ a.link-card:hover { transform: translateY(-4px); }
 .rel-art { position: relative; aspect-ratio: 3 / 2; border-radius: calc(var(--r-lg) - 8px); overflow: hidden; background: var(--grad); }
 .rel.lead .rel-art { aspect-ratio: auto; flex: 1; min-height: 320px; }
 .rel-art img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
-.rel:hover .rel-art img { transform: scale(1.04); }
+.rel:hover .rel-art img:not(.rel-bg) { transform: scale(1.04); }
+.rel-art .rel-bg { filter: blur(26px) saturate(1.15); transform: scale(1.3); }
+.rel.wide .rel-art img:not(.rel-bg) { object-fit: contain; }
 .rel-mark { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; text-align: center; font: 500 clamp(30px, 3.4vw, 54px)/.95 var(--f-body); letter-spacing: -.06em; color: rgba(255,255,255,.92); text-transform: lowercase; }
 .rel-tags { position: absolute; z-index: 2; left: 10px; right: 10px; top: 10px; display: flex; justify-content: space-between; gap: 8px; }
 .rel-body { display: flex; flex-direction: column; gap: 8px; padding: 16px 12px 10px; }
