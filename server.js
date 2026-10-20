@@ -12,6 +12,8 @@ import { securityHeaders, makeCsrf, checkCsrf, isAdmin, originAllowed, clean, EM
 import { Traffic, writeJson } from './lib/traffic.js';
 import { patreonFeed, tebexPackages, shopifyProducts, discordWidget, notifyDiscord } from './lib/integrations.js';
 import { jsonLd, sitemap, robots, productPage } from './lib/seo.js';
+import { collectReleases } from './lib/releases.js';
+import { personaPrompt } from './public/js/persona.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(ROOT, 'public');
@@ -26,7 +28,7 @@ if (!env.SECRET_KEY || env.SECRET_KEY === 'change-me') console.warn('[warn] SECR
 if (!env.ADMIN_TOKEN || env.ADMIN_TOKEN.length < 24) console.warn('[warn] ADMIN_TOKEN missing or < 24 chars: /admin is disabled.');
 
 const traffic = new Traffic({ dataDir: DATA, trustProxy: env.TRUST_PROXY });
-const CONTENT = ['site', 'products', 'roadmap', 'feed', 'showcase'];
+const CONTENT = ['site', 'products', 'roadmap', 'feed', 'showcase', 'releases-manual'];
 const MAX_BODY = 32 * 1024;
 
 const MIME = {
@@ -117,6 +119,18 @@ async function renderIndex(buf) {
 }
 
 // ── API ──────────────────────────────────────────────
+// latest releases across platforms: refreshed at most every 6 hours, stale copy served if a refresh fails
+let releasesCache = null;
+async function latestReleases() {
+  if (releasesCache && Date.now() - releasesCache.at < 6 * 3600_000) return releasesCache.value;
+  const value = await collectReleases(readData('site'), {
+    manual: readData('releases-manual'), githubToken: env.GITHUB_TOKEN,
+    patreonToken: env.PATREON_ACCESS_TOKEN, patreonCampaign: env.PATREON_CAMPAIGN_ID,
+  }).catch(() => null);
+  if (value && value.items.length) releasesCache = { at: Date.now(), value };
+  return releasesCache?.value || value || { items: [] };
+}
+
 const routes = {
   'GET /api/site': (req, res) => json(req, res, 200, readData('site')),
   'GET /api/products': async (req, res) => json(req, res, 200, await allProducts()),
@@ -125,6 +139,34 @@ const routes = {
   'GET /api/feed': async (req, res) => {
     const live = await patreonFeed(env);
     json(req, res, 200, { source: live ? 'patreon' : 'local', posts: live || readData('feed') });
+  },
+  'GET /api/releases': async (req, res) => json(req, res, 200, await latestReleases()),
+
+  // chat proxy: only active when an OpenAI-compatible key is set (keeps the key off the page).
+  // Without it the page talks to the free keyless tier directly.
+  'GET /api/chat': (req, res) => json(req, res, 200, { enabled: !!(env.CHAT_API_URL && env.CHAT_API_KEY) }),
+  'POST /api/chat': async (req, res) => {
+    if (!env.CHAT_API_URL || !env.CHAT_API_KEY) return json(req, res, 404, { error: 'Chat proxy not configured.' });
+    if (!originAllowed(req, SITE_URL)) return json(req, res, 403, { error: 'Bad origin.' });
+    const body = await readJsonBody(req);
+    const messages = (Array.isArray(body?.messages) ? body.messages : []).slice(-12)
+      .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+      .map((m) => ({ role: m.role, content: m.content.slice(0, 800) }));
+    if (!messages.length || messages.at(-1).role !== 'user') return json(req, res, 422, { error: 'Send a message.' });
+    const system = personaPrompt({ site: readData('site'), releases: (await latestReleases()).items || [], products: await allProducts(), roadmap: readData('roadmap') });
+    try {
+      const r = await fetch(env.CHAT_API_URL, {
+        method: 'POST', signal: AbortSignal.timeout(45000),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.CHAT_API_KEY}` },
+        body: JSON.stringify({ model: env.CHAT_MODEL || 'openai', messages: [{ role: 'system', content: system }, ...messages], max_tokens: 400 }),
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      const j = await r.json();
+      json(req, res, 200, { reply: String(j.choices?.[0]?.message?.content || '').slice(0, 2000) });
+    } catch (err) {
+      console.warn('[chat]', err.message);
+      json(req, res, 502, { error: 'The AI is unavailable right now.' });
+    }
   },
   'GET /api/discord': async (req, res) => json(req, res, 200, (await discordWidget(env)) || { online: null }),
   'GET /api/csrf': (req, res) => json(req, res, 200, { token: makeCsrf(SECRET) }),
@@ -182,9 +224,10 @@ const routes = {
     const name = q.get('name');
     if (!CONTENT.includes(name)) return json(req, res, 400, { error: 'unknown content' });
     const body = await readJsonBody(req);
-    const expectArray = ['products', 'roadmap', 'feed'].includes(name);
+    const expectArray = ['products', 'roadmap', 'feed', 'releases-manual'].includes(name);
     if (expectArray !== Array.isArray(body) || (expectArray && body.length > 200)) return json(req, res, 422, { error: `${name} must be ${expectArray ? 'an array' : 'an object'}.` });
     writeJson(path.join(DATA, `${name}.json`), body);
+    if (name === 'releases-manual') releasesCache = null;
     json(req, res, 200, { ok: true });
   },
   'POST /api/admin/unban': async (req, res) => {
@@ -206,7 +249,7 @@ async function handle(req, res) {
 
   const isApi = pathname.startsWith('/api/');
   const isAdminApi = pathname.startsWith('/api/admin/');
-  const kind = isAdminApi ? 'admin' : pathname === '/api/contact' ? 'contact' : isApi ? 'api'
+  const kind = isAdminApi ? 'admin' : pathname === '/api/contact' ? 'contact' : pathname === '/api/chat' && req.method === 'POST' ? 'chat' : isApi ? 'api'
     : /\.(css|js|svg|png|jpe?g|webp|avif|woff2|ico|json|mp4|webm)$/.test(pathname) ? 'asset' : 'page';
 
   const blocked = traffic.gate(req, kind);

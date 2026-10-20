@@ -1,15 +1,18 @@
 # Rebuilds the static site and publishes it to the gh-pages branch on every push to main,
 # so editing data/*.json (products, links, roadmap) on GitHub updates the live site.
+# It also runs every 6 hours to pull in new releases from GTA5-Mods, the FiveM forum and GitHub.
 name: Deploy site
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '23 */6 * * *'
   workflow_dispatch:
 permissions:
   contents: write
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,7 +22,13 @@ jobs:
         with:
           node-version: 20
       - name: Build
-        run: SITE_URL=https://hex-modifications.github.io node scripts/build-static.mjs
+        env:
+          SITE_URL: https://hex-modifications.github.io
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # optional: add these as repository secrets to list public Patreon posts as releases
+          PATREON_ACCESS_TOKEN: ${{ secrets.PATREON_ACCESS_TOKEN }}
+          PATREON_CAMPAIGN_ID: ${{ secrets.PATREON_CAMPAIGN_ID }}
+        run: node scripts/build-static.mjs
       - name: Publish to gh-pages
         run: |
           cd dist

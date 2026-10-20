@@ -188,6 +188,38 @@
     $('#feed').hidden = false; observeReveal();
   }
 
+  // ── Latest releases (GTA5-Mods, FiveM forum, GitHub, Patreon…, merged newest first) ──
+  function renderReleases(data) {
+    const items = (data?.items || []).filter((it) => it.title && /^https?:\/\//.test(it.url || '')).slice(0, 12);
+    if (!items.length) return;
+    const fmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const num = (n) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k` : String(n));
+    const imgSrc = (u) => (/^(https:\/\/|img\/releases\/)[^"'<>\s]+$/.test(u || '') ? u : '');
+    const SHOWN = 6;
+    $('#relGrid').innerHTML = items.map((it, i) => {
+      const d = it.date ? new Date(it.date) : null, s = it.stats || {};
+      const fresh = d && Date.now() - d < 21 * 864e5;
+      const meta = [s.downloads && `↓ ${num(s.downloads)}`, s.likes && `♥ ${num(s.likes)}`, s.rating && `★ ${s.rating}`, s.stars && `★ ${num(s.stars)}`].filter(Boolean);
+      const src = imgSrc(it.image);
+      return `<a class="rel glass reveal${i === 0 ? ' lead' : ''}" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener" data-track="release-${esc(it.platform)}"${i >= SHOWN ? ' hidden' : ''}>
+        <div class="rel-art">${src ? `<img src="${esc(src)}" alt="" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer">` : ''}<span class="rel-mark" aria-hidden="true">${esc(it.source || '')}</span>
+          <div class="rel-tags"><span class="chip${fresh ? ' feat' : ''}">${fresh ? 'new · ' : ''}${esc(it.source || 'release')}</span>${d && !isNaN(d) ? `<span class="chip">${esc(fmt.format(d).toLowerCase())}</span>` : ''}</div></div>
+        <div class="rel-body"><h3>${esc(it.title)}</h3>${it.description ? `<p>${esc(it.description)}</p>` : ''}
+          <div class="rel-foot"><span class="rel-meta">${[...(it.tags || []).slice(0, 3).map((t) => String(t).toLowerCase()), ...meta].map((m) => `<span>${esc(m)}</span>`).join('')}</span><span class="rel-go" aria-hidden="true">↗</span></div></div>
+      </a>`;
+    }).join('');
+    // a cover that fails to load falls back to the platform mark
+    $$('#relGrid img').forEach((img) => img.addEventListener('error', () => img.remove(), { once: true }));
+    const more = $('#relMore');
+    if (items.length > SHOWN) {
+      more.hidden = false;
+      more.addEventListener('click', () => { $$('#relGrid .rel[hidden]').forEach((el) => { el.hidden = false; }); more.hidden = true; observeReveal(); }, { once: true });
+    }
+    const sources = [...new Set(items.map((it) => it.source).filter(Boolean))];
+    if (sources.length) $('#relNote').textContent = `the newest uploads from ${sources.length > 1 ? `${sources.slice(0, -1).join(', ')} and ${sources.at(-1)}` : sources[0]}, pulled in automatically. open one to grab it where it lives.`;
+    $('#releases').hidden = false; observeReveal();
+  }
+
   // ── Contact ────────────────────────────────────────
   async function copy(text, title, body) {
     try { await navigator.clipboard.writeText(text); toast(title, body); }
@@ -307,14 +339,19 @@
 
   // ── Go ─────────────────────────────────────────────
   (async () => {
-    const [site, prods, road, feed, show] = await Promise.all([
+    const [site, prods, road, feed, show, rel] = await Promise.all([
       load('/api/site', 'data/site.json'),
       load('/api/products', 'data/products.json'),
       load('/api/roadmap', 'data/roadmap.json'),
       load('/api/feed', 'data/feed.json'),
       load('/api/showcase', 'data/showcase.json'),
+      load('/api/releases', 'data/releases.json'),
     ]);
+    // shared with the chat assistant (js/chat.js), which answers from the same data
+    window.hexData = { site, products: Array.isArray(prods) ? prods : [], roadmap: Array.isArray(road) ? road : [], releases: rel?.items || [], apiOnline };
+    document.dispatchEvent(new CustomEvent('hex:data'));
     applySite(site);
+    renderReleases(rel);
     renderTech(show);
     setupStore(prods);
     renderRoadmap(road);

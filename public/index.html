@@ -39,6 +39,7 @@
 <header class="nav" id="top">
   <a class="wordmark" href="#top" aria-label="Hex Modifications home"><img class="wm-badge" src="img/logo-badge.png" alt="" width="42" height="42"><span class="wm-text"><span class="wm-hex">hex</span><span class="wm-sub">modifications</span></span></a>
   <nav class="pill glass" aria-label="Primary">
+    <a href="#releases">new</a>
     <a href="#tech">tech</a>
     <a href="#mods">mods</a>
     <a href="#store">store</a>
@@ -55,7 +56,7 @@
 
 <div class="sheet glass" id="sheet" hidden>
   <nav class="sheet-nav" aria-label="Menu">
-    <a href="#tech">tech</a><a href="#mods">mods</a><a href="#store">store</a><a href="#software">software</a><a href="#contact">contact</a>
+    <a href="#releases">latest releases</a><a href="#tech">tech</a><a href="#mods">mods</a><a href="#store">store</a><a href="#software">software</a><a href="#contact">contact</a>
   </nav>
   <p class="label">find hex modifications on</p>
   <ul class="sheet-plats" id="sheetPlats"></ul>
@@ -82,6 +83,17 @@
     </div>
   </section>
 
+  <!-- ═════════ LATEST RELEASES ═════════ -->
+  <section class="section" id="releases" aria-labelledby="relTitle" hidden>
+    <header class="sec-head reveal">
+      <p class="label">latest releases</p>
+      <h2 id="relTitle" class="sec-title">fresh<br><span class="grad">drops</span></h2>
+      <p class="sec-note" id="relNote">the newest uploads from every platform, pulled in automatically. open one to grab it where it lives.</p>
+    </header>
+    <div class="rel-grid" id="relGrid"></div>
+    <button class="btn-pill glass rel-more" type="button" id="relMore" hidden>more releases</button>
+  </section>
+
   <!-- ═════════ TECHNOLOGY ═════════ -->
   <section class="section" id="tech" aria-labelledby="techTitle">
     <header class="sec-head reveal">
@@ -94,7 +106,7 @@
       <div class="cmp" id="techCmp">
         <img class="before" id="techBefore" alt="Untouched frame" src="img/tech/vanilla.webp" width="1600" height="1000" loading="lazy" decoding="async">
         <img class="after" id="techAfter" alt="" src="img/tech/full.webp" width="1600" height="1000" loading="lazy" decoding="async">
-        <span class="cmp-label l" id="techLabelL">stock</span><span class="cmp-label r" id="techLabelR">reshade</span>
+        <span class="cmp-label l" id="techLabelL">no post</span><span class="cmp-label r" id="techLabelR">reshade</span>
         <div class="cmp-handle"></div><div class="cmp-knob" aria-hidden="true">‹ ›</div>
         <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Compare the stock frame with the processed frame">
       </div>
@@ -229,9 +241,31 @@
   <p class="foot-legal">© <span id="yr">2026</span> Hex Modifications · developed by 001hex · not affiliated with Rockstar Games or Take-Two · <a href="sitemap.xml">sitemap</a></p>
 </footer>
 
-<div class="progress glass" aria-hidden="true"><span>scroll down</span><i><b id="progBar"></b></i><span id="progPct">0%</span></div>
+<section class="chat glass" id="chat" role="dialog" aria-labelledby="chatTitle" hidden>
+  <header class="chat-head">
+    <img src="img/logo-badge.png" alt="" width="38" height="38">
+    <div><strong id="chatTitle">ask hex</strong><small>AI that answers in 001hex's style. it can get things wrong.</small></div>
+    <button class="chat-x" id="chatClose" type="button" aria-label="Close chat">×</button>
+  </header>
+  <div class="chat-log" id="chatLog" aria-live="polite"></div>
+  <div class="chat-sugg" id="chatSugg" hidden><button type="button">what's new?</button><button type="button">how do i install a reshade preset?</button><button type="button">do you take commissions?</button><button type="button">where's the discord?</button></div>
+  <form class="chat-form" id="chatForm" autocomplete="off">
+    <label class="sr-only" for="chatInput">Message</label>
+    <input id="chatInput" name="q" maxlength="500" placeholder="ask about mods, presets, scripts…" required>
+    <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </form>
+  <p class="chat-foot">messages go to a free AI service, so don't share personal info. real support: discord <span data-discord-user>001hex</span>.</p>
+</section>
+<div class="dock">
+  <button class="chat-fab glass" id="chatFab" type="button" aria-expanded="false" aria-controls="chat" data-track="chat-open" hidden>
+    <img src="img/logo-badge.png" alt="" width="34" height="34"><span class="chat-fab-t">ask hex</span><i class="chat-dot" aria-hidden="true"></i>
+  </button>
+  <div class="progress glass" aria-hidden="true"><span>scroll down</span><i><b id="progBar"></b></i><span id="progPct">0%</span></div>
+</div>
 
+<script type="module" src="js/liquid.js"></script>
 <script type="module" src="js/glass3d.js"></script>
 <script src="js/app.js" defer></script>
+<script type="module" src="js/chat.js"></script>
 </body>
 </html>

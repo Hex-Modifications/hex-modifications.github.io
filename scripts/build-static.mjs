@@ -4,13 +4,17 @@
 // Backend-only features (contact inbox, admin, live Patreon/Tebex/Shopify) need `node server.js` on a Node host.
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { jsonLd, sitemap, robots, productPage } from '../lib/seo.js';
+import { collectReleases } from '../lib/releases.js';
+import { personaPrompt } from '../public/js/persona.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const SITE_URL = (process.env.SITE_URL || 'https://hexmodifications.github.io').replace(/\/$/, '');
 const read = (n) => JSON.parse(fs.readFileSync(path.join(ROOT, 'data', `${n}.json`), 'utf8'));
+const UA = 'Mozilla/5.0 (compatible; HexModificationsSite/1.0; +https://hex-modifications.github.io)';
 
 fs.rmSync(DIST, { recursive: true, force: true });
 fs.cpSync(path.join(ROOT, 'public'), DIST, {
@@ -27,8 +31,47 @@ for (const n of ['site', 'products', 'roadmap', 'feed', 'showcase']) {
   fs.copyFileSync(path.join(ROOT, 'data', `${n}.json`), path.join(DIST, 'data', `${n}.json`));
 }
 
+// latest releases, fetched fresh every build (the workflow also runs every few hours).
+// A platform that fails this time keeps whatever the live site already shows for it.
+const releases = process.env.SKIP_RELEASES === '1' ? { items: [], status: { skipped: true } } : await collectReleases(site, {
+  manual: read('releases-manual'),
+  githubToken: process.env.GITHUB_TOKEN,
+  patreonToken: process.env.PATREON_ACCESS_TOKEN,
+  patreonCampaign: process.env.PATREON_CAMPAIGN_ID,
+});
+const failed = Object.entries(releases.status).filter(([, v]) => String(v).startsWith('error')).map(([k]) => k);
+if (failed.length) {
+  try {
+    const prev = await (await fetch(`${SITE_URL}/data/releases.json`, { signal: AbortSignal.timeout(10000) })).json();
+    const kept = (prev.items || []).filter((it) => failed.includes(it.platform)).map((it) => ({ ...it, image: it.imageSrc || it.image }));
+    releases.items = [...releases.items, ...kept].sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0)).slice(0, 12);
+  } catch { /* first deploy, or the live site is down: show what we have */ }
+}
+// cover images are saved next to the page, so visitors never load anything from third-party CDNs
+fs.mkdirSync(path.join(DIST, 'img', 'releases'), { recursive: true });
+const EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+await Promise.all(releases.items.map(async (it) => {
+  if (!it.image || !/^https:\/\//.test(it.image)) return;
+  try {
+    const res = await fetch(it.image, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(15000) });
+    const ext = EXT[(res.headers.get('content-type') || '').split(';')[0]];
+    const buf = Buffer.from(await res.arrayBuffer());
+    if (!res.ok || !ext || buf.length > 4e6) return;
+    const name = `${crypto.createHash('sha1').update(it.image).digest('hex').slice(0, 12)}.${ext}`;
+    fs.writeFileSync(path.join(DIST, 'img', 'releases', name), buf);
+    it.imageSrc = it.image; it.image = `img/releases/${name}`;
+  } catch { /* leave the remote URL; the CSP allows https images */ }
+}));
+fs.writeFileSync(path.join(DIST, 'data', 'releases.json'), JSON.stringify(releases));
+// the chat persona, for the optional Cloudflare Worker (workers/chat-worker.js) to read
+fs.writeFileSync(path.join(DIST, 'data', 'persona.json'), JSON.stringify({ prompt: personaPrompt({ site, releases: releases.items, products, roadmap: read('roadmap') }) }));
+console.log('releases:', JSON.stringify(releases.status), `${releases.items.length} items`);
+
 // index: SEO structured data + real URLs + a CSP for hosts that can't send headers
-const csp = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'";
+// the chat talks to Pollinations' free tier, or to the endpoint set in site.json "chat"
+const chatOrigins = ['https://text.pollinations.ai'];
+try { if (site.chat?.endpoint) chatOrigins.push(new URL(site.chat.endpoint).origin); } catch { /* ignore a bad URL */ }
+const csp = `default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' ${chatOrigins.join(' ')}; base-uri 'self'; form-action 'self'; object-src 'none'`;
 let index = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8')
   .replace('<!--SEO_JSONLD-->', `<script type="application/ld+json">${jsonLd(site, products, SITE_URL)}</script>`)
   .replaceAll('__SITE_URL__', SITE_URL)

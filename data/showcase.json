@@ -1,13 +1,13 @@
 {
   "before": "img/tech/vanilla.webp",
-  "note": "technique lab scene, rendered with the same screen-space passes ReShade uses",
+  "note": "clay test scene: grey materials only, so the diagrams show exactly what each pass does to the light. same screen-space maths ReShade runs on the game.",
   "slides": [
     {
       "key": "full",
       "title": "full preset",
       "after": "img/tech/full.webp",
       "buffer": "img/tech/depth_buffer.webp",
-      "text": "every pass below, stacked in order: occlusion, light scattering, bloom, depth of field, then the colour grade. ReShade runs this after the game draws each frame, reading the game's own depth buffer."
+      "text": "every pass stacked in order: occlusion, light scattering, bloom, depth of field, then the grade. ReShade runs this after the game draws each frame, reading the game's own depth buffer."
     },
     {
       "key": "scatter",
@@ -35,14 +35,14 @@
       "title": "bloom",
       "after": "img/tech/bloom.webp",
       "buffer": "img/tech/bloom_buffer.webp",
-      "text": "only light above a brightness threshold is kept: lamps, tail lights and the sun's core. it's blurred at three sizes and added back, the way a real lens glows."
+      "text": "only light above a brightness threshold is kept: the lamps and the sun's core. it's blurred at three sizes and added back, the way a real lens glows."
     },
     {
       "key": "grade",
       "title": "colour grading",
       "after": "img/tech/grade.webp",
       "buffer": "img/tech/grade_buffer.webp",
-      "text": "the HDR frame is tonemapped (ACES), then pushed through a lookup table: indigo shadows, coral highlights and a gentle S-curve. the whole look lives in one small texture."
+      "text": "the HDR frame is tonemapped with the ACES filmic curve, then the look is applied: lifted blacks and a gentle S-curve. the whole grade is one curve from light in to pixel out, which ReShade stores as a small lookup texture."
     }
   ]
 }

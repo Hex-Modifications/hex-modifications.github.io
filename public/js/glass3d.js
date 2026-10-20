@@ -3,6 +3,7 @@
    Lighting follows the timecycle phase. Click the object to swap it.
    three.js r165 (ES module, self-contained build). */
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js';
+import { GLSL as LIQUID_GLSL, liquid } from './liquid.js';
 
 const canvas = document.getElementById('glass');
 const hero = canvas?.parentElement;
@@ -215,26 +216,43 @@ function init() {
   const pmrem = new THREE.PMREMGenerator(renderer);
   let envRT = null;
 
-  /* Backdrop plane: page colour + soft glows, opaque so the glass has something to refract */
-  const bdCanvas = document.createElement('canvas');
-  const bdTex = new THREE.CanvasTexture(bdCanvas); bdTex.colorSpace = THREE.SRGBColorSpace;
-  const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: bdTex, toneMapped: false }));
+  /* Backdrop plane: the page's own liquid light field, evaluated at the same viewport pixels,
+     so the canvas is seamless with the page and the glass refracts what is really behind it */
+  const bdU = {
+    uBg: { value: new THREE.Vector3() }, uC: { value: [0, 1, 2, 3].map(() => new THREE.Vector3()) },
+    uOp: { value: 0.3 }, uTime: { value: 0 }, uView: { value: new THREE.Vector2(1, 1) },
+    uOrigin: { value: new THREE.Vector2() }, uSize: { value: new THREE.Vector2(1, 1) },
+    uGlow: { value: 0 }, uGlowAt: { value: new THREE.Vector2(0.7, 0.5) }, uGlowK: { value: 0.55 },
+  };
+  const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({
+    uniforms: bdU, depthWrite: false, toneMapped: false,
+    vertexShader: 'varying vec2 vNdc; void main(){ vec4 c = projectionMatrix * modelViewMatrix * vec4(position, 1.0); vNdc = c.xy / c.w; gl_Position = c; }',
+    fragmentShader: LIQUID_GLSL + `
+      uniform vec2 uOrigin, uSize, uGlowAt; uniform float uGlow, uGlowK; varying vec2 vNdc;
+      float glowAt(vec2 d, vec2 c, float r) { return clamp(1.0 - length(d - c) / r, 0.0, 1.0); }
+      vec3 toLinear(vec3 c) { return mix(pow(c * 0.9478672986 + 0.0521327014, vec3(2.4)), c * 0.0773993808, vec3(lessThanEqual(c, vec3(0.04045)))); }
+      void main() {
+        vec2 uv = vNdc * 0.5 + 0.5, pd = vec2(uv.x, 1.0 - uv.y);
+        vec3 col = hexLiquid(uOrigin + pd * uSize);
+        if (uGlow > 0.5) {   // refraction only: soft palette glows behind the object, so the glass carries colour
+          vec2 d = (pd - uGlowAt) * uSize / min(uSize.x, uSize.y);
+          col = mix(col, uC[0], uGlowK * glowAt(d, vec2(-0.18, -0.12), 0.42));
+          col = mix(col, uC[2], uGlowK * glowAt(d, vec2(0.2, 0.15), 0.45));
+          col = mix(col, uC[1], uGlowK * 0.9 * glowAt(d, vec2(0.02, -0.02), 0.3));
+          col = mix(col, uC[3], uGlowK * 0.6 * glowAt(d, vec2(-0.25, 0.3), 0.25));
+        }
+        gl_FragColor = vec4(toLinear(col), 1.0);
+        #include <colorspace_fragment>
+      }`,
+  }));
   backdrop.position.z = -6; scene.add(backdrop);
-  const rgba = (hex, a) => { const c = new THREE.Color(hex); return `rgba(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)},${a})`; };
-  let glowAt = { x: 0.7, y: 0.5 };
-  function paintBackdrop() {
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    bdCanvas.width = Math.max(2, Math.round(w * 0.5)); bdCanvas.height = Math.max(2, Math.round(h * 0.5));
-    const g = bdCanvas.getContext('2d'), W = bdCanvas.width, H = bdCanvas.height, R = Math.min(W, H);
-    const night = document.documentElement.dataset.phase === 'night';
-    g.fillStyle = css('--bg', '#E8E7EC'); g.fillRect(0, 0, W, H);
-    const blob = (x, y, r, color, a) => { const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, rgba(color, a)); gr.addColorStop(1, rgba(color, 0)); g.fillStyle = gr; g.fillRect(0, 0, W, H); };
-    const x = glowAt.x * W, y = glowAt.y * H, k = night ? 0.75 : 0.55;
-    blob(x - R * 0.18, y - R * 0.12, R * 0.42, css('--g1', PAL.slate), k);
-    blob(x + R * 0.2, y + R * 0.15, R * 0.45, css('--g3', PAL.coral), k);
-    blob(x + R * 0.02, y - R * 0.02, R * 0.3, css('--g2', PAL.lilac), k * 0.9);
-    blob(x - R * 0.25, y + R * 0.3, R * 0.25, css('--g4', PAL.indigo), k * 0.6);
-    bdTex.needsUpdate = true;
+  // the transmission pass renders into its own target; only there do the extra glows apply
+  backdrop.onBeforeRender = (r) => { bdU.uGlow.value = r.getRenderTarget() ? 1 : 0; };
+  let canvasDocTop = 0, canvasLeft = 0;
+  function syncBackdrop() {
+    bdU.uBg.value.fromArray(liquid.bg); liquid.c.forEach((c, i) => bdU.uC.value[i].fromArray(c));
+    bdU.uOp.value = liquid.op; bdU.uGlowK.value = document.documentElement.dataset.phase === 'night' ? 0.75 : 0.55; bdU.uTime.value = liquid.time(); bdU.uView.value.fromArray(liquid.view);
+    bdU.uOrigin.value.set(canvasLeft, canvasDocTop - scrollY);
   }
 
   const rim = new THREE.PointLight(PAL.coral, 30, 20); rim.position.set(4, -2, 3); scene.add(rim);
@@ -251,7 +269,6 @@ function init() {
     rim.color.set(g3); rim2.color.set(g1);
     renderer.toneMappingExposure = phase === 'night' ? 0.92 : phase === 'dusk' ? 1.0 : 1.04;
     glass.attenuationColor.set(phase === 'night' ? '#E6DDF5' : phase === 'dusk' ? '#F6E6EC' : '#F2ECF7');
-    paintBackdrop();
   }
   document.addEventListener('hex:phase', applyPhase);
 
@@ -296,7 +313,6 @@ function init() {
 
   /* Layout */
   let layout = { x: 0, y: 0, s: 1 };
-  const tmp = new THREE.Vector3();
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;      // canvas only covers the object's side of the hero
     const narrow = hero.clientWidth < 900;
@@ -307,15 +323,18 @@ function init() {
     const bz = camera.position.z - backdrop.position.z;
     const bh = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * bz;
     backdrop.scale.set(bh * camera.aspect * 1.02, bh * 1.02, 1);
-    tmp.set(layout.x, layout.y, 0).project(camera);
-    glowAt = { x: (tmp.x + 1) / 2, y: (1 - tmp.y) / 2 };
-    paintBackdrop();
+    const at = new THREE.Vector3(layout.x, layout.y, 0).project(camera);
+    bdU.uGlowAt.value.set((at.x + 1) / 2, (1 - at.y) / 2);
+    const r = canvas.getBoundingClientRect();
+    canvasLeft = r.left; canvasDocTop = r.top + scrollY; bdU.uSize.value.set(r.width, r.height);
   }
   new ResizeObserver(resize).observe(hero);
 
   /* Interaction */
   const ptr = { x: 0, y: 0 }, cur = { x: 0, y: 0 }, ndc = new THREE.Vector2(), ray = new THREE.Raycaster();
   const hits = (e) => {
+    const at = new THREE.Vector3(layout.x, layout.y, 0).project(camera);
+    bdU.uGlowAt.value.set((at.x + 1) / 2, (1 - at.y) / 2);
     const r = canvas.getBoundingClientRect();
     ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
@@ -392,6 +411,7 @@ function init() {
       );
       o.m.scale.setScalar(layout.s);
     }
+    syncBackdrop();
     renderer.render(scene, camera);
   });
 }

@@ -46,10 +46,31 @@ Everything lives in `data/`. You can edit it from **/admin → Content** (valida
 | `site.json` | Your links (Patreon, Ko-fi, Fiverr, Tebex, Shopify, Discord server invite, YouTube, GitHub, X), `discordUser` (the username visitors copy, currently `001hex`), years scripting, email. The "join the server" button only appears once `links.discord` is a real invite |
 | `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
 | `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
-| `showcase.json` | The technology viewer: one `before` image plus slides (`title`, `after`, `buffer`, `text`). The current images come from the technique lab scene; swap in your own in-game ReShade screenshots any time |
+| `showcase.json` | The technology viewer: one `before` image plus slides (`title`, `after`, `buffer`, `text`). The current images are grey clay diagrams of each pass with technical overlays (sample rays, occlusion vectors, focal plane, blur radii, tone curves) |
 | `feed.json` | Updates section. Hidden while empty; fills automatically once Patreon is connected |
+| `releases-manual.json` | Extra entries for **Latest releases** from sites that block automated reading (LCPDFR). Each entry: `{ "platform": "lcpdfr", "source": "LCPDFR", "title", "url", "image", "description", "date": "2026-10-01" }` |
 
 The store, roadmap and updates start empty and stay hidden (the store shows a "coming soon" card) until you add entries.
+
+## Latest releases
+
+The **fresh drops** section fills itself, newest first, from every platform:
+
+- **GTA5-Mods:** read from your public profile and each file page (cover image, description, upload date, downloads, likes, rating)
+- **FiveM forum:** Discourse JSON API (topics you created; `[INACTIVE]` ones are skipped)
+- **GitHub:** REST API (your own public repos that have a description)
+- **Patreon:** public posts, once `PATREON_ACCESS_TOKEN` and `PATREON_CAMPAIGN_ID` are set (as `.env` values, or as repository secrets for GitHub Pages)
+- **LCPDFR:** its pages sit behind a browser check, so add those by hand in `data/releases-manual.json`
+
+On GitHub Pages the deploy workflow refreshes this **every 6 hours**. Cover images are copied onto the site itself, so visitors never load anything from other servers. If one platform is down during a refresh, it keeps the entries the live site already had. With the Node server it's live at `/api/releases`, cached for 6 hours.
+
+## Chat assistant ("ask hex")
+
+A chat button at the bottom left answers visitors in 001hex's voice. It's built from your own site data (links, releases, store, roadmap) by `public/js/persona.js`, so it stays current automatically. It's told never to invent prices or dates, never to share personal details, and to point people to Discord when it isn't sure.
+
+- **Free, no setup:** it uses Pollinations' keyless free tier. That allows about one AI reply every 30 seconds per visitor, so common questions (support, links, what's new) are answered instantly on the page and the AI handles the rest. When the free tier is busy, the chat waits and retries on its own
+- **Faster, still free:** deploy `workers/chat-worker.js` to Cloudflare Workers AI (steps are at the top of the file), then add `"chat": { "endpoint": "<worker url>" }` to `data/site.json`
+- **With the Node server:** set `CHAT_API_URL` and `CHAT_API_KEY` (any OpenAI-compatible API) and replies go through `/api/chat`, rate-limited and with the key kept off the page
 
 ## Connect your platforms (`.env`)
 
@@ -96,7 +117,11 @@ lib/security.js        headers, CSRF, auth, sanitising
 lib/traffic.js         rate limiting, bans, analytics
 lib/integrations.js    Patreon, Tebex, Shopify, Discord
 lib/seo.js             JSON-LD, sitemap, robots, product pages
-public/                index.html, admin.html, css/, js/ (app.js, glass3d.js, timecycle.js, admin.js), img/
+lib/releases.js        latest releases from GTA5-Mods, FiveM forum, GitHub, Patreon
+public/                index.html, admin.html, css/, js/, img/
+  js/app.js            page logic        js/glass3d.js   3D hero         js/liquid.js   flowing background
+  js/chat.js           ask hex chat      js/persona.js   chat persona    js/timecycle.js time-of-day lighting
+workers/chat-worker.js optional free Cloudflare Workers AI backend for the chat
 brand/                 official Hex Modifications images (transparent, sunset, night) + the script that makes them
 data/                  editable content (JSON)
 ```
