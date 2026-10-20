@@ -187,7 +187,7 @@ function init() {
   const params = new URLSearchParams(location.search);
   const fixedQuality = params.get('quality') === 'high';
   const DPR_CAP = Math.min(devicePixelRatio || 1, 1.5);
-  const DPR_MIN = 0.6;
+  const DPR_MIN = 0.75;
   let dpr = DPR_CAP;
   renderer.setPixelRatio(dpr);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
