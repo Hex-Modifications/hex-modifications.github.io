@@ -23,7 +23,8 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.core.js" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <script src="js/timecycle.js"></script>
@@ -91,8 +92,8 @@
     <div class="tech glass reveal">
       <div class="filters tech-tabs" role="tablist" aria-label="Techniques" id="techTabs"><span class="filter-thumb" aria-hidden="true"></span></div>
       <div class="cmp" id="techCmp">
-        <img class="before" id="techBefore" alt="Untouched frame" src="img/tech/vanilla.webp">
-        <img class="after" id="techAfter" alt="" src="img/tech/full.webp">
+        <img class="before" id="techBefore" alt="Untouched frame" src="img/tech/vanilla.webp" width="1600" height="1000" loading="lazy" decoding="async">
+        <img class="after" id="techAfter" alt="" src="img/tech/full.webp" width="1600" height="1000" loading="lazy" decoding="async">
         <span class="cmp-label l" id="techLabelL">stock</span><span class="cmp-label r" id="techLabelR">reshade</span>
         <div class="cmp-handle"></div><div class="cmp-knob" aria-hidden="true">‹ ›</div>
         <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Compare the stock frame with the processed frame">

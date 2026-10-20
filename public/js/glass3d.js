@@ -2,7 +2,7 @@
    pistol · rifle · sports car · police cruiser · wanted star · heist cash
    Lighting follows the timecycle phase. Click the object to swap it.
    three.js r165 (ES module, self-contained build). */
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js';
 
 const canvas = document.getElementById('glass');
 const hero = canvas?.parentElement;
@@ -31,7 +31,7 @@ function roundedShape(points, radius) {
 
 // Extrude with a deep bevel, then average normals so it reads as one soft, inflated surface.
 function puff(shape, depth, bevel) {
-  const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * 0.85, bevelSegments: 12, curveSegments: 20 });
+  const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel * 0.85, bevelSegments: 8, curveSegments: 12 });
   g.translate(0, 0, -depth / 2);
   return smoothNormals(g);
 }
@@ -59,7 +59,7 @@ const glass = new THREE.MeshPhysicalMaterial({
   clearcoat: 1, clearcoatRoughness: 0.04, specularIntensity: 1, envMapIntensity: 1.3,
   attenuationColor: new THREE.Color('#F2ECF7'), attenuationDistance: 8,
 });
-const gloss = (hex, extra = {}) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0.6, sheenColor: new THREE.Color('#ffffff'), envMapIntensity: 1.1, ...extra });
+const gloss = (hex, extra = {}) => new THREE.MeshPhysicalMaterial({ color: hex, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 1.15, ...extra });
 
 /* ── Models ───────────────────────────────────────── */
 const MODELS = {
@@ -178,9 +178,18 @@ function pickInitial() {
 
 function init() {
   let renderer;
-  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' }); }
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: (devicePixelRatio || 1) < 1.5, powerPreference: 'high-performance' }); }
   catch { document.documentElement.classList.add('no-webgl'); return; }
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  // ── Performance budget ──
+  // The glass refraction pass re-renders the scene every frame; half resolution is visually identical
+  // because the refraction is soft anyway. Resolution then adapts to keep frames under budget.
+  renderer.transmissionResolutionScale = 0.5;
+  const params = new URLSearchParams(location.search);
+  const fixedQuality = params.get('quality') === 'high';
+  const DPR_CAP = Math.min(devicePixelRatio || 1, 1.5);
+  const DPR_MIN = 0.6;
+  let dpr = DPR_CAP;
+  renderer.setPixelRatio(dpr);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
   const scene = new THREE.Scene();
@@ -214,7 +223,7 @@ function init() {
   const rgba = (hex, a) => { const c = new THREE.Color(hex); return `rgba(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)},${a})`; };
   let glowAt = { x: 0.7, y: 0.5 };
   function paintBackdrop() {
-    const w = hero.clientWidth, h = hero.clientHeight;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
     bdCanvas.width = Math.max(2, Math.round(w * 0.5)); bdCanvas.height = Math.max(2, Math.round(h * 0.5));
     const g = bdCanvas.getContext('2d'), W = bdCanvas.width, H = bdCanvas.height, R = Math.min(W, H);
     const night = document.documentElement.dataset.phase === 'night';
@@ -253,7 +262,7 @@ function init() {
     { c: PAL.lilac, r: 0.25, dist: 2.8, speed: 0.45, phase: 4.2, tilt: 0.9 },
     { c: '#ffffff', r: 0.17, dist: 4.0, speed: 0.2, phase: 1.1, tilt: -0.8, chrome: true },
   ].map((d) => {
-    const m = new THREE.Mesh(new THREE.SphereGeometry(d.r, 48, 48), d.chrome
+    const m = new THREE.Mesh(new THREE.SphereGeometry(d.r, 28, 20), d.chrome
       ? new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 1, roughness: 0.05, envMapIntensity: 1.5 })
       : gloss(d.c, { emissive: d.c, emissiveIntensity: 0.12 }));
     scene.add(m); return { m, ...d };
@@ -289,11 +298,12 @@ function init() {
   let layout = { x: 0, y: 0, s: 1 };
   const tmp = new THREE.Vector3();
   function resize() {
-    const w = hero.clientWidth, h = hero.clientHeight;
+    const w = canvas.clientWidth, h = canvas.clientHeight;      // canvas only covers the object's side of the hero
+    const narrow = hero.clientWidth < 900;
     renderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix(); camera.updateMatrixWorld();
     const vh = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z, vw = vh * camera.aspect;
-    layout = w < 900 ? { x: vw * 0.16, y: -vh * 0.1, s: Math.min(0.8, vw / 9) } : { x: vw * 0.22, y: vh * 0.02, s: Math.min(1.2, vh / 9.4) };
+    layout = narrow ? { x: vw * 0.16, y: -vh * 0.1, s: Math.min(0.8, vw / 9) } : { x: vw * 0.04, y: vh * 0.02, s: Math.min(1.2, vh / 9.4, vw / 7.2) };
     const bz = camera.position.z - backdrop.position.z;
     const bh = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * bz;
     backdrop.scale.set(bh * camera.aspect * 1.02, bh * 1.02, 1);
@@ -327,9 +337,27 @@ function init() {
   const clock = new THREE.Clock();
   let t = 0;
   const easeOutBack = (k) => 1 + 2.2 * Math.pow(k - 1, 3) + 1.2 * Math.pow(k - 1, 2);
-  renderer.setAnimationLoop(() => {
+  let lastFrame = 0, sampleT = 0, sampleN = 0, lastAdjust = 0, degraded = false;
+  function adapt(now, frameMs) {
+    if (fixedQuality) return;
+    sampleT += frameMs; sampleN++;
+    if (sampleN < 24 || now - lastAdjust < 1500) return;
+    const avg = sampleT / sampleN; sampleT = 0; sampleN = 0; lastAdjust = now;
+    let next = dpr;
+    if (avg > 21 && dpr > DPR_MIN) next = Math.max(DPR_MIN, dpr - (avg > 40 ? 0.3 : 0.15));
+    else if (avg < 14 && dpr < DPR_CAP) next = Math.min(DPR_CAP, dpr + 0.1);
+    else if (avg > 40 && dpr <= DPR_MIN && !degraded) {      // very weak GPU: drop the priciest optics
+      degraded = true; glass.dispersion = 0; glass.iridescence = 0; glass.needsUpdate = true;
+    }
+    if (next !== dpr) { dpr = next; renderer.setPixelRatio(dpr); resize(); }
+  }
+  renderer.setAnimationLoop((now) => {
+    if (!visible || document.hidden) { clock.getDelta(); return; }
+    if (now - lastFrame < 15.5) return;                       // cap at ~60fps on 120/144Hz screens
+    const frameMs = lastFrame ? now - lastFrame : 16.7;
+    lastFrame = now;
+    adapt(now, frameMs);
     const dt = Math.min(clock.getDelta(), 0.05);
-    if (!visible) return;
     t += dt * timeScale;
     const m = reduced ? 0 : 1;
     cur.x += (ptr.x - cur.x) * 0.05; cur.y += (ptr.y - cur.y) * 0.05;

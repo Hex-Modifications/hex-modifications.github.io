@@ -35,7 +35,7 @@
   --g1: var(--c-slate); --g2: var(--c-lilac); --g3: var(--c-coral); --g4: var(--c-indigo);
   --aura-op: .3;
 
-  --blur: blur(24px) saturate(170%);
+  --blur: blur(16px) saturate(160%);
   --f-body: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
   --f-display: var(--f-body);
   --f-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
@@ -100,11 +100,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* ── Ambient light field ── */
 .aura { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-.aura i { position: absolute; border-radius: 50%; filter: blur(100px); opacity: var(--aura-op); will-change: transform; transition: background-color 1.4s var(--ease), opacity 1.4s; }
-.aura .a1 { width: 46vw; height: 46vw; left: -12vw; top: 40vh; background: var(--g3); animation: drift1 26s var(--ease) infinite alternate; }
-.aura .a2 { width: 40vw; height: 40vw; right: -10vw; top: -8vh; background: var(--g1); animation: drift2 30s var(--ease) infinite alternate; }
-.aura .a3 { width: 34vw; height: 34vw; left: 38vw; top: 70vh; background: var(--g2); animation: drift1 34s var(--ease) infinite alternate-reverse; }
-.aura .a4 { width: 22vw; height: 22vw; right: 18vw; top: 55vh; background: var(--g4); animation: drift2 24s var(--ease) infinite alternate-reverse; }
+.aura i { position: absolute; border-radius: 50%; opacity: var(--aura-op); will-change: transform; transition: opacity 1.4s; background: radial-gradient(closest-side, var(--c) 0%, color-mix(in srgb, var(--c) 55%, transparent) 38%, transparent 100%) !important; }
+.aura .a1 { width: 70vw; height: 70vw; left: -12vw; top: 40vh; --c: var(--g3); }
+.aura .a2 { width: 62vw; height: 62vw; right: -10vw; top: -8vh; --c: var(--g1); }
+.aura .a3 { width: 54vw; height: 54vw; left: 38vw; top: 70vh; --c: var(--g2); }
+.aura .a4 { width: 36vw; height: 36vw; right: 18vw; top: 55vh; --c: var(--g4); }
 @keyframes drift1 { to { transform: translate(14vw, -18vh) scale(1.15); } }
 @keyframes drift2 { to { transform: translate(-16vw, 22vh) scale(.9); } }
 .noise { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: .05; pointer-events: none; mix-blend-mode: multiply; }
@@ -114,8 +114,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .rain { position: fixed; inset: -20% 0 0; z-index: 45; pointer-events: none; opacity: 0; transition: opacity 1.5s;
   background-image: repeating-linear-gradient(105deg, transparent 0 22px, rgba(160,170,210,.35) 22px 23px, transparent 23px 61px),
                     repeating-linear-gradient(100deg, transparent 0 37px, rgba(160,170,210,.22) 37px 38px, transparent 38px 90px);
-  background-size: 100% 240px, 100% 330px; animation: rain .45s linear infinite; }
-.rain.on { opacity: 1; }
+  background-size: 100% 240px, 100% 330px; visibility: hidden; }
+.rain.on { opacity: 1; visibility: visible; animation: rain .45s linear infinite; }
 @keyframes rain { to { background-position: -40px 240px, -50px 330px; } }
 
 /* ── Glass material ── */
@@ -202,7 +202,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ═════════ HERO ═════════ */
 main, .foot { position: relative; z-index: 1; }
 .hero { position: relative; min-height: max(680px, 100svh); padding: 0 var(--gut); display: grid; grid-template-rows: 1fr auto auto; }
-.hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.hero-canvas { position: absolute; top: 0; right: 0; width: 62%; height: 100%; z-index: 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%); mask-image: linear-gradient(90deg, transparent 0, #000 22%); }
+@media (max-width: 900px) { .hero-canvas { width: 100%; -webkit-mask-image: none; mask-image: none; } }
 .hero-canvas.hover { cursor: pointer; }
 .hero-fallback { display: none; position: absolute; right: 6vw; top: 18vh; width: 38vw; aspect-ratio: 1; border-radius: 30%; background: var(--grad); filter: blur(30px); opacity: .45; }
 .no-webgl .hero-fallback { display: block; }

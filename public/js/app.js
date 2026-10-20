@@ -22,12 +22,18 @@
   }
 
   // ── Glass specular follows the pointer ─────────────
+  // (rAF-throttled: one style write per frame at most, instead of one per mouse event)
+  let sheenEvt = null;
   document.addEventListener('pointermove', (e) => {
-    const g = e.target.closest?.('.glass, .glass-dark');
-    if (!g) return;
-    const r = g.getBoundingClientRect();
-    g.style.setProperty('--mx', `${e.clientX - r.left}px`);
-    g.style.setProperty('--my', `${e.clientY - r.top}px`);
+    if (sheenEvt === null) requestAnimationFrame(() => {
+      const ev = sheenEvt; sheenEvt = null;
+      const g = ev.target.closest?.('.glass, .glass-dark');
+      if (!g) return;
+      const r = g.getBoundingClientRect();
+      g.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+      g.style.setProperty('--my', `${ev.clientY - r.top}px`);
+    });
+    sheenEvt = e;
   }, { passive: true });
 
   // ── Toast ──────────────────────────────────────────
@@ -99,11 +105,15 @@
     btn.addEventListener('click', () => { buffer = !buffer; show(); });
     const set = (v) => cmp.style.setProperty('--pos', `${v}%`);
     range.addEventListener('input', () => set(range.value));
+    let pending = null;
     cmp.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse' && !e.buttons) return;
-      const r = cmp.getBoundingClientRect();
-      const v = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
-      range.value = v; set(v);
+      if (pending === null) requestAnimationFrame(() => {
+        const r = cmp.getBoundingClientRect();
+        const v = Math.max(0, Math.min(100, ((pending - r.left) / r.width) * 100));
+        pending = null; range.value = v; set(v);
+      });
+      pending = e.clientX;
     });
     show();
     requestAnimationFrame(() => moveThumb(tabs, $('[aria-selected="true"]', tabs)));
