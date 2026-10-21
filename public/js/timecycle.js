@@ -17,7 +17,15 @@
   try {
     if (root.hasAttribute('data-splash') && !document.hidden && !/[?&]nosplash\b/.test(location.search)
       && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)
-      && !sessionStorage.getItem('hex-intro')) root.classList.add('splash-on');
+      && !sessionStorage.getItem('hex-intro')) {
+      root.classList.add('splash-on');
+      // fetch the intro's two small assets straight away, before the body is even parsed
+      [['media/mark.webp', 'image'], ['media/mark-dots.bin', 'fetch']].forEach(([href, as]) => {
+        const l = document.createElement('link'); l.rel = 'preload'; l.href = href; l.as = as;
+        if (as === 'fetch') l.crossOrigin = 'anonymous';
+        document.head.appendChild(l);
+      });
+    }
   } catch { /* storage blocked: no splash */ }
 
   function apply(phase) {

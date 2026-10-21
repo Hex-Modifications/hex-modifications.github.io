@@ -32,9 +32,14 @@
 </head>
 <body>
 <div class="splash" id="splash" role="progressbar" aria-label="Loading Hex Modifications">
+  <div class="splash-base" aria-hidden="true"></div>
+  <canvas class="splash-gl" aria-hidden="true"></canvas>
   <div class="splash-tint" aria-hidden="true"></div>
-  <video class="splash-video" muted playsinline preload="none" poster="media/intro-poster.webp" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
   <div class="splash-wash" aria-hidden="true"></div>
+  <div class="splash-logo" aria-hidden="true">
+    <img class="splash-mark" src="media/mark.webp" alt="" width="1030" height="1200" loading="lazy" decoding="async">
+    <div class="splash-word"><span class="wm-hex">hex</span><span class="wm-sub">modifications</span></div>
+  </div>
   <div class="splash-load" aria-hidden="true"><div class="splash-meta"><span class="splash-step">initialising</span><span class="splash-pct">0%</span></div><div class="splash-bar"><b></b></div></div>
 </div>
 <audio id="splashAudio" preload="none"><source src="media/intro.m4a" type="audio/mp4"><source src="media/intro-audio.webm" type="audio/webm"></audio>
