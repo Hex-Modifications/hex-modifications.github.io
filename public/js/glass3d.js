@@ -302,6 +302,8 @@ function init() {
   }
   let swap = { t: -1, next: null };
   let pop = 0; // intro scale 0 → 1
+  document.addEventListener('hex:intro-leave', () => { pop = 0; });   // replay the pop as the splash clears
+  let firstFrame = false;
   function requestSwap(name) {
     if (swap.t >= 0) return;
     const i = NAMES.indexOf(holder.userData.name);
@@ -413,9 +415,10 @@ function init() {
     }
     syncBackdrop();
     renderer.render(scene, camera);
+    if (!firstFrame) { firstFrame = true; window.hexHeroReady = true; document.dispatchEvent(new CustomEvent('hex:hero-ready')); }
   });
 }
 
 if (canvas && hero) {
-  try { init(); } catch (err) { console.warn('[glass3d]', err); document.documentElement.classList.add('no-webgl'); }
+  try { init(); } catch (err) { console.warn('[glass3d]', err); document.documentElement.classList.add('no-webgl'); window.hexHeroReady = true; document.dispatchEvent(new CustomEvent('hex:hero-ready')); }
 }

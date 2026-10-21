@@ -12,6 +12,14 @@
     if (PHASES.includes(q)) override = q;
   } catch { /* ignore */ }
 
+  // intro splash (homepage only, marked data-splash): once per browser session; skipped with reduced motion,
+  // data saver, a background tab, or ?nosplash. The class is set here so the page never flashes before it.
+  try {
+    if (root.hasAttribute('data-splash') && !document.hidden && !/[?&]nosplash\b/.test(location.search)
+      && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)
+      && !sessionStorage.getItem('hex-intro')) root.classList.add('splash-on');
+  } catch { /* storage blocked: no splash */ }
+
   function apply(phase) {
     if (root.dataset.phase === phase) return;
     root.dataset.phase = phase;

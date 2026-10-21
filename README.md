@@ -64,6 +64,14 @@ The **fresh drops** section fills itself, newest first, from every platform:
 
 On GitHub Pages the deploy workflow refreshes this **every 6 hours**. Cover images are copied onto the site itself, so visitors never load anything from other servers. If one platform is down during a refresh, it keeps the entries the live site already had. With the Node server it's live at `/api/releases`, cached for 6 hours.
 
+## Intro splash
+
+The Hex Modifications animation (`public/media/intro.mp4`, with a VP9 `.webm` fallback) plays over the homepage while it loads underneath, then the picture blooms into the site's own palette and dissolves into the page. It lasts about 5 seconds: the clip runs at 1.15× and the exit starts just after the wordmark lands. It only holds on the finished logo if the page is still loading, and never runs past 7 seconds.
+
+- **Sound:** `media/intro.m4a` (an Opus `.webm` fallback too), mastered quiet at −24 LUFS and faded out with the picture. Browsers usually block sound until the visitor interacts, so if it's blocked, the first click, tap or key press during the intro starts it in sync
+- **When it shows:** once per browser session, so reloads and navigation don't replay it. It's skipped for reduced-motion users, Data Saver, background tabs and `?nosplash`, and straight away if the video can't start within 1.5 seconds. There's a "skip intro" button and Esc
+- **Replace it:** swap the files in `public/media/`, and adjust the exit point (`4.5`) and speed (`1.15`) in `public/js/splash.js` if the new clip's timing differs
+
 ## Chat assistant ("ask hex")
 
 A chat button at the bottom left answers visitors in 001hex's voice. It's built from your own site data (links, releases, store, roadmap) by `public/js/persona.js`, so it stays current automatically. It's told never to invent prices or dates, never to share personal details, and to point people to Discord when it isn't sure.
@@ -121,6 +129,7 @@ lib/releases.js        latest releases from GTA5-Mods, FiveM forum, GitHub, Patr
 public/                index.html, admin.html, css/, js/, img/
   js/app.js            page logic        js/glass3d.js   3D hero         js/liquid.js   flowing background
   js/chat.js           ask hex chat      js/persona.js   chat persona    js/timecycle.js time-of-day lighting
+  js/splash.js         intro splash      media/          intro video, poster and sound
 workers/chat-worker.js optional free Cloudflare Workers AI backend for the chat
 brand/                 official Hex Modifications images (transparent, sunset, night) + the script that makes them
 data/                  editable content (JSON)

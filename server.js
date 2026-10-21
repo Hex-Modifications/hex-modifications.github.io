@@ -35,7 +35,7 @@ const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
-  '.txt': 'text/plain; charset=utf-8', '.webmanifest': 'application/manifest+json; charset=utf-8', '.xml': 'application/xml; charset=utf-8', '.mp4': 'video/mp4', '.webm': 'video/webm',
+  '.txt': 'text/plain; charset=utf-8', '.webmanifest': 'application/manifest+json; charset=utf-8', '.xml': 'application/xml; charset=utf-8', '.mp4': 'video/mp4', '.webm': 'video/webm', '.m4a': 'audio/mp4',
 };
 const COMPRESSIBLE = /^(text\/|application\/(json|xml|javascript)|image\/svg)/;
 
@@ -102,6 +102,21 @@ async function serveStatic(req, res, pathname) {
   securityHeaders(res, { isHtml });
   const cacheControl = isHtml ? 'no-cache' : 'public, max-age=604800, stale-while-revalidate=86400';
   if (!isHtml && req.headers['if-none-match'] === etag) { res.writeHead(304, { ETag: etag, 'Cache-Control': cacheControl }); res.end(); return true; }
+
+  // audio/video: byte ranges (Safari won't play media without them), streamed, never recompressed
+  if (/^(video|audio)\//.test(type)) {
+    const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+    let start = 0, end = stat.size - 1;
+    if (m) {
+      start = m[1] ? Number(m[1]) : Math.max(0, stat.size - Number(m[2]));
+      end = m[1] && m[2] ? Math.min(Number(m[2]), stat.size - 1) : end;
+      if (start > end || start >= stat.size) { res.writeHead(416, { 'Content-Range': `bytes */${stat.size}` }); res.end(); return true; }
+    }
+    res.writeHead(m ? 206 : 200, { 'Content-Type': type, 'Content-Length': end - start + 1, 'Accept-Ranges': 'bytes', ETag: etag, 'Cache-Control': cacheControl, ...(m ? { 'Content-Range': `bytes ${start}-${end}/${stat.size}` } : {}) });
+    if (req.method === 'HEAD') { res.end(); return true; }
+    fs.createReadStream(file, { start, end }).pipe(res);
+    return true;
+  }
 
   let body = staticCache.get(file)?.etag === etag ? staticCache.get(file).body : await fsp.readFile(file);
   staticCache.set(file, { etag, body });

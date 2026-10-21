@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB" data-phase="day">
+<html lang="en-GB" data-phase="day" data-splash>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -31,6 +31,12 @@
 <!--SEO_JSONLD-->
 </head>
 <body>
+<div class="splash" id="splash">
+  <video class="splash-video" muted playsinline preload="none" poster="media/intro-poster.webp" disablepictureinpicture aria-hidden="true"><source src="media/intro.mp4" type="video/mp4"><source src="media/intro.webm" type="video/webm"></video>
+  <div class="splash-wash" aria-hidden="true"></div>
+  <button class="splash-skip" type="button">skip intro</button>
+</div>
+<audio id="splashAudio" preload="none"><source src="media/intro.m4a" type="audio/mp4"><source src="media/intro-audio.webm" type="audio/webm"></audio>
 <a class="skip" href="#main">Skip to content</a>
 
 <div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
@@ -265,6 +271,7 @@
 
 <script type="module" src="js/liquid.js"></script>
 <script type="module" src="js/glass3d.js"></script>
+<script src="js/splash.js" defer></script>
 <script src="js/app.js" defer></script>
 <script type="module" src="js/chat.js"></script>
 </body>
