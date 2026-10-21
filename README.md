@@ -66,11 +66,14 @@ On GitHub Pages the deploy workflow refreshes this **every 6 hours**. Cover imag
 
 ## Intro splash
 
-The Hex Modifications animation (`public/media/intro.mp4`, with a VP9 `.webm` fallback) plays over the homepage while it loads underneath, then the picture blooms into the site's own palette and dissolves into the page. It lasts about 5 seconds: the clip runs at 1.15× and the exit starts just after the wordmark lands. It only holds on the finished logo if the page is still loading, and never runs past 7 seconds.
+The Hex Modifications animation plays over the homepage while it loads underneath, with a loading bar, then the picture dissolves into the site's own palette and the page settles in. It takes about 5 seconds, only holds on the finished logo if the page is still loading, and never runs past 7.5 seconds.
 
-- **Sound:** `media/intro.m4a` (an Opus `.webm` fallback too), mastered quiet at −24 LUFS and faded out with the picture. Browsers usually block sound until the visitor interacts, so if it's blocked, the first click, tap or key press during the intro starts it in sync
-- **When it shows:** once per browser session, so reloads and navigation don't replay it. It's skipped for reduced-motion users, Data Saver, background tabs and `?nosplash`, and straight away if the video can't start within 1.5 seconds. There's a "skip intro" button and Esc
-- **Replace it:** swap the files in `public/media/`, and adjust the exit point (`4.5`) and speed (`1.15`) in `public/js/splash.js` if the new clip's timing differs
+- **Video:** debanded at 1080p and encoded three ways, with the script picking the best one each device decodes smoothly: AV1 10-bit (1.35 MB, Chrome/Edge/Firefox and newer Apple devices), HEVC 10-bit (2.2 MB, Safari) and H.264 (2.7 MB, everything else). The 10-bit versions keep the dark gradients free of banding
+- **Loading bar:** follows real milestones (site data and release count, the 3D hero's first frame, fonts, assets) mixed with a shuffled, randomly timed set of build steps, so it reads differently every visit
+- **Sound:** `media/intro.m4a` (Opus `.webm` fallback), mastered subtle at −29 LUFS with a soft fade-in, and faded out with the picture. Browsers usually block sound until the visitor interacts, so if it's blocked, the first click, tap or key press starts it in sync
+- **Smoothness:** the exit only animates opacity and transform (GPU-composited). The 3D hero draws a few warm-up frames to compile its shaders, then idles behind the splash, and the background shader pauses until the hand-off
+- **When it shows:** once per browser session. It's skipped for reduced motion, Data Saver, background tabs and `?nosplash`, and straight away if the video can't start within 1.8 seconds. Esc also skips it
+- **Replace it:** swap the files in `public/media/`, and adjust `EXIT_AT` in `public/js/splash.js` if the new clip's timing differs
 
 ## Chat assistant ("ask hex")
 

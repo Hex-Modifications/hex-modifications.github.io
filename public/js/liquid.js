@@ -20,6 +20,7 @@ vec3 hexLiquid(vec2 px) {
   return col;
 }`;
 
+const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const t0 = Math.random() * 400;                     // a different moment of the flow each visit
 
@@ -98,8 +99,9 @@ let last = 0, prev = 0, interval = 50, janks = 0, scrolledAt = 0;
 addEventListener('scroll', () => { scrolledAt = performance.now(); }, { passive: true });
 function loop(now) {
   requestAnimationFrame(loop);
-  const gap = now - prev; prev = now;
+  const gap = prev ? now - prev : 16; prev = now;
   if (gap > 60 && gap < 1000 && !document.hidden) { if (++janks >= 6 && interval < 200) { interval *= 2; janks = 0; } }
+  if (root.classList.contains('splash-on') && !root.classList.contains('splash-leaving')) { prev = 0; return; }   // hidden behind the intro
   if (document.hidden || now - last < interval || (now - scrolledAt < 180 && !from)) return;
   last = now; tween(now); draw();
 }

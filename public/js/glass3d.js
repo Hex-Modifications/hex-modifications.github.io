@@ -302,7 +302,6 @@ function init() {
   }
   let swap = { t: -1, next: null };
   let pop = 0; // intro scale 0 → 1
-  document.addEventListener('hex:intro-leave', () => { pop = 0; });   // replay the pop as the splash clears
   let firstFrame = false;
   function requestSwap(name) {
     if (swap.t >= 0) return;
@@ -372,8 +371,15 @@ function init() {
     }
     if (next !== dpr) { dpr = next; renderer.setPixelRatio(dpr); resize(); }
   }
+  // behind the intro splash: draw a few warm-up frames (compiles every shader), then idle until it clears
+  let warmFrames = 0, introHold = document.documentElement.classList.contains('splash-on');
+  document.addEventListener('hex:intro-leave', () => {
+    introHold = false; pop = 0;                                // replay the pop as the splash clears
+    lastFrame = 0; sampleT = 0; sampleN = 0; lastAdjust = performance.now();   // the pause isn't lag: don't let it cut resolution
+  });
   renderer.setAnimationLoop((now) => {
-    if (!visible || document.hidden) { clock.getDelta(); return; }
+    if (!visible || document.hidden || (introHold && warmFrames >= 3)) { clock.getDelta(); return; }
+    if (introHold) warmFrames++;
     if (now - lastFrame < 15.5) return;                       // cap at ~60fps on 120/144Hz screens
     const frameMs = lastFrame ? now - lastFrame : 16.7;
     lastFrame = now;

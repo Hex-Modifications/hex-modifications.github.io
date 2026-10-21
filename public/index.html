@@ -31,10 +31,11 @@
 <!--SEO_JSONLD-->
 </head>
 <body>
-<div class="splash" id="splash">
-  <video class="splash-video" muted playsinline preload="none" poster="media/intro-poster.webp" disablepictureinpicture aria-hidden="true"><source src="media/intro.mp4" type="video/mp4"><source src="media/intro.webm" type="video/webm"></video>
+<div class="splash" id="splash" role="progressbar" aria-label="Loading Hex Modifications">
+  <div class="splash-tint" aria-hidden="true"></div>
+  <video class="splash-video" muted playsinline preload="none" poster="media/intro-poster.webp" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
   <div class="splash-wash" aria-hidden="true"></div>
-  <button class="splash-skip" type="button">skip intro</button>
+  <div class="splash-load" aria-hidden="true"><div class="splash-meta"><span class="splash-step">initialising</span><span class="splash-pct">0%</span></div><div class="splash-bar"><b></b></div></div>
 </div>
 <audio id="splashAudio" preload="none"><source src="media/intro.m4a" type="audio/mp4"><source src="media/intro-audio.webm" type="audio/webm"></audio>
 <a class="skip" href="#main">Skip to content</a>
