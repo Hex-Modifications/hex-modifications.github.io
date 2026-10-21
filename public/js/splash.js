@@ -18,7 +18,7 @@
   const canvas = $('.splash-gl'), mark = $('.splash-mark'), word = $('.splash-word');
   const bar = $('.splash-bar b'), label = $('.splash-step'), pct = $('.splash-pct');
   const MAX_MS = 7500, REVEAL_MS = 1300;
-  const T = { arrive: 2.55, cross: 2.55, mark: 0.4, word: 2.75, minExit: 3.3 };   // seconds into the intro
+  const T = { arrive: 2.7, cross: 2.75, mark: 0.4, word: 2.95, minExit: 3.45 };   // seconds into the intro
   const CROSS = [0.52, 0.47];                    // centre of the cross within the mark
   const t0 = performance.now();
   const now = () => (performance.now() - t0) / 1000;
@@ -129,51 +129,67 @@
         vec3 rim = mix(vec3(0.91, 0.6, 0.6), vec3(0.64, 0.45, 0.83), 0.5 + 0.5 * sin(ang * 2. + uTime));
         gl_FragColor = vec4(col * keep + rim * ring * 0.55, min(1., keep + ring * 0.25));
       }`);
+    // three stages, like the original: crisp dots appear scattered, gather into a cloud, then flow into
+    // the figure head-first with a stream sweeping in from the lower left
     const pts = compile(`precision highp float;
-      attribute vec2 aStart, aCtrl, aEnd; attribute vec4 aInfo;            // info: radius px@1000, brightness, delay, duration
-      uniform float uTime, uScale, uDpr, uAlpha;
-      varying float vA, vB, vK;
+      attribute vec4 aA;      // scatter.xy, cloud.xy (clip space)
+      attribute vec4 aB;      // curve control.xy, target.xy
+      attribute vec4 aT;      // fade-in, gather start, flow start, flow duration (s)
+      attribute vec2 aI;      // halftone dot radius (px at 1000px mark height), brightness
+      uniform float uTime, uScale, uDpr, uAlpha, uAspect;
+      varying float vA, vB;
+      float sm(float x){ return x * x * (3. - 2. * x); }
       void main(){
-        float k = clamp((uTime - aInfo.z) / aInfo.w, 0., 1.);
-        float e = 1. - pow(1. - k, 3.);                                      // ease out
-        vec2 p = mix(mix(aStart, aCtrl, e), mix(aCtrl, aEnd, e), e);          // curved path
+        float t = uTime, seed = aT.x * 37.1 + aT.y * 11.3;
+        vec2 drift = vec2(sin(t * 0.7 + seed), cos(t * 0.6 + seed * 1.7)) * vec2(0.006 / uAspect, 0.006);
+        vec2 p1 = mix(aA.xy + drift, aA.zw + drift * 0.5, sm(clamp((t - aT.y) / 0.8, 0., 1.)));
+        float k = clamp((t - aT.z) / aT.w, 0., 1.), e = sm(k);
+        vec2 p = mix(mix(p1, aB.xy, e), mix(aB.xy, aB.zw, e), e);
         gl_Position = vec4(p, 0., 1.);
-        gl_PointSize = max(1., aInfo.x * uScale * uDpr * 2. * mix(1.9, 1., e));
-        vA = smoothstep(0., 0.18, k) * mix(0.45, 1., e) * uAlpha; vB = aInfo.y; vK = e;
+        float land = smoothstep(0.7, 1., k), dotPx = aI.x * uScale * uDpr * 2.;
+        gl_PointSize = max(1., mix(min(2.6 * uDpr, dotPx + uDpr), dotPx, land));   // crisp travelling dots, halftone-sized on arrival
+        vA = smoothstep(aT.x, aT.x + 0.4, t) * uAlpha;
+        vB = mix(0.92, aI.y, land);
       }`, `precision highp float;
-      varying float vA, vB, vK;
+      varying float vA, vB;
       void main(){
         float d = length(gl_PointCoord - 0.5) * 2.;
-        float edge = mix(0.35, 0.82, vK);                                     // soft while flying, crisp on arrival
-        float a = (1. - smoothstep(edge, 1., d)) * vA;
-        vec3 c = mix(vec3(0.82, 0.76, 1.), vec3(1.), vK) * vB;
-        gl_FragColor = vec4(c * a, a);
+        float a = (1. - smoothstep(0.62, 1., d)) * vA;
+        gl_FragColor = vec4(vec3(0.95, 0.93, 1.) * vB * a, a);
       }`);
     if (bg && pts) {
       const tri = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, tri); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       const U = (p, n) => gl.getUniformLocation(p, n);
       const bgU = { res: U(bg, 'uRes'), cross: U(bg, 'uCross'), time: U(bg, 'uTime'), flash: U(bg, 'uFlash'), glow: U(bg, 'uGlow'), reveal: U(bg, 'uReveal') };
-      const pU = { time: U(pts, 'uTime'), scale: U(pts, 'uScale'), dpr: U(pts, 'uDpr'), alpha: U(pts, 'uAlpha') };
-      const A = ['aStart', 'aCtrl', 'aEnd', 'aInfo'].map((n) => gl.getAttribLocation(pts, n));
+      const pU = { time: U(pts, 'uTime'), scale: U(pts, 'uScale'), dpr: U(pts, 'uDpr'), alpha: U(pts, 'uAlpha'), aspect: U(pts, 'uAspect') };
+      const A = ['aA', 'aB', 'aT', 'aI'].map((n) => gl.getAttribLocation(pts, n));
       const buf = gl.createBuffer();
       let dots = null, W = 0, H = 0, dpr = 1, rect = null;
 
-      // particles: targets are the mark's real halftone dots; starts and curves are random every visit
+      // particles: targets are the mark's real halftone dots; the scatter, cloud and stream differ every visit
+      const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
       const build = () => {
         if (!dots) return;
         rect = mark.getBoundingClientRect();
-        const n = dots.byteLength / 6, v = new DataView(dots), out = new Float32Array(n * 10);
+        const n = dots.byteLength / 6, v = new DataView(dots), out = new Float32Array(n * 14);
         const toX = (px) => (px / innerWidth) * 2 - 1, toY = (py) => 1 - (py / innerHeight) * 2;
-        const span = Math.max(innerWidth, innerHeight);
+        const mh = rect.height, mcx = rect.left + rect.width * 0.42, mcy = rect.top + mh * 0.36;
+        const sweep = 0.75 + Math.random() * 0.5, tilt = (Math.random() - 0.5) * 0.3;
         for (let i = 0; i < n; i++) {
-          const ex = rect.left + (v.getUint16(i * 6, true) / 65535) * rect.width, ey = rect.top + (v.getUint16(i * 6 + 2, true) / 65535) * rect.height;
-          const ang = Math.random() * Math.PI * 2, dist = span * (0.12 + Math.pow(Math.random(), 0.7) * 0.42);
-          const sx = ex + Math.cos(ang) * dist, sy = ey + Math.sin(ang) * dist * 0.75;
-          const sw = (Math.random() < 0.5 ? -1 : 1) * (0.25 + Math.random() * 0.35);  // swirl
-          const cx = (sx + ex) / 2 - (ey - sy) * sw, cy = (sy + ey) / 2 + (ex - sx) * sw;
-          const fromCross = Math.hypot(ex - (rect.left + CROSS[0] * rect.width), ey - (rect.top + CROSS[1] * rect.height)) / rect.height;
-          const delay = 0.12 + Math.pow(Math.random(), 1.3) * 0.75 + fromCross * 0.35, dur = Math.min(T.arrive - delay, 1.05 + Math.random() * 0.45);
-          out.set([toX(sx), toY(sy), toX(cx), toY(cy), toX(ex), toY(ey), v.getUint8(i * 6 + 4) / 10, 0.55 + 0.45 * (v.getUint8(i * 6 + 5) / 255), delay, dur], i * 10);
+          const xN = v.getUint16(i * 6, true) / 65535, yN = v.getUint16(i * 6 + 2, true) / 65535;
+          const ex = rect.left + xN * rect.width, ey = rect.top + yN * mh;
+          // 1. scattered across the middle of the screen
+          const sx = innerWidth * 0.48 + gauss() * Math.max(innerWidth * 0.19, mh * 0.5), sy = innerHeight * 0.44 + gauss() * Math.max(innerHeight * 0.2, mh * 0.4);
+          // 2. a dense cloud just above the figure's centre
+          const cx = mcx + gauss() * mh * 0.24, cy = mcy + gauss() * mh * 0.17;
+          // 3. flow in head-first; the lower-left of the figure fills last, its dots bowing in from below left
+          const order = 0.68 * yN + 0.32 * (1 - xN);
+          const bow = (0.3 + 0.7 * order) * sweep * (0.6 + Math.random() * 0.6);
+          const kx = (cx + ex) / 2 - mh * 0.34 * bow, ky = (cy + ey) / 2 + mh * (0.2 + tilt) * bow;
+          const fade = Math.pow(Math.random(), 1.3) * 1.0, gather = 0.25 + Math.random() * 0.45;   // sparse at first, filling in
+          const flow = 0.95 + order * 0.95 + Math.random() * 0.12, dur = 0.5 + Math.random() * 0.22;
+          out.set([toX(sx), toY(sy), toX(cx), toY(cy), toX(kx), toY(ky), toX(ex), toY(ey), fade, gather, flow, dur,
+            v.getUint8(i * 6 + 4) / 10, 0.6 + 0.4 * (v.getUint8(i * 6 + 5) / 255)], i * 14);
         }
         count = n;
         gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, out, gl.STATIC_DRAW);
@@ -207,8 +223,8 @@
         gl.useProgram(pts);
         gl.bindBuffer(gl.ARRAY_BUFFER, buf);
         gl.disableVertexAttribArray(0);
-        [2, 2, 2, 4].forEach((size, i) => { if (A[i] < 0) return; gl.enableVertexAttribArray(A[i]); gl.vertexAttribPointer(A[i], size, gl.FLOAT, false, 40, [0, 8, 16, 24][i]); });
-        gl.uniform1f(pU.time, t); gl.uniform1f(pU.scale, r.height / 1000); gl.uniform1f(pU.dpr, dpr);
+        [4, 4, 4, 2].forEach((size, i) => { if (A[i] < 0) return; gl.enableVertexAttribArray(A[i]); gl.vertexAttribPointer(A[i], size, gl.FLOAT, false, 56, i * 16); });
+        gl.uniform1f(pU.time, t); gl.uniform1f(pU.scale, r.height / 1000); gl.uniform1f(pU.dpr, dpr); gl.uniform1f(pU.aspect, innerWidth / innerHeight);
         gl.uniform1f(pU.alpha, 1 - markShown);
         gl.drawArrays(gl.POINTS, 0, count);
       };
