@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { jsonLd, sitemap, robots, productPage } from '../lib/seo.js';
 import { collectReleases } from '../lib/releases.js';
 import { personaPrompt } from '../public/js/persona.js';
-import { buildGta6 } from './build-gta6.mjs';
+import { buildGta6 } from '../gta6hub/build.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
@@ -100,7 +100,8 @@ for (const p of products) {
   fs.writeFileSync(path.join(dir, 'index.html'), productPage(site, p, SITE_URL));
 }
 
-// Leonida Files, the GTA VI hub at /gta6/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
+// GTA 6 Hub, the standalone GTA VI site at /gta6hub/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
+fs.cpSync(path.join(ROOT, 'gta6hub', 'public'), path.join(DIST, 'gta6hub'), { recursive: true });
 const gta6 = await buildGta6({ root: ROOT, dist: DIST, siteUrl: SITE_URL, site, fetchFeed: process.env.SKIP_FEED !== '1' });
 
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, gta6.urls));
