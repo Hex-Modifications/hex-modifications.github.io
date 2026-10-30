@@ -1,6 +1,7 @@
 # Rebuilds the static site and publishes it to the gh-pages branch on every push to main,
 # so editing data/*.json (products, links, roadmap) on GitHub updates the live site.
-# It also runs every 6 hours to pull in new releases from GTA5-Mods, the FiveM forum and GitHub.
+# It also runs every 6 hours to pull in new releases from GTA5-Mods, the FiveM forum and GitHub,
+# and new GTA VI videos from Rockstar's YouTube channel for the Leonida Files hub at /gta6/.
 name: Deploy site
 on:
   push:

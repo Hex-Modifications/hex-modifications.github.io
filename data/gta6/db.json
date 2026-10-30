@@ -1,0 +1,226 @@
+{
+  "updated": "2026-10-30",
+  "game": {
+    "title": "Grand Theft Auto VI",
+    "developer": "Rockstar Games",
+    "publisher": "Rockstar Games (Take-Two Interactive)",
+    "release": "2026-11-19",
+    "platforms": ["PlayStation 5", "Xbox Series X|S"],
+    "pc": "Not announced",
+    "setting": "Vice City and the state of Leonida, a modern-day take on Florida",
+    "protagonists": ["Jason Duval", "Lucia Caminos"],
+    "rating": "Mature: blood and gore, intense violence, mature humour, nudity, strong language, strong sexual content, drug and alcohol use; in-game purchases",
+    "status": "confirmed",
+    "source": "Rockstar Games official GTA VI site"
+  },
+  "editions": [
+    {
+      "slug": "standard-edition",
+      "name": "Standard Edition",
+      "price": "$79.99 (US)",
+      "priceStatus": "reported",
+      "summary": "The base game. Pre-orders made before launch include the Vintage Vice City Pack.",
+      "items": [],
+      "images": ["ultimate-edition-01"],
+      "status": "confirmed",
+      "source": "PlayStation Store listing as reported by Game Informer and others"
+    },
+    {
+      "slug": "ultimate-edition",
+      "name": "Ultimate Edition",
+      "price": "$99.99 (US)",
+      "priceStatus": "reported",
+      "summary": "The base game plus a collection of exclusive vehicles, weapons, shops and outfits woven through Jason and Lucia's story.",
+      "items": ["'95 Grotti Cheetah", "Squalo speedboat", "Vapid off-road buggy", "Vapid Ganado retro build", "\"One-Eyed Willie\" Canis off-roader", "Wyman Car Collection", "Safehouse vehicles", "Hawk & Little Morgan revolvers", "Engraved sidearm variants", "Electric Fang Tattoo", "Rideout Customs", "Sara's Salon", "Stock 305", "PTT store", "Goodtime Gear apparel", "Vice City Style outfits"],
+      "images": ["ultimate-edition-02", "ultimate-edition-grotti-cheetah-01", "ultimate-edition-squalo-01", "ultimate-edition-electric-fang-01"],
+      "status": "confirmed",
+      "source": "Rockstar Games official media pack (Ultimate Edition Benefits)"
+    },
+    {
+      "slug": "vintage-vice-city-pack",
+      "name": "Vintage Vice City Pack (pre-order bonus)",
+      "price": "Included with pre-orders",
+      "priceStatus": "confirmed",
+      "summary": "A retro bonus that harks back to Vice City's neon heyday: a '55 Vapid Stanier, exclusive 80s-style outfits and hairstyles, and a vintage weapon pattern.",
+      "items": ["'55 Vapid Stanier", "Exclusive vintage looks and hairstyles", "Vintage Vice City weapon pattern"],
+      "images": ["vintage-vice-city-pack-01", "vintage-vice-city-pack-vapid-stanier-01", "vintage-vice-city-pack-exclusive-looks-01"],
+      "status": "confirmed",
+      "source": "Rockstar Games official site and media pack (Vintage Vice City Pack)"
+    },
+    {
+      "slug": "vice-city-collection",
+      "name": "The Vice City Collection (collector's box)",
+      "price": "Rockstar Store",
+      "priceStatus": "confirmed",
+      "summary": "A collector's box of physical merchandise sold through the Rockstar Store, separate from the game editions.",
+      "items": [],
+      "images": [],
+      "status": "confirmed",
+      "source": "Rockstar Newswire, 8 October 2026"
+    }
+  ],
+  "characters": [
+    {
+      "slug": "jason-duval", "name": "Jason Duval", "role": "Protagonist", "status": "confirmed",
+      "summary": "One half of the lead duo. Raised around con artists and criminals, Jason joined the Army to escape a rough adolescence, then drifted down to the Keys and back into what he knows: running errands for local drug smugglers.",
+      "facts": ["Playable protagonist", "Army veteran", "Works for drug runners in the Leonida Keys", "Lives rent-free at one of Brian Heder's properties in exchange for help with shakedowns", "Friends with Cal Hampton"],
+      "quote": "Another day in paradise, right?",
+      "images": ["jason-duval-01", "jason-duval-02", "jason-duval-03", "jason-duval-04", "jason-duval-05", "jason-duval-06", "jason-duval-07", "jason-duval-08", "jason-duval-09", "jason-duval-10"]
+    },
+    {
+      "slug": "lucia-caminos", "name": "Lucia Caminos", "role": "Protagonist", "status": "confirmed",
+      "summary": "The other lead. Taught to fight by her father from childhood, Lucia ended up in the Leonida Penitentiary after standing up for her family, and walked out by sheer luck. Now she is done with half-measures and wants the better life her mother dreamed of back in Liberty City.",
+      "facts": ["Playable protagonist", "Recently released from Leonida Penitentiary", "Her family once lived in Liberty City", "Sees a life with Jason as a possible way out"],
+      "quote": "The only thing that matters is who you know and what you got.",
+      "images": ["lucia-caminos-01", "lucia-caminos-02", "lucia-caminos-03", "lucia-caminos-04", "lucia-caminos-05", "lucia-caminos-06", "lucia-caminos-07", "lucia-caminos-08", "lucia-caminos-09", "lucia-caminos-10"]
+    },
+    {
+      "slug": "cal-hampton", "name": "Cal Hampton", "role": "Jason's friend", "status": "confirmed",
+      "summary": "A conspiracy-minded homebody and fellow associate of Brian's. Cal is happiest at home with a few beers, listening in on Coast Guard radio and falling down internet rabbit holes.",
+      "facts": ["Friend of Jason", "Associate of Brian Heder", "Monitors Coast Guard communications"],
+      "quote": "What if everything on the internet was true?",
+      "images": ["cal-hampton-01", "cal-hampton-02", "cal-hampton-03", "cal-hampton-04"]
+    },
+    {
+      "slug": "boobie-ike", "name": "Boobie Ike", "role": "Vice City entrepreneur", "status": "confirmed",
+      "summary": "A Vice City street legend who turned his past into a legitimate-looking empire: property, a strip club and a recording studio. Friendly right up until business comes up.",
+      "facts": ["Owns real estate, a strip club and a recording studio", "Co-runs Only Raw Records with Dre'Quan Priest", "Linked to the Jack of Hearts club"],
+      "quote": "It's all about heart — the Jack of Hearts.",
+      "images": ["boobie-ike-01", "boobie-ike-02", "boobie-ike-03", "boobie-ike-04"]
+    },
+    {
+      "slug": "drequan-priest", "name": "Dre'Quan Priest", "role": "Aspiring music mogul", "status": "confirmed",
+      "summary": "More hustler than gangster, Dre'Quan always saw street dealing as a stepping stone to the music business. He now runs Only Raw Records with Boobie and has just signed the Real Dimez.",
+      "facts": ["Co-runs Only Raw Records", "Signed the Real Dimez", "Books acts into Boobie's strip club"],
+      "quote": "You're with the label now.",
+      "images": ["drequan-priest-01", "drequan-priest-02", "drequan-priest-03", "drequan-priest-04"]
+    },
+    {
+      "slug": "real-dimez", "name": "Real Dimez (Bae-Luxe & Roxy)", "role": "Rap duo", "status": "confirmed",
+      "summary": "High-school friends Bae-Luxe and Roxy went from shaking down local dealers to cashing in with explicit rap tracks and a constant social media presence. An early hit with rapper DWNPLY made them; five turbulent years later they have signed to Only Raw Records chasing a second one.",
+      "facts": ["Members: Bae-Luxe and Roxy", "Earlier hit single with DWNPLY", "Signed to Only Raw Records"],
+      "quote": "One hit away from fame.",
+      "images": ["real-dimez-01", "real-dimez-02", "real-dimez-03", "real-dimez-04"]
+    },
+    {
+      "slug": "raul-bautista", "name": "Raul Bautista", "role": "Veteran bank robber", "status": "confirmed",
+      "summary": "A charming, confident career bank robber always recruiting talent willing to take big risks for big rewards. His recklessness keeps raising the stakes for whoever works with him.",
+      "facts": ["Professional bank robber", "Recruits crews for heists"],
+      "quote": "A professional adapts.",
+      "images": ["raul-bautista-01", "raul-bautista-02", "raul-bautista-03", "raul-bautista-04"]
+    },
+    {
+      "slug": "brian-heder", "name": "Brian Heder", "role": "Old-school smuggler", "status": "confirmed",
+      "summary": "A drug runner from the golden age of smuggling in the Keys, still moving product through his boatyard with his third wife, Lori. These days he lets others do the dirty work, including Jason, who lives at one of his properties.",
+      "facts": ["Runs a boatyard in the Keys", "Married to Lori (third wife)", "Jason's landlord"],
+      "quote": "Nothing better than a Mudslide at sunset.",
+      "images": ["brian-heder-01", "brian-heder-02", "brian-heder-03", "brian-heder-04"]
+    },
+    {
+      "slug": "lori", "name": "Lori", "role": "Brian's wife", "status": "confirmed",
+      "summary": "Brian Heder's third wife, who helps him run the boatyard and is known for her sangria.",
+      "facts": ["Named in Brian Heder's official profile"],
+      "quote": "", "images": []
+    },
+    {
+      "slug": "dwnply", "name": "DWNPLY", "role": "Local rapper", "status": "confirmed",
+      "summary": "A Vice City rapper whose early collaboration with the Real Dimez gave the duo their first hit.",
+      "facts": ["Named in the Real Dimez official profile"],
+      "quote": "", "images": []
+    }
+  ],
+  "cast": {
+    "status": "not announced",
+    "note": "Rockstar has not officially announced any of GTA VI's voice or performance cast. Names circulating online are rumours and are not listed here until Rockstar or the performers confirm them."
+  },
+  "places": [
+    { "slug": "vice-city", "name": "Vice City", "status": "confirmed", "inspiration": "Miami", "summary": "The neon-lit metropolis at the heart of Leonida: beaches, high-rises, nightclubs and Art Deco strips, and the epicentre of Jason and Lucia's story.", "images": ["vice-city-01", "vice-city-02", "vice-city-03", "vice-city-04", "vice-city-05", "vice-city-06", "vice-city-07", "vice-city-08", "vice-city-09", "vice-city-10", "vice-city-11", "vice-city-12"] },
+    { "slug": "leonida-keys", "name": "Leonida Keys", "status": "confirmed", "inspiration": "Florida Keys", "summary": "A chain of islands strung along the southern tip of the state: marinas, boatyards, turquoise water and a long smuggling history. It's where Jason's story begins.", "images": ["leonida-keys-01", "leonida-keys-02", "leonida-keys-03", "leonida-keys-04", "leonida-keys-05", "leonida-keys-06"] },
+    { "slug": "grassrivers", "name": "Grassrivers", "status": "confirmed", "inspiration": "The Everglades", "summary": "Vast wetlands of sawgrass, mangroves and swamp, home to alligators, airboats and the people who prefer to stay off the grid.", "images": ["grassrivers-01", "grassrivers-02", "grassrivers-03", "grassrivers-04", "grassrivers-05", "grassrivers-06"] },
+    { "slug": "port-gellhorn", "name": "Port Gellhorn", "status": "confirmed", "inspiration": "Florida's Gulf / Panhandle coast", "summary": "A faded seaside town on the Gulf coast, with motels, piers and a beach-town nightlife that has seen better days.", "images": ["port-gellhorn-01", "port-gellhorn-02", "port-gellhorn-03", "port-gellhorn-04", "port-gellhorn-05", "port-gellhorn-06"] },
+    { "slug": "ambrosia", "name": "Ambrosia", "status": "confirmed", "inspiration": "Inland Florida", "summary": "An inland industrial and farming region of factories and open roads, with a biker presence shown in official screenshots.", "images": ["ambrosia-01", "ambrosia-02", "ambrosia-03", "ambrosia-04", "ambrosia-05", "ambrosia-06"] },
+    { "slug": "mount-kalaga-national-park", "name": "Mount Kalaga National Park", "status": "confirmed", "inspiration": "", "summary": "Leonida's wild north: forests, cliffs, rivers and trails for anyone heading into the backcountry.", "images": ["mount-kalaga-national-park-01", "mount-kalaga-national-park-02", "mount-kalaga-national-park-03", "mount-kalaga-national-park-04", "mount-kalaga-national-park-05", "mount-kalaga-national-park-06"] }
+  ],
+  "vehicles": [
+    { "slug": "grotti-cheetah-95", "name": "'95 Grotti Cheetah", "brand": "Grotti", "type": "Sports car", "status": "confirmed", "where": "Ultimate Edition", "summary": "A white 90s supercar with red pinstripes and pop-up headlights.", "images": ["ultimate-edition-grotti-cheetah-01", "ultimate-edition-grotti-cheetah-02", "ultimate-edition-grotti-cheetah-03", "ultimate-edition-grotti-cheetah-04"] },
+    { "slug": "vapid-stanier-55", "name": "'55 Vapid Stanier", "brand": "Vapid", "type": "Classic sedan", "status": "confirmed", "where": "Vintage Vice City Pack (pre-order bonus)", "summary": "A two-tone 1950s cruiser with tail fins and whitewall tyres.", "images": ["vintage-vice-city-pack-vapid-stanier-01", "vintage-vice-city-pack-vapid-stanier-02", "vintage-vice-city-pack-vapid-stanier-03", "vintage-vice-city-pack-vapid-stanier-04"] },
+    { "slug": "squalo", "name": "Squalo", "brand": "Shitzu (reported)", "type": "Speedboat", "status": "confirmed", "where": "Ultimate Edition", "summary": "A sleek white speedboat built for cruising the Vice City waterfront and the Keys.", "images": ["ultimate-edition-squalo-01", "ultimate-edition-squalo-02", "ultimate-edition-squalo-03", "ultimate-edition-squalo-04"] },
+    { "slug": "vapid-buggy", "name": "Vapid off-road buggy ('67 Dominator Buggy, reported)", "brand": "Vapid", "type": "Off-roader", "status": "confirmed", "where": "Ultimate Edition", "summary": "A classic 60s muscle car turned into a lifted, mud-spattered off-road racer.", "images": ["ultimate-edition-vapid-buggy-01", "ultimate-edition-vapid-buggy-02", "ultimate-edition-vapid-buggy-03", "ultimate-edition-vapid-buggy-04"] },
+    { "slug": "vapid-ganado-retro", "name": "Vapid Ganado (retro build)", "brand": "Vapid", "type": "Coupe utility", "status": "confirmed", "where": "Ultimate Edition (retro build)", "summary": "A yellow coupe-utility with racing stripes, styled as a retro build.", "images": ["ultimate-edition-vapid-ganado-retro-build-01"] },
+    { "slug": "one-eyed-willie", "name": "\"One-Eyed Willie\" (Canis off-roader)", "brand": "Canis", "type": "Off-roader", "status": "confirmed", "where": "Ultimate Edition", "summary": "A lime-green Canis off-roader with chunky tyres and a light bar.", "images": ["ultimate-edition-one-eyed-willie-01", "ultimate-edition-one-eyed-willie-02", "ultimate-edition-one-eyed-willie-03"] },
+    { "slug": "wyman-car-collection", "name": "Wyman Car Collection", "brand": "Various", "type": "Classic car set", "status": "confirmed", "where": "Ultimate Edition", "summary": "A set of classic cars spanning muscle, off-road and racing styles, including a #36 race car and a stars-and-stripes coupe.", "images": ["ultimate-edition-wyman-car-collection-01", "ultimate-edition-wyman-car-collection-02", "ultimate-edition-wyman-car-collection-03", "ultimate-edition-wyman-car-collection-04", "ultimate-edition-wyman-car-collection-05", "ultimate-edition-wyman-car-collection-06"] },
+    { "slug": "safehouse-vehicles", "name": "Safehouse vehicles (dirt bike, kayak and muscle car)", "brand": "Various (dirt bike reported as Dinka Enduro)", "type": "Bike, boat and car", "status": "confirmed", "where": "Ultimate Edition", "summary": "An olive dirt bike, a kayak and a classic muscle car kept at a stilt-house safehouse on the water.", "images": ["ultimate-edition-safehouse-vehicles-01", "ultimate-edition-safehouse-vehicles-02", "ultimate-edition-safehouse-vehicles-03"] },
+    { "slug": "bravado-banshee", "name": "Bravado Banshee", "brand": "Bravado", "type": "Sports car", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "The long-running GTA roadster, identified by fans in trailer footage.", "images": [] },
+    { "slug": "bravado-buffalo", "name": "Bravado Buffalo", "brand": "Bravado", "type": "Muscle sedan", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "A four-door muscle sedan, including police versions, seen across trailer footage.", "images": [] },
+    { "slug": "bravado-gauntlet", "name": "Bravado Gauntlet", "brand": "Bravado", "type": "Muscle car", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "A modern muscle coupe identified in trailer footage.", "images": [] },
+    { "slug": "bravado-bison", "name": "Bravado Bison", "brand": "Bravado", "type": "Pickup", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "A full-size pickup truck seen on Leonida's roads.", "images": [] },
+    { "slug": "vapid-dominator", "name": "Vapid Dominator", "brand": "Vapid", "type": "Muscle car", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "Vapid's muscle-car line, identified in several trailer shots.", "images": [] },
+    { "slug": "vapid-caracara", "name": "Vapid Caracara", "brand": "Vapid", "type": "Off-road pickup", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "A high-performance off-road pickup.", "images": [] },
+    { "slug": "vapid-sandking", "name": "Vapid Sandking", "brand": "Vapid", "type": "Lifted truck", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "A lifted monster-style pickup, at home in Grassrivers mud.", "images": [] },
+    { "slug": "grotti-furia", "name": "Grotti Furia", "brand": "Grotti", "type": "Supercar", "status": "reported", "where": "Spotted in trailers (fan-identified)", "summary": "A modern supercar identified in Vice City street scenes.", "images": [] }
+  ],
+  "weapons": [
+    { "slug": "hawk-and-little-morgan-revolvers", "name": "Hawk & Little Morgan revolvers", "type": "Revolver", "status": "confirmed", "where": "Ultimate Edition", "summary": "A matched pair of engraved revolvers, one fitted with a scope.", "images": ["ultimate-edition-hawk-and-little-morgan-revolvers-01", "ultimate-edition-hawk-and-little-morgan-revolvers-02"] },
+    { "slug": "engraved-sidearms", "name": "Jason & Lucia's engraved sidearms", "type": "Pistol", "status": "confirmed", "where": "Ultimate Edition (weapon variants)", "summary": "Personalised pistols with decorative engravings and grips. Reported model names: Girardi ES9 (Jason) and Klose K17 (Lucia).", "images": ["ultimate-edition-weapon-variants-01"] },
+    { "slug": "vintage-weapon-pattern", "name": "Vintage Vice City weapon pattern", "type": "Weapon finish", "status": "confirmed", "where": "Vintage Vice City Pack", "summary": "A retro Vice City finish for weapons, included with pre-orders.", "images": ["vintage-vice-city-weapon-pattern-01"] },
+    { "slug": "pump-shotgun", "name": "Pump-action shotgun", "type": "Shotgun", "status": "reported", "where": "Seen in trailers", "summary": "A classic pump shotgun shown in trailer action. The Extended Look's pickup prompt reportedly names a Moreland 850.", "images": [] },
+    { "slug": "carbine-rifle", "name": "Carbine rifle", "type": "Assault rifle", "status": "reported", "where": "Seen in trailers", "summary": "M4-style carbines in a couple of variants. A Duke 556 rifle is reported from the Extended Look.", "images": [] },
+    { "slug": "smg", "name": "Submachine gun", "type": "SMG", "status": "reported", "where": "Seen in trailers", "summary": "A compact automatic weapon seen in heist footage.", "images": [] },
+    { "slug": "sniper-rifle", "name": "Sniper rifle", "type": "Sniper", "status": "reported", "where": "Seen in trailers", "summary": "Two long-range rifle types identified from trailer footage.", "images": [] },
+    { "slug": "grenade-launcher", "name": "Grenade launcher", "type": "Heavy", "status": "reported", "where": "Seen in trailers", "summary": "Returns looking similar to GTA V's.", "images": [] },
+    { "slug": "flashbang", "name": "Flashbang", "type": "Throwable", "status": "reported", "where": "Seen in Trailer 2", "summary": "Reportedly the flashbang's first appearance in a mainline GTA game.", "images": [] },
+    { "slug": "melee", "name": "Melee weapons", "type": "Melee", "status": "reported", "where": "Seen in trailers", "summary": "Baseball bats, golf clubs and hammers have all appeared.", "images": [] }
+  ],
+  "businesses": [
+    { "slug": "only-raw-records", "name": "Only Raw Records", "type": "Record label", "status": "confirmed", "where": "Story", "summary": "Boobie Ike and Dre'Quan Priest's label, now home to the Real Dimez.", "images": ["drequan-priest-02"] },
+    { "slug": "jack-of-hearts", "name": "Jack of Hearts", "type": "Strip club", "status": "confirmed", "where": "Vice City", "summary": "Boobie Ike's club, whose takings help fund the studio.", "images": ["boobie-ike-03"] },
+    { "slug": "electric-fang-tattoo", "name": "Electric Fang Tattoo", "type": "Tattoo parlour", "status": "confirmed", "where": "Ultimate Edition", "summary": "A neon-lit tattoo bar. Reported to carry 50+ designs by the art collective FAILE.", "images": ["ultimate-edition-electric-fang-01", "ultimate-edition-electric-fang-02", "ultimate-edition-electric-fang-03", "ultimate-edition-electric-fang-04"] },
+    { "slug": "rideout-customs", "name": "Rideout Customs", "type": "Custom car shop", "status": "confirmed", "where": "Ultimate Edition", "summary": "A custom shop specialising in lowriders, gold wheels and plush interiors.", "images": ["ultimate-edition-rideout-customs-01", "ultimate-edition-rideout-customs-02", "ultimate-edition-rideout-customs-03"] },
+    { "slug": "saras-salon", "name": "Sara's Salon", "type": "Hair salon", "status": "confirmed", "where": "Ultimate Edition", "summary": "A salon for new hairstyles and looks (reported full name: Sara's Unisex Salon).", "images": ["ultimate-edition-saras-salon-01", "ultimate-edition-saras-salon-02", "ultimate-edition-saras-salon-03"] },
+    { "slug": "stock-305", "name": "Stock 305", "type": "Streetwear store", "status": "confirmed", "where": "Ultimate Edition", "summary": "A graffiti-covered clothing store. The name nods to Miami's 305 area code.", "images": ["ultimate-edition-stock-305-01", "ultimate-edition-stock-305-02", "ultimate-edition-stock-305-03", "ultimate-edition-stock-305-04"] },
+    { "slug": "ptt-store", "name": "PTT store", "type": "Store", "status": "confirmed", "where": "Ultimate Edition", "summary": "A store included with the Ultimate Edition. Full details to come.", "images": ["ultimate-edition-ptt-store-01"] },
+    { "slug": "goodtime-gear", "name": "Goodtime Gear", "type": "Apparel", "status": "confirmed", "where": "Ultimate Edition", "summary": "Vice City souvenir-style tees and caps.", "images": ["ultimate-edition-goodtime-gear-01"] },
+    { "slug": "brians-boatyard", "name": "Brian's boatyard", "type": "Boatyard", "status": "confirmed", "where": "Leonida Keys", "summary": "The yard Brian Heder still uses to move product.", "images": ["brian-heder-01"] }
+  ],
+  "music": {
+    "score": { "title": "Grand Theft Auto VI: Original Score", "artist": "Justice", "release": "2026-12-11", "tracks": 30, "summary": "An adaptive score by Grammy-winning French duo Justice (Gaspard Augé and Xavier de Rosnay) that shifts with how you play. Out on streaming, CD and vinyl.", "singles": ["Flower in a Hurricane (ft. Tame Impala, SZA, King Gizzard & The Lizard Wizard)", "Pusher (ft. Gesaffelstein)"] },
+    "album": { "title": "Grand Theft Auto VI: The Album", "release": "2026-11-19", "tracks": 34, "summary": "Thirty-four original tracks from a genre-hopping roster of artists, released alongside the game.", "singles": ["That's It (feat. Future & Metro Boomin) — Yung Lean", "RHYNO — Travis Scott", "Sexy Magic — CA7RIEL & Paco Amoroso, PinkPantheress, Fred again.. & Etienne de Crécy", "Flower in a Hurricane — Justice", "Last Thing You Need — Morgan Wallen", "Suzuki — Fuerza Regida", "Macacoa 2000 — Rauw Alejandro", "Don't Chart — Cardi B", "Bright Lights, Big City — Keith Richards"] },
+    "radio": [
+      { "genre": "Modern Latin", "hosts": "El Martillo & La Gata" },
+      { "genre": "Renegade country", "hosts": "MW & Delta Dawne" },
+      { "genre": "Amapiano, African classics & 3-step", "hosts": "Burna & Palmsy" },
+      { "genre": "Metal", "hosts": "DJ Kerry & DJ Tom" },
+      { "genre": "Pop", "hosts": "Robyn & Alex" },
+      { "genre": "Southern rap & hip-hop", "hosts": "Trick & Trina" }
+    ],
+    "status": "confirmed", "source": "Rockstar Games official GTA VI music page"
+  },
+  "videos": [
+    { "slug": "launch-trailer", "title": "Launch Trailer", "youtube": "rz1B4B2yBZY", "date": "2026-10-15", "summary": "The final trailer before release, reaffirming the November 19 launch." },
+    { "slug": "extended-look", "title": "An Extended Look", "youtube": "tJbzMqJGH4k", "date": "2026-08-27", "summary": "A long-form look at the game that premiered on Netflix before arriving on YouTube." },
+    { "slug": "cover-art-reveal", "title": "Official Cover Art Reveal", "youtube": "INjHGpMRjRA", "date": "2026-06-18", "summary": "The reveal of GTA VI's official cover art." },
+    { "slug": "trailer-2", "title": "Trailer 2", "youtube": "VQRLujxTm3c", "date": "2025-05-06", "summary": "Captured entirely in-game on PlayStation 5, introducing much of the supporting cast." },
+    { "slug": "trailer-1", "title": "Trailer 1", "youtube": "QdBZY2fkU-0", "date": "2023-12-04", "summary": "The first reveal: Lucia, Jason and Vice City, set to Tom Petty's \"Love Is a Long Road\"." }
+  ],
+  "news": [
+    { "date": "2026-10-29", "title": "Justice confirmed for the GTA VI original score", "summary": "Rockstar confirmed Justice are scoring GTA VI. The 30-track score album arrives December 11, with Flower in a Hurricane and Pusher out now.", "source": "Rockstar Newswire" },
+    { "date": "2026-10-15", "title": "GTA VI Launch Trailer released", "summary": "The launch trailer is out, ahead of the November 19 release on PS5 and Xbox Series X|S.", "source": "Rockstar Newswire", "video": "rz1B4B2yBZY" },
+    { "date": "2026-10-08", "title": "The Vice City Collection lands at the Rockstar Store", "summary": "A collector's box and GTA VI merchandise are now available from the Rockstar Store.", "source": "Rockstar Newswire" },
+    { "date": "2026-08-27", "title": "An Extended Look premieres", "summary": "Rockstar's extended gameplay look premiered on Netflix, then arrived on YouTube.", "source": "Rockstar Games YouTube", "video": "tJbzMqJGH4k" },
+    { "date": "2026-06-24", "title": "Price and Ultimate Edition revealed", "summary": "The Standard Edition was listed at $79.99 and the Ultimate Edition at $99.99 in the US, with the Vintage Vice City Pack for pre-orders. Physical copies reportedly come as a code in a box.", "source": "Game Informer" },
+    { "date": "2026-06-18", "title": "Official cover art revealed", "summary": "Rockstar revealed GTA VI's official cover art.", "source": "Rockstar Games YouTube", "video": "INjHGpMRjRA" }
+  ],
+  "faq": [
+    { "q": "When does GTA 6 come out?", "a": "Grand Theft Auto VI releases on November 19, 2026." },
+    { "q": "What platforms is GTA 6 on?", "a": "PlayStation 5 and Xbox Series X|S. Rockstar's site says it plays best on PlayStation 5." },
+    { "q": "Is GTA 6 coming to PC?", "a": "Rockstar hasn't announced a PC version or date yet. Previous GTA games reached PC after their console launch." },
+    { "q": "How much does GTA 6 cost?", "a": "In the US it's reported at $79.99 for the Standard Edition and $99.99 for the Ultimate Edition." },
+    { "q": "Who are the main characters in GTA 6?", "a": "Two protagonists: Jason Duval and Lucia Caminos." },
+    { "q": "Where is GTA 6 set?", "a": "In Vice City and the wider state of Leonida, inspired by modern-day Florida. Rockstar has named six regions: Vice City, Leonida Keys, Grassrivers, Port Gellhorn, Ambrosia and Mount Kalaga National Park." },
+    { "q": "What is the GTA 6 pre-order bonus?", "a": "The Vintage Vice City Pack: a '55 Vapid Stanier, exclusive vintage outfits and hairstyles, and a weapon pattern." },
+    { "q": "What's in the GTA 6 Ultimate Edition?", "a": "Exclusive vehicles (including the '95 Grotti Cheetah and the Squalo speedboat), weapons such as the Hawk & Little Morgan revolvers, shops including Electric Fang Tattoo and Rideout Customs, and outfits." },
+    { "q": "Who voices Jason and Lucia?", "a": "Rockstar hasn't officially announced the cast. We'll add names once they're confirmed." },
+    { "q": "Who made the GTA 6 soundtrack?", "a": "The original score is by Justice (out December 11), and Grand Theft Auto VI: The Album (34 tracks) releases November 19 with artists including Travis Scott, Cardi B, Morgan Wallen and Rauw Alejandro." },
+    { "q": "Is this site official?", "a": "No. Leonida Files is an unofficial fan database by Hex Modifications, and isn't affiliated with Rockstar Games or Take-Two Interactive." }
+  ]
+}

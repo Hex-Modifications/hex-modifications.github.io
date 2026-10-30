@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { jsonLd, sitemap, robots, productPage } from '../lib/seo.js';
 import { collectReleases } from '../lib/releases.js';
 import { personaPrompt } from '../public/js/persona.js';
+import { buildGta6 } from './build-gta6.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
@@ -99,7 +100,10 @@ for (const p of products) {
   fs.writeFileSync(path.join(dir, 'index.html'), productPage(site, p, SITE_URL));
 }
 
-fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL));
+// Leonida Files, the GTA VI hub at /gta6/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
+const gta6 = await buildGta6({ root: ROOT, dist: DIST, siteUrl: SITE_URL, site, fetchFeed: process.env.SKIP_FEED !== '1' });
+
+fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, gta6.urls));
 fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disallow: /admin\n', '').replace('Disallow: /api/\n', ''));
 
 // "wasted" 404
@@ -108,4 +112,4 @@ fs.writeFileSync(path.join(DIST, '404.html'), `<!doctype html><html lang="en-GB"
 fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
 if (SITE_URL === `https://${domain}`) fs.writeFileSync(path.join(DIST, 'CNAME'), `${domain}\n`);
 if (adsClient) fs.writeFileSync(path.join(DIST, 'ads.txt'), `google.com, ${adsClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
-console.log(`Static site built in dist/ for ${SITE_URL} (${products.length} product pages)`);
+console.log(`Static site built in dist/ for ${SITE_URL} (${products.length} product pages, ${gta6.urls.length} GTA VI pages)`);
