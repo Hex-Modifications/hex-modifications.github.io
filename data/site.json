@@ -81,6 +81,13 @@
       "client": "",
       "slot": ""
     },
-    "sponsored": []
+    "sponsored": [],
+    "aads": {
+      "unit": ""
+    },
+    "adsterra": {
+      "native": "",
+      "host": ""
+    }
   }
 }

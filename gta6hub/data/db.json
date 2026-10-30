@@ -38,7 +38,7 @@
       "name": "Ultimate Edition",
       "price": "$99.99 (US)",
       "priceStatus": "reported",
-      "summary": "The base game plus a collection of exclusive vehicles, weapons, shops and outfits woven through Jason and Lucia's story.",
+      "summary": "The base game plus a collection of exclusive vehicles, weapons, shops and outfits woven through Jason and Lucia's story. Reportedly digital only.",
       "items": [
         "'95 Grotti Cheetah",
         "Squalo speedboat",
@@ -71,9 +71,10 @@
       "name": "Vintage Vice City Pack",
       "price": "Free pre-order bonus",
       "priceStatus": "confirmed",
-      "summary": "A retro bonus that harks back to Vice City's neon heyday: a '55 Vapid Stanier, exclusive 80s-style outfits and hairstyles, and a vintage weapon pattern.",
+      "summary": "A retro bonus that harks back to Vice City's neon heyday: a '55 Vapid Stanier, exclusive 80s-style outfits and hairstyles, and a vintage weapon pattern. Reportedly free with every pre-order and every digital purchase made before November 20, 2026.",
       "items": [
         "'55 Vapid Stanier",
+        "Shore Court garage near Ocean Beach (reported)",
         "Exclusive vintage looks and hairstyles",
         "Vintage Vice City weapon pattern"
       ],
@@ -320,6 +321,84 @@
       ],
       "quote": "",
       "images": []
+    },
+    {
+      "slug": "raymond",
+      "name": "Raymond",
+      "role": "Drug house boss",
+      "status": "reported",
+      "summary": "Appears to run a drug house in the Extended Look, with a partner who has got himself into trouble.",
+      "facts": [
+        "Named in dialogue in Rockstar's Extended Look (August 2026); no official bio yet"
+      ],
+      "quote": "",
+      "images": [],
+      "source": "Press and fan roundups of the Extended Look"
+    },
+    {
+      "slug": "ernesto",
+      "name": "Ernesto (\"Nesto\")",
+      "role": "Associate",
+      "status": "reported",
+      "summary": "Heard on the phone with Raymond, who calls him Nesto; the two seem to work together.",
+      "facts": [
+        "Named in dialogue in Rockstar's Extended Look (August 2026); no official bio yet"
+      ],
+      "quote": "",
+      "images": [],
+      "source": "Press and fan roundups of the Extended Look"
+    },
+    {
+      "slug": "mendez",
+      "name": "Mendez",
+      "role": "Police officer",
+      "status": "reported",
+      "summary": "The name finally attached to the crooked cop seen in the trailers.",
+      "facts": [
+        "Named in dialogue in Rockstar's Extended Look (August 2026); no official bio yet"
+      ],
+      "quote": "",
+      "images": [],
+      "source": "Press and fan roundups of the Extended Look"
+    },
+    {
+      "slug": "val",
+      "name": "Val",
+      "role": "Unknown",
+      "status": "reported",
+      "summary": "Named in dialogue in the Extended Look.",
+      "facts": [
+        "Named in dialogue in Rockstar's Extended Look (August 2026); no official bio yet"
+      ],
+      "quote": "",
+      "images": [],
+      "source": "Press and fan roundups of the Extended Look"
+    },
+    {
+      "slug": "andres-de-leon",
+      "name": "Andrés de León",
+      "role": "Unknown",
+      "status": "reported",
+      "summary": "Named in dialogue in the Extended Look.",
+      "facts": [
+        "Named in dialogue in Rockstar's Extended Look (August 2026); no official bio yet"
+      ],
+      "quote": "",
+      "images": [],
+      "source": "Press and fan roundups of the Extended Look"
+    },
+    {
+      "slug": "petra-navarro",
+      "name": "Petra Navarro",
+      "role": "COO of Megamundo",
+      "status": "reported",
+      "summary": "Named as the chief operating officer of Megamundo, a fictional Leonida company.",
+      "facts": [
+        "Named in dialogue in Rockstar's Extended Look (August 2026); no official bio yet"
+      ],
+      "quote": "",
+      "images": [],
+      "source": "Press and fan roundups of the Extended Look"
     }
   ],
   "cast": {
@@ -553,7 +632,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "The long-running GTA roadster, identified by fans in trailer footage.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "bravado-buffalo",
@@ -563,7 +643,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "A four-door muscle sedan, including police versions, seen across trailer footage.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "bravado-gauntlet",
@@ -573,7 +654,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "A modern muscle coupe identified in trailer footage.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "bravado-bison",
@@ -583,7 +665,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "A full-size pickup truck seen on Leonida's roads.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "vapid-dominator",
@@ -593,7 +676,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "Vapid's muscle-car line, identified in several trailer shots.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "vapid-caracara",
@@ -603,7 +687,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "A high-performance off-road pickup.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "vapid-sandking",
@@ -613,7 +698,8 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "A lifted monster-style pickup, at home in Grassrivers mud.",
-      "images": []
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
     },
     {
       "slug": "grotti-furia",
@@ -623,6 +709,907 @@
       "status": "reported",
       "where": "Spotted in trailers (fan-identified)",
       "summary": "A modern supercar identified in Vice City street scenes.",
+      "images": [],
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel"
+    },
+    {
+      "slug": "pegassi-zorrusso",
+      "name": "Pegassi Zorrusso",
+      "brand": "Pegassi",
+      "type": "Supercar",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Modelled on the Italdesign Zerouno. Seen on the Vice City freeway in Trailer 1 with Lucia standing out of the passenger seat. Returns from GTA Online.",
+      "inspiration": "Modelled on the Italdesign Zerouno",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "pegassi-tempesta",
+      "name": "Pegassi Tempesta",
+      "brand": "Pegassi",
+      "type": "Supercar",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Lamborghini Huracán-style. Returns from GTA Online.",
+      "inspiration": "Lamborghini Huracán-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "invetero-coquette-d10",
+      "name": "Invetero Coquette D10",
+      "brand": "Invetero",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Corvette C8-style. A modern mid-engined sports car returning from GTA Online.",
+      "inspiration": "Corvette C8-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "grotti-cheetah-classic",
+      "name": "Grotti Cheetah Classic",
+      "brand": "Grotti",
+      "type": "Sports classic",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Ferrari Testarossa-style. Spotted in a Trailer 1 street scene. Rockstar hasn't said whether it's the same car as the Ultimate Edition's '95 Grotti Cheetah.",
+      "inspiration": "Ferrari Testarossa-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "grotti-carbonizzare",
+      "name": "Grotti Carbonizzare",
+      "brand": "Grotti",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Ferrari California-style convertible. Returns from GTA V.",
+      "inspiration": "Ferrari California-style convertible",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "pfister-comet",
+      "name": "Pfister Comet",
+      "brand": "Pfister",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Porsche 911-style. A series regular; Comet Retro Custom and Comet S2 Cabrio variants have been catalogued.",
+      "inspiration": "Porsche 911-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "karin-sultan",
+      "name": "Karin Sultan",
+      "brand": "Karin",
+      "type": "Sports sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Subaru Impreza / Mitsubishi Lancer-style four-door. Returns from GTA V.",
+      "inspiration": "Subaru Impreza / Mitsubishi Lancer-style four-door",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "pegassi-infernus-classic",
+      "name": "Pegassi Infernus Classic",
+      "brand": "Pegassi",
+      "type": "Sports classic",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Lamborghini Diablo-style. A sports classic identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Lamborghini Diablo-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "grotti-itali-gto",
+      "name": "Grotti Itali GTO",
+      "brand": "Grotti",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Ferrari 812-style. A sports car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Ferrari 812-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "annis-elegy-retro-custom",
+      "name": "Annis Elegy Retro Custom",
+      "brand": "Annis",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Nissan Skyline R32-style. A sports car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Nissan Skyline R32-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "bermacht-cypher",
+      "name": "Übermacht Cypher",
+      "brand": "Übermacht",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "BMW M2-style. A sports car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "BMW M2-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "bermacht-sentinel-classic-convertible",
+      "name": "Übermacht Sentinel Classic Convertible",
+      "brand": "Übermacht",
+      "type": "Sports classic",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "BMW E30 M3-style convertible. A sports classic identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "BMW E30 M3-style convertible",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "obey-8f-drafter",
+      "name": "Obey 8F Drafter",
+      "brand": "Obey",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A sports car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "ocelot-jugular",
+      "name": "Ocelot Jugular",
+      "brand": "Ocelot",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Jaguar XE SV-style. A sports car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Jaguar XE SV-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "enus-paragon-r",
+      "name": "Enus Paragon R",
+      "brand": "Enus",
+      "type": "Sports car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Bentley Continental GT-style. A sports car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Bentley Continental GT-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "dinka-sugoi",
+      "name": "Dinka Sugoi",
+      "brand": "Dinka",
+      "type": "Sports compact",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Honda Civic Type R-style. A sports compact identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Honda Civic Type R-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "dinka-blista-compact",
+      "name": "Dinka Blista Compact",
+      "brand": "Dinka",
+      "type": "Compact",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Honda CR-X-style. A compact identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Honda CR-X-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "benefactor-schafter",
+      "name": "Benefactor Schafter",
+      "brand": "Benefactor",
+      "type": "Sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Mercedes S-Class-style. Returns from GTA V.",
+      "inspiration": "Mercedes S-Class-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "maibatsu-penumbra",
+      "name": "Maibatsu Penumbra",
+      "brand": "Maibatsu",
+      "type": "Coupe",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Mitsubishi Eclipse-style. Returns from GTA V.",
+      "inspiration": "Mitsubishi Eclipse-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "albany-eldorado",
+      "name": "Albany Eldorado",
+      "brand": "Albany",
+      "type": "Classic convertible",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "1959 Cadillac Eldorado-style. A classic convertible identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "1959 Cadillac Eldorado-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "albany-buccaneer",
+      "name": "Albany Buccaneer",
+      "brand": "Albany",
+      "type": "Muscle car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Buick Riviera-style. A muscle car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Buick Riviera-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "imponte-phoenix",
+      "name": "Imponte Phoenix",
+      "brand": "Imponte",
+      "type": "Muscle car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Pontiac Trans Am-style. A muscle car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Pontiac Trans Am-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "imponte-ruiner",
+      "name": "Imponte Ruiner",
+      "brand": "Imponte",
+      "type": "Muscle car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Pontiac Firebird-style. A muscle car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Pontiac Firebird-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "declasse-impaler",
+      "name": "Declasse Impaler",
+      "brand": "Declasse",
+      "type": "Muscle car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Chevrolet Impala-style. A muscle car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Chevrolet Impala-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "declasse-vigero-zx-convertible",
+      "name": "Declasse Vigero ZX Convertible",
+      "brand": "Declasse",
+      "type": "Muscle car",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Chevrolet Camaro-style convertible. A muscle car identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Chevrolet Camaro-style convertible",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "albany-primo",
+      "name": "Albany Primo",
+      "brand": "Albany",
+      "type": "Sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A sedan identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "albany-emperor",
+      "name": "Albany Emperor",
+      "brand": "Albany",
+      "type": "Sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Buick Roadmaster-style. A sedan identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Buick Roadmaster-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "karin-asterope-gz",
+      "name": "Karin Asterope GZ",
+      "brand": "Karin",
+      "type": "Sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Toyota Camry-style. A sedan identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Toyota Camry-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "karin-intruder",
+      "name": "Karin Intruder",
+      "brand": "Karin",
+      "type": "Sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A sedan identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "obey-tailgater",
+      "name": "Obey Tailgater",
+      "brand": "Obey",
+      "type": "Sedan",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Audi A6-style. A sedan identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Audi A6-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "vapid-taxi",
+      "name": "Vapid Taxi",
+      "brand": "Vapid",
+      "type": "Service",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A service identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "declasse-granger",
+      "name": "Declasse Granger",
+      "brand": "Declasse",
+      "type": "SUV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Chevrolet Suburban-style. Returns from GTA V, plus the Granger 3600LX.",
+      "inspiration": "Chevrolet Suburban-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "canis-kamacho",
+      "name": "Canis Kamacho",
+      "brand": "Canis",
+      "type": "Off-roader",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Jeep Gladiator-style. A off-roader identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Jeep Gladiator-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "canis-mesa",
+      "name": "Canis Mesa",
+      "brand": "Canis",
+      "type": "Off-roader",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Jeep Wrangler-style. A off-roader identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Jeep Wrangler-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "karin-rebel",
+      "name": "Karin Rebel",
+      "brand": "Karin",
+      "type": "Pickup",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Toyota Hilux-style. A pickup identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Toyota Hilux-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "vapid-aleutian",
+      "name": "Vapid Aleutian",
+      "brand": "Vapid",
+      "type": "SUV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A suv identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "declasse-rancher",
+      "name": "Declasse Rancher",
+      "brand": "Declasse",
+      "type": "Pickup",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Chevrolet Blazer-style. A pickup identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Chevrolet Blazer-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "declasse-walton-l35",
+      "name": "Declasse Walton L35",
+      "brand": "Declasse",
+      "type": "Pickup",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A pickup identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "nagasaki-blazer",
+      "name": "Nagasaki Blazer",
+      "brand": "Nagasaki",
+      "type": "ATV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Quad bike. A atv identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Quad bike",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "nagasaki-outlaw",
+      "name": "Nagasaki Outlaw",
+      "brand": "Nagasaki",
+      "type": "Off-road buggy",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Side-by-side UTV. A off-road buggy identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Side-by-side UTV",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "gallivanter-baller",
+      "name": "Gallivanter Baller",
+      "brand": "Gallivanter",
+      "type": "SUV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Range Rover-style. A suv identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Range Rover-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "benefactor-dubsta",
+      "name": "Benefactor Dubsta",
+      "brand": "Benefactor",
+      "type": "SUV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Mercedes G-Class-style. A suv identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Mercedes G-Class-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "dundreary-landstalker-xl",
+      "name": "Dundreary Landstalker XL",
+      "brand": "Dundreary",
+      "type": "SUV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Lincoln Navigator-style. A suv identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Lincoln Navigator-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "pfister-astron",
+      "name": "Pfister Astron",
+      "brand": "Pfister",
+      "type": "SUV",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A suv identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "declasse-burrito",
+      "name": "Declasse Burrito",
+      "brand": "Declasse",
+      "type": "Van",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Chevrolet Express-style. A van identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Chevrolet Express-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "vapid-speedo",
+      "name": "Vapid Speedo",
+      "brand": "Vapid",
+      "type": "Van",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Ford Econoline-style. A van identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Ford Econoline-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "brute-boxville",
+      "name": "Brute Boxville",
+      "brand": "Brute",
+      "type": "Truck",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Step van. A truck identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Step van",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "speedophile-seashark",
+      "name": "Speedophile Seashark",
+      "brand": "Speedophile",
+      "type": "Jet ski",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Seen on the shore in Trailer 1's beach scene; jet skis are playable in the Extended Look.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "crest-kayak",
+      "name": "Crest Kayak",
+      "brand": "Crest",
+      "type": "Kayak",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A kayak was shown on the water in the Extended Look.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "airboat",
+      "name": "Airboat",
+      "brand": "—",
+      "type": "Airboat",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Airboats gliding through the swamp were shown in the Extended Look.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "dinka-marquis",
+      "name": "Dinka Marquis",
+      "brand": "Dinka",
+      "type": "Sailboat",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Luxury yacht. A sailboat identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Luxury yacht",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "maibatsu-sanchez",
+      "name": "Maibatsu Sanchez",
+      "brand": "Maibatsu",
+      "type": "Dirt bike",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Dirt-bike events appeared in the Extended Look.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "maibatsu-manchez",
+      "name": "Maibatsu Manchez",
+      "brand": "Maibatsu",
+      "type": "Dirt bike",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A dirt bike identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "principe-alvino-v1",
+      "name": "Principe Alvino V1",
+      "brand": "Principe",
+      "type": "Sport bike",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A sport bike identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "nagasaki-carbon-rs",
+      "name": "Nagasaki Carbon RS",
+      "brand": "Nagasaki",
+      "type": "Sport bike",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A sport bike identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "dinka-double-t",
+      "name": "Dinka Double T",
+      "brand": "Dinka",
+      "type": "Sport bike",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A sport bike identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "western-sovereign",
+      "name": "Western Sovereign",
+      "brand": "Western Motorcycle Company",
+      "type": "Touring bike",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A touring bike identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "western-zombie-chopper",
+      "name": "Western Zombie Chopper",
+      "brand": "Western Motorcycle Company",
+      "type": "Chopper",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A chopper identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "lcc-avarus",
+      "name": "LCC Avarus",
+      "brand": "Liberty City Cycles",
+      "type": "Chopper",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A chopper identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "bmx",
+      "name": "BMX",
+      "brand": "—",
+      "type": "Bicycle",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A bicycle identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "e-scooter",
+      "name": "E-scooter",
+      "brand": "—",
+      "type": "Scooter",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "E-scooters appeared in the Extended Look.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "buckingham-maverick",
+      "name": "Buckingham Maverick",
+      "brand": "Buckingham",
+      "type": "Helicopter",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Helicopters chase the player in the Extended Look.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "buckingham-swift",
+      "name": "Buckingham Swift",
+      "brand": "Buckingham",
+      "type": "Helicopter",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A helicopter identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "buckingham-supervolito",
+      "name": "Buckingham SuperVolito",
+      "brand": "Buckingham",
+      "type": "Helicopter",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A helicopter identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "buckingham-nimbus",
+      "name": "Buckingham Nimbus",
+      "brand": "Buckingham",
+      "type": "Private jet",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A private jet identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "buckingham-shamal",
+      "name": "Buckingham Shamal",
+      "brand": "Buckingham",
+      "type": "Private jet",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A private jet identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "nagasaki-buzzard",
+      "name": "Nagasaki Buzzard",
+      "brand": "Nagasaki",
+      "type": "Helicopter",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A helicopter identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "mammoth-dodo",
+      "name": "Mammoth Dodo",
+      "brand": "Mammoth",
+      "type": "Seaplane",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A seaplane flies over the Keys in an official screenshot.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "western-duster",
+      "name": "Western Duster",
+      "brand": "Western",
+      "type": "Crop duster",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A crop duster identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "jobuilt-mammatus",
+      "name": "Jobuilt Mammatus",
+      "brand": "Jobuilt",
+      "type": "Light aircraft",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A light aircraft identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "police-buffalo-stx",
+      "name": "Police Buffalo STX",
+      "brand": "Bravado",
+      "type": "Police",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Dodge Charger police-style. The police pursuit version of the Buffalo STX.",
+      "inspiration": "Dodge Charger police-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "vapid-police-cruiser",
+      "name": "Vapid Police Cruiser",
+      "brand": "Vapid",
+      "type": "Police",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Ford Police Interceptor-style. A police identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Ford Police Interceptor-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "bravado-gauntlet-interceptor",
+      "name": "Bravado Gauntlet Interceptor",
+      "brand": "Bravado",
+      "type": "Police",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "Dodge Challenger police-style. A police identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "Dodge Challenger police-style",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "police-maverick",
+      "name": "Police Maverick",
+      "brand": "Buckingham",
+      "type": "Police helicopter",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A police helicopter identified by fans in Rockstar's official GTA VI footage.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
+      "images": []
+    },
+    {
+      "slug": "coast-guard-boat",
+      "name": "Coast Guard boat",
+      "brand": "—",
+      "type": "Boat",
+      "status": "reported",
+      "where": "Spotted in official footage",
+      "summary": "A Coast Guard vessel has been catalogued, fitting Cal's habit of listening in on Coast Guard comms.",
+      "inspiration": "",
+      "source": "Fan identification in official trailers and screenshots, catalogued by GTA Intel",
       "images": []
     }
   ],
@@ -913,9 +1900,43 @@
           "artist": "Justice ft. Gesaffelstein",
           "type": "album",
           "id": "6T1v6phBadT4WrAHWaybkZ"
+        },
+        {
+          "song": "That's It",
+          "artist": "Yung Lean ft. Future & Metro Boomin",
+          "type": "track",
+          "id": "45TB2WNxWu2X4MmqmCAJnF"
+        },
+        {
+          "song": "Don't Chart",
+          "artist": "Cardi B",
+          "type": "track",
+          "id": "4NaBitL0J4PBSODIL1sUg7"
+        },
+        {
+          "song": "Last Thing You Need",
+          "artist": "Morgan Wallen",
+          "type": "track",
+          "id": "5qGziX9216V8hKJjGg8RtH"
         }
       ]
-    }
+    },
+    "trailers": [
+      {
+        "trailer": "Trailer 2",
+        "song": "Hot Together",
+        "artist": "The Pointer Sisters",
+        "spotify": "2KWhl75cqqKWEqTIHv1Zsd",
+        "video": "VQRLujxTm3c"
+      },
+      {
+        "trailer": "Trailer 1",
+        "song": "Love Is a Long Road",
+        "artist": "Tom Petty",
+        "spotify": "",
+        "video": "QdBZY2fkU-0"
+      }
+    ]
   },
   "videos": [
     {
@@ -1051,7 +2072,10 @@
     "store": "https://store.rockstargames.com/",
     "playstation": "https://www.playstation.com/en-us/games/grand-theft-auto-vi/",
     "youtube": "https://www.youtube.com/@RockstarGames",
-    "spotify": "https://open.spotify.com/artist/15o7qdDTBzs6xWRUYUtZc1"
+    "spotify": "https://open.spotify.com/artist/15o7qdDTBzs6xWRUYUtZc1",
+    "gtadb": "https://gtadb.org",
+    "communityMap": "https://map.stateofleonida.net",
+    "gtadbMap": "https://leonida.gtadb.org"
   },
   "timeline": [
     {
@@ -1265,6 +2289,61 @@
         "status": "confirmed",
         "text": "Where Lucia served time. Location not yet known."
       }
+    ]
+  },
+  "gameplay": {
+    "source": "Rockstar's Extended Look (August 27, 2026) and the accompanying Newswire post",
+    "features": [
+      [
+        "Two protagonists",
+        "Swap between Jason and Lucia with a selection wheel (solo Jason, solo Lucia, or both together), with an instant swap when they're side by side.",
+        "confirmed"
+      ],
+      [
+        "Six-star wanted level",
+        "Shaking a six-star wanted level can mean ditching or torching the car and switching vehicles.",
+        "confirmed"
+      ],
+      [
+        "Stealing cars",
+        "Two ways to take a car: a loud physical struggle, or quietly with a slim jim.",
+        "confirmed"
+      ],
+      [
+        "Handling tuned by racers",
+        "Rockstar says real race drivers helped tune the driving; upgrades change performance and handling, not just looks.",
+        "confirmed"
+      ],
+      [
+        "Racing",
+        "Circuit racing, dirt-bike and off-road events were shown.",
+        "confirmed"
+      ],
+      [
+        "Vehicle combat",
+        "Shooting out police tyres and firing at pursuing helicopters.",
+        "confirmed"
+      ],
+      [
+        "Land, sea and air",
+        "Airboats, jet skis, kayaks, e-scooters, snorkelling and scuba diving, and skydiving over Vice City.",
+        "confirmed"
+      ],
+      [
+        "Convertible roofs",
+        "A convertible lowering its roof on the move anchors the \"go for a drive\" set-piece.",
+        "confirmed"
+      ],
+      [
+        "Single-player",
+        "Rockstar's pre-order materials describe a single-player experience; no online mode has been announced.",
+        "reported"
+      ],
+      [
+        "Social feeds",
+        "The Real Dimez's rise plays out on in-game social media feeds.",
+        "reported"
+      ]
     ]
   }
 }

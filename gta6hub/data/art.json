@@ -1,0 +1,578 @@
+[
+ {
+  "slug": "ambrosia-postcard",
+  "title": "Ambrosia postcard",
+  "kind": "place",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "boobie-ike",
+  "title": "Boobie Ike",
+  "kind": "character",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "brian-heder",
+  "title": "Brian Heder",
+  "kind": "character",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "cal-hampton",
+  "title": "Cal Hampton",
+  "kind": "character",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "drequan-priest",
+  "title": "Dre'Quan Priest",
+  "kind": "character",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "grassrivers-postcard",
+  "title": "Grassrivers postcard",
+  "kind": "place",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-01",
+  "title": "Jason and Lucia",
+  "kind": "pair",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-01-logo",
+  "title": "Jason and Lucia (with logo)",
+  "kind": "pair",
+  "logo": true,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-02",
+  "title": "Jason and Lucia II",
+  "kind": "pair",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-02-logo",
+  "title": "Jason and Lucia II (with logo)",
+  "kind": "pair",
+  "logo": true,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-beach",
+  "title": "Jason and Lucia: Beach",
+  "kind": "pair",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-beach-logo",
+  "title": "Jason and Lucia: Beach (with logo)",
+  "kind": "pair",
+  "logo": true,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-lock-and-load",
+  "title": "Jason and Lucia: Lock and Load",
+  "kind": "pair",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-lock-and-load-logo",
+  "title": "Jason and Lucia: Lock and Load (with logo)",
+  "kind": "pair",
+  "logo": true,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-robbery",
+  "title": "Jason and Lucia: Robbery",
+  "kind": "pair",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-and-lucia-robbery-logo",
+  "title": "Jason and Lucia: Robbery (with logo)",
+  "kind": "pair",
+  "logo": true,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "jason-lucia-motel",
+  "title": "Jason and Lucia: Motel",
+  "kind": "pair",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "leonida-keys-postcard",
+  "title": "Leonida Keys postcard",
+  "kind": "place",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "mount-kalaga-national-park-postcard",
+  "title": "Mount Kalaga National Park postcard",
+  "kind": "place",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "official-cover-art",
+  "title": "Official Cover Art",
+  "kind": "cover",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "port-gellhorn-postcard",
+  "title": "Port Gellhorn postcard",
+  "kind": "place",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "raul-bautista",
+  "title": "Raul Bautista",
+  "kind": "character",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "real-dimez",
+  "title": "Real Dimez",
+  "kind": "character",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "the-album-cover-art",
+  "title": "GTA VI: The Album cover",
+  "kind": "cover",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ]
+  }
+ },
+ {
+  "slug": "vice-city-postcard",
+  "title": "Vice City postcard",
+  "kind": "place",
+  "logo": false,
+  "v": {
+   "landscape": [
+    1920,
+    1080
+   ],
+   "portrait": [
+    1000,
+    1778
+   ],
+   "square": [
+    1080,
+    1080
+   ],
+   "ultrawide": [
+    2560,
+    1080
+   ]
+  }
+ }
+]
