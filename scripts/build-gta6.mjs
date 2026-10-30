@@ -171,7 +171,6 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
 </head>
 <body${section ? ` data-section="${section}"` : ''}>
 <a class="lf-skip" href="#main">Skip to content</a>
-<div class="lf-ticker" role="note" aria-label="Disclaimer"><div class="lf-ticker-track">${'<span>Unofficial fan site · not affiliated with Rockstar Games or Take-Two</span><span>Grand Theft Auto VI · 19 November 2026 · PS5 &amp; Xbox Series X|S</span><span>Updated daily · every fact labelled confirmed or reported</span>'.repeat(2)}</div></div>
 <header class="lf-head">
   <a class="lf-brand" href="${BASE}/" aria-label="Leonida Files home">
     <span class="lf-sunmark" aria-hidden="true"></span>

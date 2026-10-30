@@ -35,12 +35,6 @@ a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visibl
 .lf-skip { position: absolute; left: 12px; top: -60px; z-index: 200; background: var(--ink); color: var(--night); padding: 10px 14px; font-weight: 600; }
 .lf-skip:focus { top: 12px; }
 
-/* ── ticker ── */
-.lf-ticker { background: #000; border-bottom: 1px solid var(--line); overflow: hidden; font: 600 11px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-.lf-ticker-track { display: flex; width: max-content; animation: lf-tick 50s linear infinite; }
-.lf-ticker span { padding: 9px 28px; white-space: nowrap; }
-.lf-ticker span::before { content: '◆'; color: var(--pink); margin-right: 28px; font-size: 8px; vertical-align: 1px; }
-@keyframes lf-tick { to { transform: translateX(-50%); } }
 
 /* ── header ── */
 .lf-head {
