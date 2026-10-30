@@ -45,7 +45,7 @@ const SECTIONS = {
 const MENU = [
   ['Explore', [['map', 'Map'], ['locations', 'Real-life locations'], ['places', 'Regions'], ['characters', 'Characters'], ['vehicles', 'Vehicles'], ['weapons', 'Weapons'], ['businesses', 'Businesses']]],
   ['Watch & listen', [['trailers', 'Trailers'], ['music', 'Music & radio'], ['artwork', 'Artwork & covers'], ['gallery', 'Screenshots']]],
-  ['Guides', [['news', 'News'], ['timeline', 'Timeline'], ['gameplay', 'Gameplay'], ['editions', 'Pre-order guide'], ['faq', 'FAQ'], ['about', 'About']]],
+  ['Guides', [['news', 'News'], ['leaks', 'Leaks & rumours'], ['timeline', 'Timeline'], ['gameplay', 'Gameplay'], ['editions', 'Pre-order guide'], ['faq', 'FAQ'], ['about', 'About']]],
 ];
 
 export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = true, log = console.log }) {
@@ -102,7 +102,9 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
   const ogArt = (slug) => `${siteUrl}${BASE}/art/${slug}-landscape.webp`;
   const badge = (status) => (status === 'confirmed'
     ? '<span class="lf-badge lf-ok" title="Confirmed by Rockstar Games">Confirmed</span>'
+    : status === 'rumour' ? '<span class="lf-badge lf-rum" title="Rumour, leak or fan theory: treat with caution">Rumour</span>'
     : '<span class="lf-badge lf-rep" title="From press, store listings or fans identifying it in official footage; not confirmed by Rockstar">Reported</span>');
+  const castFor = (slug) => db.cast.rumoured.filter((r) => r.character === slug);
   const credit = `<p class="lf-credit">Artwork and screenshots © Rockstar Games, from the ${ext(L.media, 'official GTA VI media pack')}.</p>`;
   const charArt = { 'boobie-ike': 'boobie-ike', 'brian-heder': 'brian-heder', 'cal-hampton': 'cal-hampton', 'drequan-priest': 'drequan-priest', 'raul-bautista': 'raul-bautista', 'real-dimez': 'real-dimez', 'jason-duval': 'jason-and-lucia-lock-and-load', 'lucia-caminos': 'jason-and-lucia-02' };
   const placeArt = (slug) => (artBy[`${slug}-postcard`] ? `${slug}-postcard` : '');
@@ -274,7 +276,7 @@ ${adSlot('foot')}
     if (sec === 'characters' && charArt[e.slug] && e.status === 'confirmed' && !e.slug.startsWith('jason') && !e.slug.startsWith('lucia')) return artImg(charArt[e.slug], 'portrait', { alt: `${e.name}: official GTA VI artwork`, sizes: '(min-width: 1100px) 25vw, 50vw' });
     if (sec === 'places' && placeArt(e.slug)) return artImg(placeArt(e.slug), 'landscape', { alt: `${e.name} postcard: official GTA VI artwork`, sizes: '(min-width: 1100px) 33vw, 100vw' });
     if (e.images?.[0]) return img(e.images[0]);
-    return `<span class="lf-ph"><span>${esc(e.type || SECTIONS[sec].one)}</span></span>`;
+    return `<span class="lf-ph"><span>${sec === 'characters' ? '?' : esc(e.type || SECTIONS[sec].one)}</span></span>`;
   }
   function card(sec, e) {
     const meta = sec === 'characters' ? e.role : sec === 'places' ? (e.inspiration ? `Inspired by ${e.inspiration}` : 'Region of Leonida') : [e.brand !== '—' ? e.brand : '', e.type].filter(Boolean).join(' · ');
@@ -286,13 +288,13 @@ ${adSlot('foot')}
   }
   function grid(sec, list, { filter = false, adEvery = 0, types = false } = {}) {
     const items = list.map((e, i) => card(sec, e) + (adEvery && (i + 1) % adEvery === 0 && i < list.length - 1 ? adSlot('infeed') : ''));
-    const counts = { confirmed: list.filter((e) => e.status === 'confirmed').length, reported: list.filter((e) => e.status !== 'confirmed').length };
+    const counts = { confirmed: list.filter((e) => e.status === 'confirmed').length, reported: list.filter((e) => e.status === 'reported').length, rumour: list.filter((e) => e.status === 'rumour').length };
     const typeList = types ? [...new Set(list.map((e) => e.type).filter(Boolean))] : [];
     const group = (t) => (/police|helicopter|jet|aircraft|seaplane|duster|airliner/i.test(t) ? 'Air & emergency' : /boat|ski|kayak|sail|yacht|airboat/i.test(t) ? 'Boats' : /bike|chopper|scooter|bicycle|atv|bmx/i.test(t) ? 'Bikes' : /suv|pickup|truck|van|off-road|buggy|utility/i.test(t) ? 'Trucks & off-road' : /sedan|service|compact|coupe/i.test(t) ? 'Sedans & coupes' : /muscle/i.test(t) ? 'Muscle' : 'Sports & super');
     const groups = types ? [...new Set(typeList.map(group))] : [];
     const bar = filter ? `<div class="lf-tools" data-filter-for="g-${sec}">
       <label class="lf-search"><span class="lf-sr">Search ${SECTIONS[sec].label.toLowerCase()}</span><input type="search" placeholder="Search ${plural(list.length, SECTIONS[sec].one)}" autocomplete="off" data-filter-q></label>
-      <div class="lf-chips" role="group" aria-label="Filter by status"><button type="button" aria-pressed="true" data-filter-s="all">All <b>${list.length}</b></button><button type="button" aria-pressed="false" data-filter-s="confirmed">Confirmed <b>${counts.confirmed}</b></button>${counts.reported ? `<button type="button" aria-pressed="false" data-filter-s="reported">Reported <b>${counts.reported}</b></button>` : ''}</div>
+      <div class="lf-chips" role="group" aria-label="Filter by status"><button type="button" aria-pressed="true" data-filter-s="all">All <b>${list.length}</b></button><button type="button" aria-pressed="false" data-filter-s="confirmed">Confirmed <b>${counts.confirmed}</b></button>${counts.reported ? `<button type="button" aria-pressed="false" data-filter-s="reported">Reported <b>${counts.reported}</b></button>` : ''}${counts.rumour ? `<button type="button" aria-pressed="false" data-filter-s="rumour">Rumours <b>${counts.rumour}</b></button>` : ''}</div>
       ${groups.length > 1 ? `<div class="lf-chips lf-chips-types" role="group" aria-label="Filter by type"><button type="button" aria-pressed="true" data-filter-g="">Every type</button>${groups.map((g) => `<button type="button" aria-pressed="false" data-filter-g="${esc(slugify(g))}">${esc(g)}</button>`).join('')}</div>` : ''}
     </div>` : '';
     const tagged = types ? items.map((h, i) => h.replace('<a class="lf-card"', `<a class="lf-card" data-group="${esc(slugify(group(list[i]?.type || '')))}"`)) : items;
@@ -316,7 +318,7 @@ ${adSlot('foot')}
   const areaSlug = (a) => slugify(a);
   const areas = [...landmarks.reduce((m, l) => m.set(l.area, [...(m.get(l.area) || []), l]), new Map())].sort((a, b) => b[1].length - a[1].length);
   const gmaps = (l) => `https://www.google.com/maps/search/?api=1&query=${l.lat},${l.lng}`;
-  const lmRow = (l) => `<li class="lf-lm" data-q="${esc(`${l.name} ${l.district} ${l.area} ${l.real}`.toLowerCase())}"><div><b>${esc(l.name)}</b><span>${esc([l.street, l.district, l.area].filter(Boolean).join(', '))}</span></div><div class="lf-lm-real"><i>Real life</i><span>${esc(l.real.split(',')[0])}</span><em>${esc(l.real.split(',').slice(1, 3).join(',').trim())}</em></div><div class="lf-lm-act"><a href="${BASE}/map/#lm-${esc(l.id)}">Map</a>${ext(gmaps(l), 'Real place ↗')}</div></li>`;
+  const lmRow = (l) => `<li class="lf-lm${l.u ? ' is-u' : ''}" data-q="${esc(`${l.name} ${l.district} ${l.area} ${l.real}`.toLowerCase())}"><div><b>${esc(l.name)}${l.u ? ' <em class="lf-utag">unconfirmed</em>' : ''}</b><span>${esc([l.street, l.district, l.area].filter(Boolean).join(', '))}</span></div><div class="lf-lm-real"><i>Real life</i><span>${esc(l.real.split(',')[0])}</span><em>${esc(l.real.split(',').slice(1, 3).join(',').trim())}</em></div><div class="lf-lm-act"><a href="${BASE}/map/#lm-${esc(l.id)}">Map</a>${ext(gmaps(l), 'Real place ↗')}</div></li>`;
 
   // ── projection for the map (same maths as the Natural Earth export) ──
   const project = (lng, lat) => [+((lng - geo.proj.w) * geo.proj.c * geo.proj.k).toFixed(1), +((geo.proj.n - lat) * geo.proj.k).toFixed(1)];
@@ -366,7 +368,7 @@ ${adSlot('foot')}
 <section class="lf-intro">
   <h2 class="lf-pinkhead">Vice City, USA.</h2>
   <p>Jason and Lucia have always known the deck is stacked against them. When an easy score goes wrong, they end up on the darkest side of the sunniest place in America, caught in a criminal conspiracy that stretches across the state of Leonida.</p>
-  <nav class="lf-quick" aria-label="Jump to">${[['map', `Map · ${landmarks.length + db.map.pois.length} places`], ['characters', `${db.characters.length} characters`], ['vehicles', `${db.vehicles.length} vehicles`], ['artwork', `${art.length} artworks`], ['gallery', `${images.length} screenshots`], ['music', 'Soundtrack'], ['timeline', 'Timeline']].map(([s, l]) => `<a href="${BASE}/${s}/">${l}</a>`).join('')}</nav>
+  <nav class="lf-quick" aria-label="Jump to">${[['map', `Map · ${landmarks.length + db.map.pois.length} places`], ['characters', `${db.characters.length} characters`], ['leaks', 'Leaks & rumours'], ['vehicles', `${db.vehicles.length} vehicles`], ['artwork', `${art.length} artworks`], ['gallery', `${images.length} screenshots`], ['music', 'Soundtrack'], ['timeline', 'Timeline']].map(([s, l]) => `<a href="${BASE}/${s}/">${l}</a>`).join('')}</nav>
 </section>
 ${adSlot('leader')}
 ${characterFeature(jason, 'jason-duval-04', 'If anything happens, I\'m right behind you.', 'jason-and-lucia-lock-and-load', false)}
@@ -429,9 +431,10 @@ ${credit}`,
   // ═════════════ database sections ═════════════
   const listHero = { characters: ['jason-and-lucia-robbery', 'ultrawide'], places: ['leonida-keys-postcard', 'ultrawide'], vehicles: ['jason-and-lucia-01', 'ultrawide'], weapons: ['jason-and-lucia-lock-and-load', 'ultrawide'], businesses: ['boobie-ike', 'ultrawide'] };
   for (const [sec, cfg] of Object.entries(SECTIONS)) {
-    const list = sec === 'vehicles' ? [...db[sec]].sort((a, b) => (a.status === b.status ? 0 : a.status === 'confirmed' ? -1 : 1)) : db[sec];
+    const rank = { confirmed: 0, reported: 1, rumour: 2 };
+    const list = [...db[sec]].sort((a, b) => rank[a.status] - rank[b.status]);
     const extra = sec === 'characters'
-      ? `<aside class="lf-note"><b>Voice cast:</b> ${esc(db.cast.note)}</aside>`
+      ? `<section class="lf-cast" aria-labelledby="cast-h"><h2 class="lf-h3" id="cast-h">Voice cast (rumoured)</h2><p class="lf-src">${esc(db.cast.note)}</p><div class="lf-castgrid">${db.cast.rumoured.map((r) => `<a class="lf-castcard" href="${BASE}/characters/${r.character}/">${badge(r.status)}<b>${esc(r.actor)}</b><i>as ${esc(r.name)}</i><span>${esc(r.detail)}</span></a>`).join('')}</div><p class="lf-src">Denied: ${db.cast.denied.map(([n, t]) => `<b>${esc(n)}</b> (${esc(t)})`).join('; ')}. ${more(`${BASE}/leaks/`, 'Leaks &amp; rumours')}</p></section>`
       : sec === 'places' ? `<aside class="lf-note"><b>Want street-level detail?</b> <a href="${BASE}/map/">Open the interactive map</a> or browse <a href="${BASE}/locations/">${landmarks.length} real-life locations</a>.</aside>`
       : sec === 'vehicles' ? `<aside class="lf-note"><b>${db.vehicles.filter((v) => v.status === 'confirmed').length} confirmed by Rockstar, ${db.vehicles.filter((v) => v.status !== 'confirmed').length} identified by fans</b> in Rockstar's trailers and screenshots. Rockstar hasn't published a full vehicle list.</aside>` : '';
     const [hs, hv] = listHero[sec];
@@ -448,9 +451,10 @@ ${credit}`,
       const others = list.filter((o) => o !== e && o.status === e.status).slice(0, 6);
       const src = sourceLink(sec, e);
       const rows = [
-        ['Status', e.status === 'confirmed' ? 'Confirmed by Rockstar Games' : 'Reported, not confirmed by Rockstar'],
+        ['Status', e.status === 'confirmed' ? 'Confirmed by Rockstar Games' : e.status === 'rumour' ? 'Rumour or fan theory, unconfirmed' : 'Reported, not confirmed by Rockstar'],
         ...(e.aka ? [[sec === 'characters' ? 'Members' : 'Details', e.aka]] : []),
-        ...(e.role ? [['Role', e.role]] : []), ...(e.brand && e.brand !== '—' ? [['Manufacturer', e.brand]] : []), ...(e.type ? [['Type', e.type]] : []),
+        ...(e.role ? [['Role', e.role]] : []),
+        ...(sec === 'characters' ? castFor(e.slug).map((r) => [r.status === 'reported' ? 'Voice actor (reported)' : 'Voice actor (rumoured)', `${r.actor}: ${r.detail}`]) : []), ...(e.brand && e.brand !== '—' ? [['Manufacturer', e.brand]] : []), ...(e.type ? [['Type', e.type]] : []),
         ...(sec === 'vehicles' && e.inspiration ? [['Based on', `${e.inspiration} (fan comparison)`]] : []),
         ...(e.where ? [['Where it appears', e.where]] : []), ...(sec === 'places' && e.inspiration ? [['Real-world inspiration', `${e.inspiration} (fan consensus)`]] : []),
       ];
@@ -460,8 +464,9 @@ ${credit}`,
       const lines = (e.lines || []).filter((l) => l !== e.quote);
       const rel = related(sec, e);
       const lms = sec === 'places' ? landmarks.filter((l) => regionOf(l) === e.slug).slice(0, 12) : [];
-      const title = sec === 'characters' ? `${e.name} in GTA 6: Bio, Quotes and Artwork` : sec === 'places' ? `${e.name} in GTA 6: Location Guide, Landmarks and Postcard` : sec === 'vehicles' ? `${e.name} in GTA 6${e.inspiration ? `: ${e.inspiration.replace(/^Modelled on /, '')}` : ''}` : `${e.name} in GTA 6`;
-      const desc = `${e.summary} ${e.status === 'confirmed' ? 'Confirmed by Rockstar Games.' : 'Reported, not yet confirmed by Rockstar.'}`.slice(0, 300);
+      const va = sec === 'characters' ? castFor(e.slug).map((r) => r.actor) : [];
+      const title = sec === 'characters' ? `${e.name} in GTA 6: ${va.length ? 'Voice Actor, ' : ''}Bio, Quotes and Artwork` : sec === 'places' ? `${e.name} in GTA 6: Location Guide, Landmarks and Postcard` : sec === 'vehicles' ? `${e.name} in GTA 6${e.inspiration ? `: ${e.inspiration.replace(/^Modelled on /, '')}` : ''}` : `${e.name} in GTA 6`;
+      const desc = `${e.summary}${va.length ? ` Rumoured voice actor: ${va.join(' or ')}.` : ''} ${e.status === 'confirmed' ? 'Confirmed by Rockstar Games.' : e.status === 'rumour' ? 'Rumour, not confirmed.' : 'Reported, not yet confirmed by Rockstar.'}`.slice(0, 300);
       const prev = list[(idx - 1 + list.length) % list.length], next = list[(idx + 1) % list.length];
       const heroHtml = artSlug && (sec === 'places' || !/^(jason|lucia)/.test(e.slug))
         ? `<figure class="lf-entry-hero"><a href="${BASE}/art/${artSlug}-landscape.webp" data-lb="${esc(e.slug)}">${artImg(artSlug, 'landscape', { eager: true, sizes: '(min-width: 1100px) 66vw, 100vw' })}</a></figure>`
@@ -515,7 +520,7 @@ ${credit}`,
   const mapData = {
     regions: Object.entries(REGION_LL).map(([slug, ll]) => { const p = placeBy[slug]; const [x, y] = project(...ll); return { slug, x, y, name: p.name, text: p.summary, art: placeArt(slug), images: p.images.slice(0, 2), url: entryUrl('places', p) }; }),
     pois: db.map.pois.filter((q) => POI_LL[q.name]).map((q) => { const [x, y] = project(...POI_LL[q.name]); return { name: q.name, kind: q.kind, status: q.status, text: q.text, image: q.image || '', x, y, url: q.link ? `${BASE}/${q.link}/` : '', region: placeBy[q.region]?.name || '' }; }),
-    lms: landmarks.map((l) => { const [x, y] = project(l.lng, l.lat); return [l.id, l.name, [l.district, l.area].filter(Boolean).join(', '), l.real, x, y, (l.types[0] || 'landmark')]; }),
+    lms: landmarks.map((l) => { const [x, y] = project(l.lng, l.lat); return [l.id, l.name, [l.district, l.area].filter(Boolean).join(', '), l.real, x, y, (l.types[0] || 'landmark'), l.u ? 1 : 0]; }),
   };
   write('map', layout({
     p: `${BASE}/map/`, title: `GTA 6 Map: Interactive Map of Leonida, Vice City and ${landmarks.length} Locations | ${BRAND}`, section: 'map',
@@ -539,7 +544,7 @@ ${credit}`,
           <path class="lf-map-road2" d="${geo.roadsMinor}"/>
           <path class="lf-map-road" d="${geo.roads}"/>
           ${mapData.regions.map((r) => `<circle class="lf-map-zone" cx="${r.x}" cy="${r.y}" r="70" fill="url(#mg-glow)"/>`).join('')}
-          <g class="lf-lms-layer">${mapData.lms.map((l, i) => `<circle class="lf-lmdot" data-lm="${i}" cx="${l[4]}" cy="${l[5]}" r="2.2"/>`).join('')}</g>
+          <g class="lf-lms-layer">${mapData.lms.map((l, i) => `<circle class="lf-lmdot${l[7] ? ' lf-lmdot-u' : ''}" data-lm="${i}" cx="${l[4]}" cy="${l[5]}" r="2.2"/>`).join('')}</g>
           <g class="lf-lmlabels" aria-hidden="true">${mapData.lms.map((l) => `<text class="lf-lmlabel" x="${l[4]}" y="${l[5]}" dx=".5" dy="-.6">${esc(l[1])}</text>`).join('')}</g>
           ${mapData.pois.map((q, i) => `<g class="lf-pin lf-pin-${q.kind}" data-poi="${i}" data-kind="${q.kind}" tabindex="0" role="button" aria-label="${esc(q.name)}" transform="translate(${q.x} ${q.y})"><g class="lf-ms"><circle r="7"/><circle class="lf-pin-dot" r="2.6"/></g></g>`).join('')}
           ${mapData.regions.map((r, i) => `<g class="lf-map-region" data-region="${i}" tabindex="0" role="button" aria-label="${esc(r.name)}" transform="translate(${r.x} ${r.y})"><g class="lf-ms"><circle r="5"/><text y="-12">${esc(r.name)}</text></g></g>`).join('')}
@@ -581,7 +586,7 @@ ${adSlot('leader')}
   <div class="lf-areas">${areas.map(([a, ls]) => `<a class="lf-area" href="${BASE}/locations/${areaSlug(a)}/"><b>${esc(a)}</b><i>${plural(ls.length, 'landmark')}</i></a>`).join('')}</div>
   <ul class="lf-lms lf-lms-all" data-lm-list>${landmarks.slice(0, 60).map(lmRow).join('')}</ul>
   <p class="lf-src">Showing 60 of ${landmarks.length}. Pick an area above, or search, to see the rest.</p>
-  <script type="application/json" id="lf-lm-data">${json(landmarks.map((l) => [l.id, l.name, l.street, l.district, l.area, l.real, l.lat, l.lng, areaSlug(l.area)]))}</script>
+  <script type="application/json" id="lf-lm-data">${json(landmarks.map((l) => [l.id, l.name, l.street, l.district, l.area, l.real, l.lat, l.lng, areaSlug(l.area), l.u ? 1 : 0]))}</script>
 </section>`,
   }));
   for (const [a, ls] of areas) {
@@ -620,6 +625,41 @@ ${credit}`,
 ${adSlot('leader')}
 <section class="lf-section lf-tight"><div class="lf-features">${db.gameplay.features.map(([t, d2, s], i) => `<article class="lf-feat"><span class="lf-feat-n">${String(i + 1).padStart(2, '0')}</span><h2>${esc(t)}</h2><p>${esc(d2)}</p>${badge(s)}</article>`).join('')}</div></section>
 <section class="lf-section">${sechead('gv-h', 'Watch it', more(`${BASE}/trailers/`, 'All videos'))}${yt(videos.find((v) => v.slug === 'extended-look') || latest, { big: true })}</section>`,
+  }));
+
+  // ═════════════ leaks & rumours ═════════════
+  const LK = db.leaks;
+  write('leaks', layout({
+    p: `${BASE}/leaks/`, title: `GTA 6 Leaks, Rumours and Voice Actors: Everything Reported | ${BRAND}`, section: 'leaks',
+    desc: 'Every major GTA 6 leak and rumour: the 2022 hack and what it showed, the 2026 CyberLeek videos, Project Americas and the rumoured voice cast (Manni L. Perez, Dylan Rourke, Stephen Root and more).',
+    image: ogArt('jason-and-lucia-robbery'), crumbs: [['Leaks & rumours', `${BASE}/leaks/`]],
+    jsonld: [{ '@context': 'https://schema.org', '@type': 'Article', headline: 'GTA 6 leaks, rumours and voice actors', dateModified: updated, author: { '@type': 'Organization', name: 'Hex Modifications' } }],
+    body: `${bannerHead('jason-and-lucia-robbery', 'GTA VI · Unofficial', 'Leaks &amp; rumours', esc(LK.intro))}
+${adSlot('leader')}
+<section class="lf-section lf-tight" aria-labelledby="va-h">
+  ${sechead('va-h', 'Who voices who?')}
+  <p class="lf-prose">${esc(db.cast.note)}</p>
+  <div class="lf-castgrid">${db.cast.rumoured.map((r) => `<a class="lf-castcard" href="${BASE}/characters/${r.character}/">${badge(r.status)}<b>${esc(r.actor)}</b><i>as ${esc(r.name)}</i><span>${esc(r.detail)}</span><em>Source: ${esc(r.source)}</em></a>`).join('')}</div>
+  <p class="lf-src">Ruled out: ${db.cast.denied.map(([n, t]) => `<b>${esc(n)}</b>, ${esc(t.charAt(0).toLowerCase() + t.slice(1))}`).join(' ')} Sources: ${[...new Set(db.cast.rumoured.map((r) => r.url))].map((u, i) => ext(u, `[${i + 1}]`)).join(' ')}</p>
+</section>
+${LK.waves.map((w) => `<section class="lf-section" aria-labelledby="lk-${w.date}">
+  <div class="lf-leak">
+    <div class="lf-leak-head"><time datetime="${w.date}">${fmtDate(w.date)}</time><h2 class="lf-h2" id="lk-${w.date}">${esc(w.title)}</h2>${badge('rumour')}</div>
+    <p class="lf-lede">${esc(w.text)}</p>
+    <h3 class="lf-h3">What it showed</h3>
+    <ul class="lf-list">${w.details.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+    <p class="lf-src">Coverage: ${w.sources.map(([n, u]) => ext(u, `${esc(n)} ↗`)).join(' · ')}</p>
+  </div>
+</section>`).join(adSlot('infeed'))}
+<section class="lf-section" aria-labelledby="dev-h">
+  ${sechead('dev-h', 'How GTA VI was made', ext(LK.bloomberg[1], `${esc(LK.bloomberg[0])} ↗`, 'lf-more'))}
+  <ol class="lf-tl">${LK.history.map(([y, t, x]) => `<li><time>${esc(y)}</time><div class="lf-tl-card"><h3>${esc(t)}</h3><p>${esc(x)}</p></div></li>`).join('')}</ol>
+  <p class="lf-src">From Bloomberg Businessweek's October 2026 feature, based on interviews with Rockstar's leadership.</p>
+</section>
+<section class="lf-section" aria-labelledby="rc-h">
+  ${sechead('rc-h', 'Rumoured characters', more(`${BASE}/characters/`, 'All characters'))}
+  <div class="lf-grid">${db.characters.filter((c) => c.status === 'rumour').map((c) => card('characters', c)).join('')}</div>
+</section>`,
   }));
 
   // ═════════════ timeline ═════════════

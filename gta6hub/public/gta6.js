@@ -148,7 +148,7 @@
     const rows = JSON.parse(lmData.textContent);
     const list = document.querySelector('[data-lm-list]'), input = document.querySelector('[data-lm-q]');
     const note = list.nextElementSibling;
-    const row = ([id, name, street, district, area, real, lat, lng, aslug]) => `<li class="lf-lm"><div><b>${esc(name)}</b><span>${esc([street, district, area].filter(Boolean).join(', '))}</span></div><div class="lf-lm-real"><i>Real life</i><span>${esc(real.split(',')[0])}</span><em>${esc(real.split(',').slice(1, 3).join(',').trim())}</em></div><div class="lf-lm-act"><a href="${BASE}/map/#lm-${esc(id)}">Map</a><a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" rel="noopener">Real place ↗</a></div></li>`;
+    const row = ([id, name, street, district, area, real, lat, lng, aslug, u]) => `<li class="lf-lm${u ? ' is-u' : ''}"><div><b>${esc(name)}${u ? ' <em class="lf-utag">unconfirmed</em>' : ''}</b><span>${esc([street, district, area].filter(Boolean).join(', '))}</span></div><div class="lf-lm-real"><i>Real life</i><span>${esc(real.split(',')[0])}</span><em>${esc(real.split(',').slice(1, 3).join(',').trim())}</em></div><div class="lf-lm-act"><a href="${BASE}/map/#lm-${esc(id)}">Map</a><a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" rel="noopener">Real place ↗</a></div></li>`;
     const initial = list.innerHTML, initialNote = note.textContent;
     input.addEventListener('input', () => {
       const w = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
@@ -258,11 +258,11 @@
       if (move) focus(p.x, p.y, 10);
     };
     const showLm = (i, move = true) => {
-      const [id, name, where, real, x, y, type] = mapData.lms[i] || []; if (!id) return;
+      const [id, name, where, real, x, y, type, u] = mapData.lms[i] || []; if (!id) return;
       select(svg.querySelector(`[data-lm="${i}"]`), `<p class="lf-kicker">${esc(where)} · ${esc(type)}</p><h2 class="lf-h2">${esc(name)}</h2>
         <div class="lf-real"><i>Based on</i><b>${esc(real.split(',')[0])}</b><br>${esc(real.split(',').slice(1).join(',').trim())}</div>
         <div class="lf-actions"><a class="lf-more" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(real)}" target="_blank" rel="noopener">See the real place ↗</a></div>
-        <p class="lf-src">Mapped by the GTA VI community (gtadb.org). Not confirmed by Rockstar.</p>`);
+        <p class="lf-src">${u ? 'Marked unconfirmed by the mapping community. ' : ''}Mapped by the GTA VI community (gtadb.org). Not confirmed by Rockstar.</p>`);
       if (move) focus(x, y, 14);
       history.replaceState(null, '', `#lm-${id}`);
     };

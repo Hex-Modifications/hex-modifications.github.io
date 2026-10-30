@@ -399,11 +399,160 @@
       "quote": "",
       "images": [],
       "source": "Press and fan roundups of the Extended Look"
+    },
+    {
+      "slug": "ellis",
+      "name": "Ellis",
+      "role": "Supporting character",
+      "status": "rumour",
+      "summary": "A supporting character reportedly listed on actor Brett Gipson's resume. Nothing else is known.",
+      "facts": [],
+      "quote": "",
+      "images": [],
+      "source": "Beebom"
+    },
+    {
+      "slug": "valentina",
+      "name": "Valentina (fan theory)",
+      "role": "Private security client",
+      "status": "rumour",
+      "summary": "Fans believe the woman who hires Jason and Lucia as private security in the Extended Look is Valentina from GTA Online's 2025 Money Fronts update. Rockstar hasn't named her.",
+      "facts": [],
+      "quote": "",
+      "images": [],
+      "source": "GTA Intel"
+    },
+    {
+      "slug": "phil-cassidy",
+      "name": "Phil Cassidy (fan theory)",
+      "role": "Returning character?",
+      "status": "rumour",
+      "summary": "A long-running fan claim says an older Phil Cassidy, the arms dealer from GTA: Vice City, runs an Ammu-Nation in Vice City. Nothing official supports it.",
+      "facts": [],
+      "quote": "",
+      "images": [],
+      "source": "GTA Intel"
+    },
+    {
+      "slug": "stefanie",
+      "name": "Stefanie",
+      "role": "Unknown",
+      "status": "rumour",
+      "summary": "A name circulating from leaks and fan lists; no official source mentions her.",
+      "facts": [],
+      "quote": "",
+      "images": [],
+      "source": "GTA Intel"
+    },
+    {
+      "slug": "wyman",
+      "name": "Wyman",
+      "role": "Unknown",
+      "status": "rumour",
+      "summary": "A name from leaks and fan lists. The Ultimate Edition's \"Wyman Car Collection\" suggests a character with that name may exist.",
+      "facts": [],
+      "quote": "",
+      "images": [],
+      "source": "GTA Intel"
+    },
+    {
+      "slug": "erin-henshaw",
+      "name": "Erin Henshaw",
+      "role": "Unknown",
+      "status": "rumour",
+      "summary": "A name from leaks and fan lists; unconfirmed.",
+      "facts": [],
+      "quote": "",
+      "images": [],
+      "source": "GTA Intel"
     }
   ],
   "cast": {
-    "status": "not announced",
-    "note": "Rockstar has not officially announced any of GTA VI's voice or performance cast. Names circulating online are rumours and are not listed here until Rockstar or the performers confirm them."
+    "note": "Rockstar hasn't announced the cast. Below is who fans and press believe is involved: only Stephen Root has spoken about his role himself. Treat every other name as speculation.",
+    "rumoured": [
+      {
+        "character": "brian-heder",
+        "name": "Brian Heder",
+        "actor": "Stephen Root",
+        "status": "reported",
+        "detail": "Told AP News at the BAFTA TV Tea Party that he plays Brian, after fans recognised his voice (Bill Dauterive and Buck Strickland in King of the Hill) in Trailer 2.",
+        "source": "Beebom, citing AP News",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      },
+      {
+        "character": "lucia-caminos",
+        "name": "Lucia Caminos",
+        "actor": "Manni L. Perez",
+        "status": "rumour",
+        "detail": "The near-unanimous fan pick, based on her look and voice; she played a blackjack dealer in GTA Online. One outlet claimed she confirmed it on Instagram on 28 August 2026, which hasn't been verified.",
+        "source": "Beebom, All Things How",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      },
+      {
+        "character": "jason-duval",
+        "name": "Jason Duval",
+        "actor": "Dylan Rourke",
+        "status": "rumour",
+        "detail": "The most common fan pick, mostly on voice comparisons; he booked an undisclosed video game role in 2019.",
+        "source": "Beebom, All Things How",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      },
+      {
+        "character": "jason-duval",
+        "name": "Jason Duval",
+        "actor": "Gregory Connors",
+        "status": "rumour",
+        "detail": "An older theory after a resume showed a \"Lead\" credit on a Rockstar game; the credit was later removed.",
+        "source": "All Things How",
+        "url": "https://allthings.how/gta-6-voice-actors-who-plays-jason-and-lucia/"
+      },
+      {
+        "character": "cal-hampton",
+        "name": "Cal Hampton",
+        "actor": "Bobby Moynihan",
+        "status": "rumour",
+        "detail": "The former SNL cast member is the fan favourite for Cal's voice.",
+        "source": "Beebom",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      },
+      {
+        "character": "raul-bautista",
+        "name": "Raul Bautista",
+        "actor": "Manny Perez",
+        "status": "rumour",
+        "detail": "Fans switched to him after hearing Raul in the Extended Look; earlier guesses pointed to Óscar Jaenada on looks alone.",
+        "source": "Beebom",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      },
+      {
+        "character": "mendez",
+        "name": "Mendez",
+        "actor": "John Ortiz",
+        "status": "rumour",
+        "detail": "Linked by fans on looks and voice; he also appeared in the Miami Vice film.",
+        "source": "Beebom",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      },
+      {
+        "character": "ellis",
+        "name": "Ellis",
+        "actor": "Brett Gipson",
+        "status": "rumour",
+        "detail": "A GTA 6 role reportedly appeared on his resume; he hasn't acknowledged it.",
+        "source": "Beebom",
+        "url": "https://beebom.com/gta-6-voice-actors-cast/"
+      }
+    ],
+    "denied": [
+      [
+        "Troy Baker",
+        "Said in April 2024 that he is not playing Jason."
+      ],
+      [
+        "Roger Craig Smith",
+        "Answered \"Nope\" when asked if he voices Jason."
+      ]
+    ]
   },
   "places": [
     {
@@ -2051,7 +2200,7 @@
     },
     {
       "q": "Who voices Jason and Lucia?",
-      "a": "Rockstar hasn't officially announced the cast. We'll add names once they're confirmed."
+      "a": "Rockstar hasn't announced the cast. Stephen Root has said he plays Brian Heder; fans believe Lucia is voiced by Manni L. Perez and Jason by Dylan Rourke, but neither is confirmed."
     },
     {
       "q": "Who made the GTA 6 soundtrack?",
@@ -2060,6 +2209,10 @@
     {
       "q": "Is this site official?",
       "a": "No. Leonida Files is an unofficial fan database by Hex Modifications, and isn't affiliated with Rockstar Games or Take-Two Interactive."
+    },
+    {
+      "q": "What leaked from GTA 6?",
+      "a": "Two big leaks: around 90 clips of early footage in September 2022 after a hack, and the \"CyberLeek\" videos from a near-final build in August 2026. Our Leaks & rumours page describes what they showed, with links to the coverage."
     }
   ],
   "links": {
@@ -2085,10 +2238,10 @@
       "status": "confirmed"
     },
     {
-      "date": "2022-09-19",
-      "title": "Rockstar addresses the network intrusion",
-      "text": "Rockstar confirms early development footage was taken in a network intrusion and says work continues as planned.",
-      "status": "confirmed"
+      "date": "2022-09-18",
+      "title": "The leak",
+      "text": "Around 90 clips of early development footage leak online after a hack of Rockstar's Slack.",
+      "status": "reported"
     },
     {
       "date": "2023-11-08",
@@ -2136,6 +2289,12 @@
       "status": "reported"
     },
     {
+      "date": "2026-08-15",
+      "title": "CyberLeek leaks begin",
+      "text": "An anonymous leaker posts clips from a near-final build in the run-up to the Extended Look.",
+      "status": "reported"
+    },
+    {
       "date": "2026-08-27",
       "title": "An Extended Look",
       "text": "A long-form look at the game premieres on Netflix, then YouTube.",
@@ -2147,6 +2306,12 @@
       "title": "The Vice City Collection",
       "text": "A collector's box and merchandise launch on the Rockstar Store.",
       "status": "confirmed"
+    },
+    {
+      "date": "2026-10-14",
+      "title": "Bloomberg's making-of feature",
+      "text": "Rockstar opens up about Project Americas, delays and the leaks in a Bloomberg Businessweek feature.",
+      "status": "reported"
     },
     {
       "date": "2026-10-15",
@@ -2344,6 +2509,115 @@
         "The Real Dimez's rise plays out on in-game social media feeds.",
         "reported"
       ]
+    ]
+  },
+  "leaks": {
+    "intro": "GTA VI has had two major leaks and years of rumours. Here's what was reported, described in our own words with links to the original coverage. We don't host leaked files: the sources below covered them at the time.",
+    "history": [
+      [
+        "2015",
+        "Project Americas",
+        "Rockstar told Bloomberg the game began life as \"Project Americas\", meant to span large parts of North and South America. Senior staff flew to Miami that year for the first research trip.",
+        "reported"
+      ],
+      [
+        "2016–2018",
+        "On hold for Red Dead",
+        "GTA VI was first meant to be made alongside Red Dead Redemption 2, but as Red Dead grew, most of the studio moved onto finishing it and GTA VI slipped back years.",
+        "reported"
+      ],
+      [
+        "2019",
+        "The story takes shape",
+        "By the end of 2019 the leads had the skeleton of the story: Jason and Lucia, a criminal couple robbing their way through a fictional Miami. The scope was later cut back to Miami and its surroundings.",
+        "reported"
+      ],
+      [
+        "2020–2021",
+        "Pandemic slowdown",
+        "Covid shut Rockstar's performance-capture studios, hiring made communication harder and some senior designers quit. Rob Nelson called it a dark period.",
+        "reported"
+      ],
+      [
+        "2022",
+        "A playable whole",
+        "By 2022, Bloomberg wrote, there were finally enough working pieces to see the whole game.",
+        "reported"
+      ],
+      [
+        "2024",
+        "Back to the office",
+        "Rockstar required staff in the office five days a week, partly over security.",
+        "reported"
+      ]
+    ],
+    "waves": [
+      {
+        "date": "2022-09-18",
+        "title": "The 2022 hack",
+        "text": "Around 90 clips (about an hour) of early development footage were posted to GTAForums by a user calling themselves \"teapotuberhacker\", after an attacker phished their way into Rockstar's internal Slack. A UK teenager linked to the Lapsus$ group was later found responsible by a UK court. Rockstar's Aaron Garbut later told Bloomberg it felt \"deeply invasive\".",
+        "details": [
+          "A Vice City setting, with \"Vice City\" on signs and buildings in a modern-day city",
+          "Two protagonists, a woman and her male partner (later revealed as Lucia and Jason)",
+          "A diner robbery at \"Hank's Waffles\", which Rockstar later showed polished in the Extended Look",
+          "A Vice City metro, with Jason getting on and off a train",
+          "Explorable interiors, carrying bodies and a lower crouch",
+          "A redesigned weapon wheel and GTA V-style gunplay",
+          "Police who reload in real time during shootouts",
+          "The Sanchez and Sultan among the vehicles"
+        ],
+        "sources": [
+          [
+            "Kotaku",
+            "https://kotaku.com/gta-6s-big-gameplay-reveal-contains-a-mission-first-seen-in-the-2022-leak-so-lets-compare-them-2000729084"
+          ],
+          [
+            "TechRadar",
+            "https://techradar.com/news/everything-confirmed-in-the-gta-6-leak-including-setting-characters-and-combat"
+          ],
+          [
+            "GamePressure",
+            "https://www.gamepressure.com/newsroom/gta-6-leak-analyzed/zd4a3e"
+          ],
+          [
+            "TechCrunch",
+            "https://techcrunch.com/2022/09/18/gta-6-gameplay-video-leak"
+          ],
+          [
+            "GameSpot",
+            "https://www.gamespot.com/articles/gta-6-leaks-are-still-coming-rockstar-labels-the-2022-hack-weirdly-invasive/"
+          ]
+        ]
+      },
+      {
+        "date": "2026-08-15",
+        "title": "The CyberLeek videos",
+        "text": "From mid-August 2026 an anonymous leaker calling themselves \"CyberLeek\" posted short clips from an apparently playable build, tied to a memecoin that let fans pay to vote on the next leak. Reports put the total at 16+ clips and around 30 minutes by August 26, plus a full map image; a later batch reportedly included mission cutscenes. IGN reported the leaker appeared to cash out about $270,000. Rockstar called it heartbreaking for the team and confirmed the November 19 date.",
+        "details": [
+          "Jason playing basketball, driving and fighting pedestrians",
+          "An image said to show the full map",
+          "A later 25-minute batch said to include missions and cutscenes (authenticity unverified)",
+          "No arrest had been reported as of late August 2026"
+        ],
+        "sources": [
+          [
+            "Dexerto",
+            "https://www.dexerto.com/gta/gta-6-leaker-cyberleek-returns-with-massive-25-minute-gameplay-leak-3416630/"
+          ],
+          [
+            "GameSpot timeline",
+            "https://www.gamespot.com/articles/gta-6-leaks-a-timeline-of-the-events-so-far/"
+          ],
+          [
+            "TrendInTech",
+            "https://trendintech.com/gta-6-cyberleek-leak-video-2026/"
+          ]
+        ]
+      }
+    ],
+    "bloomberg": [
+      "GTA Intel recap of Bloomberg's feature",
+      "https://gtaintel.com/news/gta-6-bloomberg-making-of-project-americas"
     ]
   }
 }
