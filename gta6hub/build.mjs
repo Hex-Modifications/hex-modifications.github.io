@@ -44,7 +44,7 @@ const SECTIONS = {
 
 // main menu (opened from the menu button, Rockstar-style), grouped
 const MENU = [
-  ['Mods', [['mods', 'Mods hub'], ['developers', 'Developer guide'], ['mods/guidelines', 'Upload rules'], ['mods/police', 'Police mods'], ['mods/scripts', 'Script mods']]],
+  ['Mods', [['mods', 'Mods hub'], ['developers', 'Developer guide'], ['mods/guidelines', 'Upload rules'], ['mods/selling', 'Selling mods'], ['mods/police', 'Police mods'], ['mods/scripts', 'Script mods']]],
   ['Explore', [['map', 'Map'], ['locations', 'Real-life locations'], ['places', 'Regions'], ['characters', 'Characters'], ['vehicles', 'Vehicles'], ['weapons', 'Weapons'], ['businesses', 'Businesses']]],
   ['Watch & listen', [['trailers', 'Trailers'], ['music', 'Music & radio'], ['artwork', 'Artwork & covers'], ['gallery', 'Screenshots']]],
   ['Guides', [['news', 'News'], ['leaks', 'Leaks & rumours'], ['timeline', 'Timeline'], ['gameplay', 'Gameplay'], ['editions', 'Pre-order guide'], ['faq', 'FAQ'], ['about', 'About']]],
@@ -669,6 +669,7 @@ ${adSlot('leader')}
   <div class="lf-features">${mod.standards.map(([t, d2], i) => `<article class="lf-feat"><span class="lf-feat-n">${String(i + 1).padStart(2, '0')}</span><h2>${esc(t)}</h2><p>${esc(d2)}</p></article>`).join('')}</div>
 </section>
 <section class="lf-section" aria-labelledby="rv-h">${sechead('rv-h', 'How uploads work')}<ol class="lf-steps">${mod.review.map(([t, d2]) => `<li><b>${esc(t)}</b><span>${esc(d2)}</span></li>`).join('')}</ol></section>
+<section class="lf-section" aria-labelledby="sl-h">${sechead('sl-h', 'Selling mods', more(`${BASE}/mods/selling/`, 'Verified sellers'))}<p class="lf-prose">${esc(mod.selling.intro)}</p></section>
 ${joinBlock}
 <section class="lf-section" aria-labelledby="dg-h">${sechead('dg-h', 'Developer guide', more(`${BASE}/developers/`, 'All chapters'))}<div class="lf-gcards">${mod.guide.slice(0, 4).map(guideCard).join('')}</div></section>
 <section class="lf-section" aria-labelledby="mf-h">${sechead('mf-h', 'Mods FAQ')}<div class="lf-faq">${mod.faq.map(([q, a]) => faqItem({ q, a })).join('')}</div></section>`,
@@ -688,6 +689,26 @@ ${adSlot('leader')}
 <section class="lf-section" aria-labelledby="rv2-h">${sechead('rv2-h', 'Review process')}<ol class="lf-steps">${mod.review.map(([t, d2]) => `<li><b>${esc(t)}</b><span>${esc(d2)}</span></li>`).join('')}</ol></section>
 <section class="lf-section" aria-labelledby="tk-h">${sechead('tk-h', 'Takedowns and reports')}<p class="lf-prose">Rights holders and creators can report a mod at <a href="mailto:hexmodifications@icloud.com">hexmodifications@icloud.com</a>. We remove infringing or unsafe files quickly and tell the uploader why.</p></section>
 ${joinBlock}`,
+  }));
+  const S = mod.selling;
+  const sellMail = `mailto:hexmodifications@icloud.com?subject=${encodeURIComponent('GTA6 Project verified seller')}&body=${encodeURIComponent('Creator name:\nWhat I make and plan to sell:\nPrevious mods (links, download counts):\nYears modding:\nStorefront I use or plan to use:\n')}`;
+  write('mods/selling', layout({
+    p: `${BASE}/mods/selling/`, title: `Sell GTA 6 Mods: Verified Sellers | ${BRAND}`, section: 'mods/selling', label: 'Selling mods',
+    desc: 'How verified sellers list paid GTA 6 mods on GTA6 Project: manual approval, a proven track record, and every sale through a storefront Rockstar has approved.',
+    image: ogArt('jason-and-lucia-robbery'), crumbs: [['Mods', `${BASE}/mods/`], ['Selling mods', `${BASE}/mods/selling/`]],
+    body: `${head('GTA6 Project · Verified sellers', 'Selling mods', esc(S.intro))}
+<section class="lf-section lf-tight"><div class="lf-status"><span class="lf-status-dot" aria-hidden="true"></span><div><b>Selling opens with uploads</b><p>${esc(S.apply)}</p></div></div></section>
+<section class="lf-section" aria-labelledby="sh-h">${sechead('sh-h', 'How to become a verified seller')}<ol class="lf-steps">${S.how.map(([t, d2]) => `<li><b>${esc(t)}</b><span>${esc(d2)}</span></li>`).join('')}</ol></section>
+<section class="lf-section" aria-labelledby="sr-h">${sechead('sr-h', 'Rules for paid mods')}<div class="lf-features">${S.requirements.map(([t, d2], i) => `<article class="lf-feat"><span class="lf-feat-n">${String(i + 1).padStart(2, '0')}</span><h2>${esc(t)}</h2><p>${esc(d2)}</p></article>`).join('')}</div>
+  <aside class="lf-note"><b>Losing seller status:</b> ${esc(S.lose)}</aside></section>
+${adSlot('leader')}
+<section class="lf-section" aria-labelledby="sw-h">${sechead('sw-h', 'Why sales go through approved stores')}
+  <p class="lf-prose">Rockstar's modding guidelines say mods can only be sold through storefronts it has approved, and that modding everywhere else has to be non-commercial. Rockstar's own Cfx Marketplace is the first of these. Sending buyers there keeps your mod, and this site, on the right side of Rockstar. ${esc(S.future)}</p>
+  <p class="lf-src">Sources: ${RS.links.map(([n, u]) => ext(u, `${esc(n)} ↗`)).join(' · ')}. Not legal advice.</p></section>
+<section class="lf-section" id="apply" aria-labelledby="sa-h"><div class="lf-join">
+  <div><p class="lf-kicker">Verified sellers</p><h2 class="lf-h2" id="sa-h">Register your interest</h2><p>Already sell GTA V or RDR2 mods through an approved store, or have a strong free portfolio? Tell us now and we'll contact you when selling opens. Registering doesn't guarantee approval.</p></div>
+  <div class="lf-join-cta"><a class="lf-btn" href="${esc(sellMail)}">Apply to sell</a><p class="lf-src">Opens your email app with a short form.</p></div>
+</div></section>`,
   }));
   for (const c of mod.categories) {
     write(`mods/${c.slug}`, layout({

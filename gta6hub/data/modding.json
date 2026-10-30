@@ -143,6 +143,14 @@
       [
         "GamesRadar",
         "https://www.gamesradar.com/games/grand-theft-auto/ahead-of-gta-6-rockstar-releases-modding-guidelines-that-axe-new-missions-maps-ports-and-more-respect-our-games/"
+      ],
+      [
+        "Rockstar mod guidelines",
+        "https://www.rockstargames.com/community-resources/mod-guidelines"
+      ],
+      [
+        "TechRadar: Cfx Marketplace",
+        "https://www.techradar.com/gaming/rockstar-has-launched-its-own-mod-marketplace-ahead-of-the-launch-of-grand-theft-auto-6"
       ]
     ],
     "rules": [
@@ -171,8 +179,8 @@
         "No real person's voice, image or likeness without written permission."
       ],
       [
-        "No paid mods outside approved stores",
-        "Mods can only be sold through storefronts Rockstar approves; everything here is free."
+        "Paid mods through approved stores only",
+        "Mods can only be sold through storefronts Rockstar approves, such as its Cfx Marketplace. Everywhere else, modding has to be non-commercial."
       ],
       [
         "No gambling, loot boxes or crypto",
@@ -240,6 +248,10 @@
     [
       "Verified creator",
       "Three or more approved mods with no rule breaks. Faster reviews and a badge."
+    ],
+    [
+      "Verified seller",
+      "Manually approved creators with a track record who can list paid mods. Application only."
     ],
     [
       "Founding creator",
@@ -564,13 +576,18 @@
           "estimate"
         ],
         [
+          "Selling mods",
+          "Allowed only through storefronts Rockstar approves. GTA6 Project lists paid mods from verified sellers and sends buyers to the approved store to pay.",
+          "fact"
+        ],
+        [
           "Grey areas",
           "Real-world cars and brands were a huge part of GTA V modding. Under the new guidelines they count as other people's IP, so we won't host them.",
           "estimate"
         ],
         [
           "Clearly out",
-          "Story or character edits, ports from other Rockstar games, online cheats, paid or paywalled mods, gambling and crypto.",
+          "Story or character edits, ports from other Rockstar games, online cheats, selling mods outside Rockstar-approved stores, gambling and crypto.",
           "fact"
         ],
         [
@@ -587,8 +604,8 @@
       "Not yet. Uploads open once GTA VI is on PC. You can register as a founding creator today to reserve your name."
     ],
     [
-      "Will mods be free?",
-      "Yes. Rockstar only allows mods to be sold through storefronts it approves, so everything on GTA6 Project is free. Creators can link a tip page."
+      "Can creators sell mods?",
+      "Yes, but only verified sellers: experienced creators we approve by hand. Paid mods are listed on GTA6 Project and bought through a storefront Rockstar has approved, as its guidelines require. Most mods stay free."
     ],
     [
       "Will you host real-world cars?",
@@ -602,5 +619,63 @@
       "How do you keep files safe?",
       "Every file is virus-scanned, script mods are code-reviewed, and a moderator tests every upload before it goes live."
     ]
-  ]
+  ],
+  "selling": {
+    "intro": "Most mods on GTA6 Project are free. A small group of verified sellers, approved by hand, can also list premium mods. Buyers always pay through a storefront Rockstar has approved, so creators get paid and stay inside Rockstar's rules.",
+    "how": [
+      [
+        "Earn your place",
+        "Have at least five approved free mods on GTA6 Project, six months of history and a clean record: no rule breaks, no stolen assets, no unresolved reports."
+      ],
+      [
+        "Apply",
+        "Send your profile, your best work and what you plan to sell. We look at quality, support history and how you treat users."
+      ],
+      [
+        "Manual approval",
+        "A staff member reviews every application by hand. There's no automatic route and no paying to skip the queue."
+      ],
+      [
+        "Set up on an approved store",
+        "Sell through a storefront Rockstar has approved, such as the Cfx Marketplace once it covers GTA VI. We check your store listing matches your upload."
+      ],
+      [
+        "List on GTA6 Project",
+        "Your premium mod gets a full page here, with screenshots, reviews, the price and a buy button that goes to your approved store listing."
+      ]
+    ],
+    "requirements": [
+      [
+        "Approved store only",
+        "Every sale goes through a storefront Rockstar has approved. No PayPal links, Patreon paywalls, Discord sales or direct bank transfers."
+      ],
+      [
+        "Original work",
+        "Everything in a paid mod must be yours or licensed for commercial use. No Rockstar assets, missions or DLC behind a paywall, and no real brands."
+      ],
+      [
+        "Keep releasing free work",
+        "Paid mods sit beside free work, not instead of it. Sellers keep publishing free mods too."
+      ],
+      [
+        "No gambling or chance",
+        "No loot boxes, gacha, random rewards for money, in-game currency sales, crypto or NFTs."
+      ],
+      [
+        "Honest listings",
+        "Real in-game screenshots, clear features, the game version it works on, and a refund policy that follows UK and EU consumer law."
+      ],
+      [
+        "Support and updates",
+        "Paying users get fixes when a game update breaks the mod. Abandoned paid mods are delisted."
+      ],
+      [
+        "Same review as free mods",
+        "Paid mods go through the full human review and virus scan, and can be pulled at any time if they break the rules."
+      ]
+    ],
+    "lose": "Selling status is removed for stolen or ripped content, selling outside approved stores, misleading listings, ignoring refunds or support, or any breach of Rockstar's guidelines.",
+    "future": "If Rockstar approves GTA6 Project as a storefront, verified sellers will be able to sell directly on the site. Until then, every purchase happens on an approved store.",
+    "apply": "Selling opens after GTA VI reaches PC and uploads go live. Founding creators can register interest now."
+  }
 }
