@@ -1,5 +1,6 @@
-// Builds "GTA 6 Hub", the unofficial GTA VI database by Hex Modifications, into dist/gta6hub/.
+// Builds "GTA6 Project", the GTA VI modding hub and fan database by Hex Modifications, into dist/gta6project/.
 // It is its own site (own name, look and navigation) that shares the Hex Modifications GitHub Pages deploy.
+// GTA6_BASE sets the URL path ('' once it moves to its own domain).
 // Data (all in gta6hub/data):
 //   db.json         facts, each "confirmed" (said or shown by Rockstar) or "reported" (press, store listings, fan identification)
 //   images.json     Rockstar's official screenshot pack (→ public/img)        art.json  official artwork & wallpapers (→ public/art)
@@ -11,9 +12,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const BRAND = 'GTA 6 Hub';
+const BRAND = 'GTA6 Project';
 const YT_FEED = 'https://www.youtube.com/feeds/videos.xml?channel_id=UC6VcWc1rAoWdBCM0JxrRQ3A';   // Rockstar Games
-const BASE = '/gta6hub';
+const BASE = (process.env.GTA6_BASE ?? '/gta6project').replace(/\/$/, '');
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
@@ -43,6 +44,7 @@ const SECTIONS = {
 
 // main menu (opened from the menu button, Rockstar-style), grouped
 const MENU = [
+  ['Mods', [['mods', 'Mods hub'], ['developers', 'Developer guide'], ['mods/guidelines', 'Upload rules'], ['mods/police', 'Police mods'], ['mods/scripts', 'Script mods']]],
   ['Explore', [['map', 'Map'], ['locations', 'Real-life locations'], ['places', 'Regions'], ['characters', 'Characters'], ['vehicles', 'Vehicles'], ['weapons', 'Weapons'], ['businesses', 'Businesses']]],
   ['Watch & listen', [['trailers', 'Trailers'], ['music', 'Music & radio'], ['artwork', 'Artwork & covers'], ['gallery', 'Screenshots']]],
   ['Guides', [['news', 'News'], ['leaks', 'Leaks & rumours'], ['timeline', 'Timeline'], ['gameplay', 'Gameplay'], ['editions', 'Pre-order guide'], ['faq', 'FAQ'], ['about', 'About']]],
@@ -51,11 +53,13 @@ const MENU = [
 export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = true, log = console.log }) {
   const dataDir = path.join(root, 'gta6hub', 'data');
   const read = (n) => JSON.parse(fs.readFileSync(path.join(dataDir, n), 'utf8'));
-  const db = read('db.json'), images = read('images.json'), art = read('art.json'), landmarks = read('landmarks.json'), geo = read('leonida-geo.json');
+  const db = read('db.json'), images = read('images.json'), art = read('art.json'), landmarks = read('landmarks.json'), geo = read('leonida-geo.json'), mod = read('modding.json');
   const imgBy = Object.fromEntries(images.map((i) => [i.slug, i]));
   const artBy = Object.fromEntries(art.map((a) => [a.slug, a]));
   const L = db.links;
-  const out = path.join(dist, 'gta6hub');
+  const out = path.join(dist, BASE.replace(/^\//, ''));
+  fs.mkdirSync(out, { recursive: true });
+  fs.cpSync(path.join(root, 'gta6hub', 'public'), out, { recursive: true });
   const urls = [];
   const now = Date.now();
 
@@ -172,7 +176,7 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
       : `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com; connect-src 'self'; frame-src ${frames}; media-src 'none'; base-uri 'self'; form-action 'none'; object-src 'none'`;
     const sectionLabel = label || MENU.flatMap(([, l]) => l).find(([s]) => s === section)?.[1] || '';
     return `<!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-base="${BASE}">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="${csp}">
@@ -194,7 +198,7 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(desc)}">
 <meta name="twitter:image" content="${esc(image)}">
-<link rel="icon" href="${BASE}/icon.svg" type="image/svg+xml">
+<link rel="icon" href="${BASE}/brand/gta6project-32.png" type="image/png" sizes="32x32"><link rel="apple-touch-icon" href="${BASE}/brand/gta6project-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${fonts}">
 <link rel="stylesheet" href="${BASE}/gta6.css">
@@ -205,10 +209,10 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
 <a class="lf-skip" href="#main">Skip to content</a>
 <canvas class="lf-liquid" aria-hidden="true"></canvas>
 <header class="lf-head">
-  <a class="lf-brand" href="${BASE}/" aria-label="${BRAND} home"><span class="lf-logo">GTA<b>6</b></span><span class="lf-logo-hub">Hub</span></a>
+  <a class="lf-brand" href="${BASE}/" aria-label="${BRAND} home"><span class="lf-logo">GTA<b>6</b></span><span class="lf-logo-hub">Project</span></a>
   ${sectionLabel ? `<span class="lf-head-sec">${esc(sectionLabel)}</span>` : ''}
-  <nav class="lf-quicknav" aria-label="Popular">${[['map', 'Map'], ['characters', 'Characters'], ['vehicles', 'Vehicles'], ['trailers', 'Trailers'], ['news', 'News']].map(([s, l]) => `<a href="${BASE}/${s}/"${s === section ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</nav>
-  <a class="lf-pill" href="${BASE}/editions/">Pre-Order Guide</a>
+  <nav class="lf-quicknav" aria-label="Popular">${[['mods', 'Mods'], ['developers', 'Developers'], ['map', 'Map'], ['characters', 'Characters'], ['news', 'News']].map(([s, l]) => `<a href="${BASE}/${s}/"${s === section ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</nav>
+  <a class="lf-pill" href="${BASE}/mods/#join">Join as a creator</a>
   <button class="lf-menu-btn" type="button" aria-expanded="false" aria-controls="lf-menu"><span class="lf-sr">Menu</span><i></i><i></i></button>
 </header>
 <div class="lf-menu" id="lf-menu" hidden>
@@ -226,14 +230,14 @@ ${adSlot('foot')}
 <footer class="lf-foot">
   <div class="lf-foot-grid">
     <div class="lf-foot-about">
-      <a class="lf-brand" href="${BASE}/"><span class="lf-logo">GTA<b>6</b></span><span class="lf-logo-hub">Hub</span></a>
-      <p>Everything about Grand Theft Auto VI in one place: the map, the people, the cars, the music and the news, checked every day.</p>
+      <a class="lf-brand" href="${BASE}/"><span class="lf-logo">GTA<b>6</b></span><span class="lf-logo-hub">Project</span></a>
+      <p>The home of GTA VI single-player mods, plus everything known about the game: the map, the people, the cars and the news, checked every day.</p>
       <a class="lf-by" href="/"><img src="${BASE}/hex-logo.webp" width="40" height="40" alt="" loading="lazy"><span>A Hex Modifications site</span></a>
     </div>
     ${MENU.map(([h, links]) => `<nav aria-label="${h}"><p class="lf-foot-h">${h}</p>${links.map(([s, l]) => `<a href="${BASE}/${s}/">${l}</a>`).join('')}</nav>`).join('\n    ')}
     <nav aria-label="Official"><p class="lf-foot-h">Official</p>${ext(L.official, 'Rockstar: GTA VI')}${ext(L.newswire, 'Rockstar Newswire')}${ext(L.youtube, 'Rockstar on YouTube')}${ext(L.spotify, 'GTA VI on Spotify')}${ext(L.store, 'Rockstar Store')}</nav>
   </div>
-  <p class="lf-legal">GTA 6 Hub is an unofficial fan site, not affiliated with Rockstar Games or Take-Two Interactive. Grand Theft Auto and all related names and trademarks belong to their owners. Artwork and screenshots © Rockstar Games. Landmark data from ${ext(L.gtadb, 'gtadb.org')} (MIT licence). Map geography from Natural Earth. <em>Reported</em> entries come from press or fan sightings, not Rockstar.</p>
+  <p class="lf-legal">GTA6 Project is an independent fan site, not affiliated with Rockstar Games or Take-Two Interactive. Grand Theft Auto and all related names and trademarks belong to their owners. Artwork and screenshots © Rockstar Games. Landmark data from ${ext(L.gtadb, 'gtadb.org')} (MIT licence). Map geography from Natural Earth. <em>Reported</em> entries come from press or fan sightings, not Rockstar.</p>
   <p class="lf-legal">Last updated ${fmtDate(updated)} · <a href="/sitemap.xml">Sitemap</a> · <a href="${BASE}/about/">About</a></p>
 </footer>
 </body>
@@ -325,6 +329,19 @@ ${adSlot('foot')}
   const REGION_LL = { 'vice-city': [-80.2, 25.79], 'leonida-keys': [-81.15, 24.72], grassrivers: [-80.95, 25.6], 'port-gellhorn': [-85.66, 30.17], ambrosia: [-81.15, 26.85], 'mount-kalaga-national-park': [-81.75, 29.2] };
   const POI_LL = { 'Vice City sign': [-80.21, 25.81], 'Ocean View Hotel': [-80.13, 25.78], 'Jack of Hearts': [-80.23, 25.76], 'Only Raw Records': [-80.2, 25.83], "Brian's boat yard": [-80.62, 24.93], "Jason's place": [-81.36, 24.67], 'Starlet Motel': [-85.74, 30.19] };
 
+  // ═════════════ shared modding pieces ═════════════
+  const RS = mod.rockstarRules;
+  const join = `mailto:hexmodifications@icloud.com?subject=${encodeURIComponent('GTA6 Project founding creator')}&body=${encodeURIComponent('Creator name:\nWhat I make (scripts, vehicles, maps, graphics, police, other):\nPortfolio or GTA V mods (links):\nDiscord (optional):\n')}`;
+  const tag = (k) => (k === 'fact' ? '<span class="lf-badge lf-ok">Known</span>' : '<span class="lf-badge lf-est">Estimate</span>');
+  const statusBox = `<div class="lf-status"><span class="lf-status-dot" aria-hidden="true"></span><div><b>${esc(mod.status.headline)}</b><p>${esc(mod.status.text)}</p></div></div>`;
+  const catCard = (c) => `<a class="lf-cat" href="${BASE}/mods/${c.slug}/"><span class="lf-cat-ico" aria-hidden="true">${esc(c.icon)}</span><b>${esc(c.name)}</b><span>${esc(c.text)}</span><i>Opening with PC →</i></a>`;
+  const guideCard = (g, i) => `<a class="lf-gcard" href="${BASE}/developers/${g.slug}/"><span class="lf-gnum">${String(i + 1).padStart(2, '0')}</span><i>${esc(g.kicker)}</i><b>${esc(g.title)}</b><span>${esc(g.summary)}</span></a>`;
+  const joinBlock = `<section class="lf-section" id="join" aria-labelledby="join-h"><div class="lf-join">
+    <div><p class="lf-kicker">Founding creators</p><h2 class="lf-h2" id="join-h">Get in before PC launch</h2><p>Creators who join before GTA VI reaches PC get a permanent Founding Creator badge, your name reserved, and first access to uploads. Accounts open soon; until then, register by email.</p>
+    <ul class="lf-list">${mod.tiers.map(([t, d2]) => `<li><b>${esc(t)}:</b> ${esc(d2)}</li>`).join('')}</ul></div>
+    <div class="lf-join-cta"><a class="lf-btn" href="${esc(join)}">Register as a founding creator</a><p class="lf-src">Opens your email app with a short form. We'll only use it to contact you about GTA6 Project.</p></div>
+  </div></section>`;
+
   // ═════════════ home ═════════════
   const latest = videos[0];
   const upcoming = db.timeline.filter((t) => Date.parse(`${t.date}T23:59:59Z`) >= now).slice(0, 3);
@@ -347,25 +364,35 @@ ${adSlot('foot')}
   </div>
 </section>`;
   write('', layout({
-    p: `${BASE}/`, title: 'GTA 6 Hub: Map, Characters, Cars, Trailers, Music & Release Date',
-    desc: `Everything about GTA 6 in one place: the ${fmtDate(db.game.release)} release date, an interactive Leonida map with ${landmarks.length} real-life locations, every character and ${db.vehicles.length} vehicles, official artwork, trailers, music and daily news.`,
+    p: `${BASE}/`, title: 'GTA6 Project: GTA 6 Mods, Developer Guide, Map and Everything About GTA VI',
+    desc: `The home of GTA 6 single-player mods: a developer guide, upload rules and founding creator sign-ups, plus an interactive Leonida map with ${landmarks.length} real-life locations, every character, ${db.vehicles.length} vehicles, trailers and daily news.`,
     image: ogArt('jason-and-lucia-01'),
     jsonld: [{ '@context': 'https://schema.org', '@type': 'WebSite', name: BRAND, alternateName: ['GTA6 Hub', 'GTA VI Hub'], url: `${siteUrl}${BASE}/`, publisher: { '@type': 'Organization', name: 'Hex Modifications', url: `${siteUrl}/` } }, gameLd],
     body: `
 <section class="lf-hero">
   <picture class="lf-hero-media"><source media="(max-width: 700px)" srcset="${BASE}/art/jason-and-lucia-01-portrait.webp">${artImg('jason-and-lucia-01', 'ultrawide', { alt: 'Jason Duval and Lucia Caminos: official GTA VI key art', eager: true })}</picture>
   <div class="lf-hero-copy">
-    <p class="lf-kicker">Grand Theft Auto VI · Coming</p>
-    <h1 class="lf-display lf-hero-title">November 19, 2026</h1>
-    <p class="lf-hero-plat">PlayStation 5 · Xbox Series X|S</p>
+    <p class="lf-kicker">GTA6 Project · The GTA VI modding hub</p>
+    <h1 class="lf-display lf-hero-title">The home of GTA VI mods</h1>
+    <p class="lf-hero-plat">Scripts · Police · Vehicles · Maps · Graphics</p>
     <div class="lf-count" data-release="${db.game.release}">
       <div class="lf-count-units"><span><b data-u="d">${days}</b><i>days</i></span><span><b data-u="h">--</b><i>hrs</i></span><span><b data-u="m">--</b><i>min</i></span><span><b data-u="s">--</b><i>sec</i></span></div>
-      <p class="lf-count-label">Until launch in your time zone</p>
+      <p class="lf-count-label">Until GTA VI launches on PS5 &amp; Xbox Series X|S</p>
     </div>
-    <div class="lf-cta"><a class="lf-btn" href="${BASE}/trailers/${latest.slug}/"><span class="lf-btn-play" aria-hidden="true"></span>Watch the ${esc(latest.title)}</a><a class="lf-btn lf-ghost" href="${BASE}/map/">Explore the map</a></div>
+    <div class="lf-cta"><a class="lf-btn" href="${BASE}/mods/#join">Become a founding creator</a><a class="lf-btn lf-ghost" href="${BASE}/developers/">Read the developer guide</a></div>
   </div>
 </section>
+<section class="lf-section lf-tight" aria-labelledby="mh-h">
+  ${statusBox}
+  ${sechead('mh-h', 'Mods, built to a standard', more(`${BASE}/mods/`, 'Mods hub'))}
+  <div class="lf-cats">${mod.categories.slice(0, 6).map(catCard).join('')}</div>
+</section>
+<section class="lf-section" aria-labelledby="dgh-h">
+  ${sechead('dgh-h', 'Developer guide', more(`${BASE}/developers/`, `All ${mod.guide.length} chapters`))}
+  <div class="lf-gcards">${mod.guide.slice(0, 4).map(guideCard).join('')}</div>
+</section>
 <section class="lf-intro">
+  <p class="lf-kicker">Everything we know</p>
   <h2 class="lf-pinkhead">Vice City, USA.</h2>
   <p>Jason and Lucia have always known the deck is stacked against them. When an easy score goes wrong, they end up on the darkest side of the sunniest place in America, caught in a criminal conspiracy that stretches across the state of Leonida.</p>
   <nav class="lf-quick" aria-label="Jump to">${[['map', `Map · ${landmarks.length + db.map.pois.length} places`], ['characters', `${db.characters.length} characters`], ['leaks', 'Leaks & rumours'], ['vehicles', `${db.vehicles.length} vehicles`], ['artwork', `${art.length} artworks`], ['gallery', `${images.length} screenshots`], ['music', 'Soundtrack'], ['timeline', 'Timeline']].map(([s, l]) => `<a href="${BASE}/${s}/">${l}</a>`).join('')}</nav>
@@ -627,6 +654,92 @@ ${adSlot('leader')}
 <section class="lf-section">${sechead('gv-h', 'Watch it', more(`${BASE}/trailers/`, 'All videos'))}${yt(videos.find((v) => v.slug === 'extended-look') || latest, { big: true })}</section>`,
   }));
 
+  // ═════════════ mods hub ═════════════
+  write('mods', layout({
+    p: `${BASE}/mods/`, title: `GTA 6 Mods: The Home of GTA VI Single-Player Mods | ${BRAND}`, section: 'mods', label: 'Mods',
+    desc: 'GTA6 Project is building the home of GTA 6 single-player mods: scripts, police mods, vehicles, maps and graphics, reviewed for quality and built to Rockstar\'s modding rules. Register as a founding creator.',
+    image: ogArt('jason-and-lucia-lock-and-load'), crumbs: [['Mods', `${BASE}/mods/`]],
+    jsonld: [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'GTA 6 mods', url: `${siteUrl}${BASE}/mods/`, about: { '@type': 'VideoGame', name: db.game.title } }],
+    body: `${bannerHead('jason-and-lucia-lock-and-load', 'GTA6 Project · Mods', 'GTA 6 mods', 'The home of GTA VI single-player mods. Scripts, police mods, vehicles, maps and graphics, every upload reviewed by a human and built to Rockstar\'s rules.')}
+<section class="lf-section lf-tight">${statusBox}</section>
+<section class="lf-section" aria-labelledby="cat-h">${sechead('cat-h', 'What you\'ll find here')}<div class="lf-cats">${mod.categories.map(catCard).join('')}</div></section>
+${adSlot('leader')}
+<section class="lf-section" aria-labelledby="qb-h">${sechead('qb-h', 'The quality bar', more(`${BASE}/mods/guidelines/`, 'Full upload rules'))}
+  <p class="lf-prose">We'd rather host 500 great mods than 50,000 broken ones. Every upload has to clear these before it goes live.</p>
+  <div class="lf-features">${mod.standards.map(([t, d2], i) => `<article class="lf-feat"><span class="lf-feat-n">${String(i + 1).padStart(2, '0')}</span><h2>${esc(t)}</h2><p>${esc(d2)}</p></article>`).join('')}</div>
+</section>
+<section class="lf-section" aria-labelledby="rv-h">${sechead('rv-h', 'How uploads work')}<ol class="lf-steps">${mod.review.map(([t, d2]) => `<li><b>${esc(t)}</b><span>${esc(d2)}</span></li>`).join('')}</ol></section>
+${joinBlock}
+<section class="lf-section" aria-labelledby="dg-h">${sechead('dg-h', 'Developer guide', more(`${BASE}/developers/`, 'All chapters'))}<div class="lf-gcards">${mod.guide.slice(0, 4).map(guideCard).join('')}</div></section>
+<section class="lf-section" aria-labelledby="mf-h">${sechead('mf-h', 'Mods FAQ')}<div class="lf-faq">${mod.faq.map(([q, a]) => faqItem({ q, a })).join('')}</div></section>`,
+  }));
+  write('mods/guidelines', layout({
+    p: `${BASE}/mods/guidelines/`, title: `GTA 6 Mod Upload Rules and Rockstar's Modding Guidelines | ${BRAND}`, section: 'mods/guidelines', label: 'Upload rules',
+    desc: 'The rules every GTA6 Project upload follows: Rockstar\'s September 2026 modding guidelines in plain English, plus our quality bar, review process and creator tiers.',
+    image: ogArt('jason-and-lucia-robbery'), crumbs: [['Mods', `${BASE}/mods/`], ['Upload rules', `${BASE}/mods/guidelines/`]],
+    body: `${head('GTA6 Project · Rules', 'Upload rules', 'Two layers: Rockstar\'s own modding guidelines, which every mod must follow, and our quality bar on top.')}
+<section class="lf-section lf-tight" aria-labelledby="rr-h">${sechead('rr-h', 'Rockstar\'s guidelines')}
+  <p class="lf-prose">Rockstar published updated modding guidelines on ${fmtDate(RS.date)}, covering GTA VI as well as GTA V and Red Dead Redemption 2. In short:</p>
+  <div class="lf-rules">${RS.rules.map(([t, d2]) => `<div class="lf-rule"><b>${esc(t)}</b><span>${esc(d2)}</span></div>`).join('')}</div>
+  <p class="lf-src">Summarised from ${RS.links.map(([n, u]) => ext(u, `${esc(n)} ↗`)).join(' · ')}. Rockstar's own wording always wins. This isn't legal advice.</p>
+</section>
+${adSlot('leader')}
+<section class="lf-section" aria-labelledby="ours-h">${sechead('ours-h', 'Our quality bar')}<div class="lf-features">${mod.standards.map(([t, d2], i) => `<article class="lf-feat"><span class="lf-feat-n">${String(i + 1).padStart(2, '0')}</span><h2>${esc(t)}</h2><p>${esc(d2)}</p></article>`).join('')}</div></section>
+<section class="lf-section" aria-labelledby="rv2-h">${sechead('rv2-h', 'Review process')}<ol class="lf-steps">${mod.review.map(([t, d2]) => `<li><b>${esc(t)}</b><span>${esc(d2)}</span></li>`).join('')}</ol></section>
+<section class="lf-section" aria-labelledby="tk-h">${sechead('tk-h', 'Takedowns and reports')}<p class="lf-prose">Rights holders and creators can report a mod at <a href="mailto:hexmodifications@icloud.com">hexmodifications@icloud.com</a>. We remove infringing or unsafe files quickly and tell the uploader why.</p></section>
+${joinBlock}`,
+  }));
+  for (const c of mod.categories) {
+    write(`mods/${c.slug}`, layout({
+      p: `${BASE}/mods/${c.slug}/`, title: `GTA 6 ${c.name} Mods: What's Coming for PC | ${BRAND}`, section: `mods/${c.slug}`, label: c.name,
+      desc: `GTA 6 ${c.name.toLowerCase()} mods on GTA6 Project: ${c.text} Opening with the PC release, every upload reviewed for quality.`,
+      image: ogArt('jason-and-lucia-lock-and-load'), crumbs: [['Mods', `${BASE}/mods/`], [c.name, `${BASE}/mods/${c.slug}/`]],
+      body: `${head('GTA6 Project · Mods', `GTA 6 ${esc(c.name)} mods`, esc(c.text))}
+<section class="lf-section lf-tight">${statusBox}</section>
+<section class="lf-section" aria-labelledby="ex-h">${sechead('ex-h', 'What we expect to see')}<ul class="lf-list lf-cols">${c.examples.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
+  <aside class="lf-note"><b>Rules for this category:</b> follow Rockstar's guidelines (no real-world brands, story characters or online features) and our quality bar. ${more(`${BASE}/mods/guidelines/`, 'Upload rules')}</aside></section>
+${adSlot('leader')}
+<section class="lf-section" aria-labelledby="oc-h">${sechead('oc-h', 'Other categories')}<div class="lf-cats">${mod.categories.filter((o) => o !== c).map(catCard).join('')}</div></section>
+<section class="lf-section" aria-labelledby="gd-h">${sechead('gd-h', 'Start learning', more(`${BASE}/developers/`, 'Developer guide'))}<div class="lf-gcards">${mod.guide.slice(1, 5).map((g) => guideCard(g, mod.guide.indexOf(g))).join('')}</div></section>
+${joinBlock}`,
+    }));
+  }
+
+  // ═════════════ developer guide ═════════════
+  write('developers', layout({
+    p: `${BASE}/developers/`, title: `GTA 6 Modding Guide for Developers: Engine, File Formats, Scripting and Tools | ${BRAND}`, section: 'developers', label: 'Developer guide',
+    desc: 'The GTA 6 modding developer guide: will GTA 6 have mods, the RAGE engine, likely file formats, scripting languages, folder structure, the tools to learn now and Rockstar\'s modding rules.',
+    image: ogArt('jason-and-lucia-robbery'), crumbs: [['Developer guide', `${BASE}/developers/`]],
+    jsonld: [{ '@context': 'https://schema.org', '@type': 'ItemList', name: 'GTA 6 modding developer guide', itemListElement: mod.guide.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: g.title, url: `${siteUrl}${BASE}/developers/${g.slug}/` })) }],
+    body: `${bannerHead('jason-and-lucia-robbery', 'GTA6 Project · Developers', 'Developer guide', 'Everything a GTA VI modder needs to get ready: what\'s known from GTA V and Red Dead Redemption 2, and our best estimates for GTA VI, clearly labelled.')}
+<section class="lf-section lf-tight"><aside class="lf-note"><b>How to read this guide:</b> ${tag('fact')} means it's documented or confirmed. ${tag('estimate')} is our educated guess from how Rockstar's previous games work. No GTA VI PC files exist yet.</aside>
+<div class="lf-gcards">${mod.guide.map(guideCard).join('')}</div></section>
+${adSlot('leader')}
+${joinBlock}`,
+  }));
+  mod.guide.forEach((g, i) => {
+    const prev = mod.guide[i - 1], next = mod.guide[i + 1];
+    write(`developers/${g.slug}`, layout({
+      p: `${BASE}/developers/${g.slug}/`, title: `${g.title.replace(/^Will GTA 6/, 'Will GTA 6')}${/GTA/.test(g.title) ? '' : ' for GTA 6 Modding'} | ${BRAND}`, section: 'developers', label: 'Developer guide', type: 'article',
+      desc: `${g.summary} Part of the GTA6 Project developer guide for GTA VI modders.`,
+      image: ogArt('jason-and-lucia-robbery'), crumbs: [['Developer guide', `${BASE}/developers/`], [g.title, `${BASE}/developers/${g.slug}/`]],
+      jsonld: [{ '@context': 'https://schema.org', '@type': 'TechArticle', headline: g.title, description: g.summary, dateModified: updated, author: { '@type': 'Organization', name: 'Hex Modifications' } }],
+      body: `<article class="lf-guide">
+  ${head(`Developer guide · ${String(i + 1).padStart(2, '0')} · ${esc(g.kicker)}`, esc(g.title), esc(g.summary))}
+  <div class="lf-section lf-tight">
+    ${g.table ? `<div class="lf-ftable" role="table" aria-label="File formats"><div role="row" class="lf-ftable-head"><span role="columnheader">Type</span><span role="columnheader">GTA V</span><span role="columnheader">What it is</span><span role="columnheader">GTA VI estimate</span></div>${g.table.map((r) => `<div role="row">${r.map((c2, k) => `<span role="cell"${k === 1 ? ' class="lf-mono"' : ''}>${esc(c2)}</span>`).join('')}</div>`).join('')}</div>` : ''}
+    ${g.tree ? `<pre class="lf-tree" aria-label="GTA V folder layout">${g.tree.map(esc).join('\n')}</pre>` : ''}
+    ${g.tools ? `<div class="lf-buy">${g.tools.map(([n, d2, u]) => `<a class="lf-buycard" href="${esc(u)}" target="_blank" rel="noopener"><b>${esc(n)}</b><span>${esc(d2)}</span><i>Open ↗</i></a>`).join('')}</div>` : ''}
+    ${g.steps ? `<ol class="lf-steps">${g.steps.map(([t, d2]) => `<li><b>${esc(t)}</b><span>${esc(d2)}</span></li>`).join('')}</ol>` : ''}
+    <div class="lf-gsections">${(g.sections || []).map(([t, d2, k]) => `<section class="lf-gsec">${tag(k)}<h2>${esc(t)}</h2><p>${esc(d2)}</p></section>`).join('')}</div>
+    ${g.slug === 'will-gta-6-have-mods' ? `<h2 class="lf-h3">How long PC versions have taken</h2><div class="lf-compare" role="table"><div role="row" class="lf-compare-head"><span role="columnheader">Game</span><span role="columnheader">Console</span><span role="columnheader">PC</span></div>${mod.status.pcHistory.map(([n, a, b, gap]) => `<div role="row"><span role="rowheader">${esc(n)}</span><span role="cell">${esc(a)}</span><span role="cell">${esc(b)} <small>(${esc(gap)})</small></span></div>`).join('')}</div><p class="lf-src">${esc(mod.status.pcEstimate)}</p>` : ''}
+    ${adSlot('infeed')}
+    <nav class="lf-pager" aria-label="Guide chapters">${prev ? `<a href="${BASE}/developers/${prev.slug}/"><i>Previous</i>${esc(prev.title)}</a>` : `<a href="${BASE}/developers/"><i>Back to</i>All chapters</a>`}${next ? `<a href="${BASE}/developers/${next.slug}/"><i>Next</i>${esc(next.title)}</a>` : `<a href="${BASE}/mods/#join"><i>Next</i>Become a creator</a>`}</nav>
+  </div>
+</article>`,
+    }));
+  });
+
   // ═════════════ leaks & rumours ═════════════
   const LK = db.leaks;
   write('leaks', layout({
@@ -807,12 +920,12 @@ ${adSlot('leader')}
 
   // ═════════════ about ═════════════
   write('about', layout({
-    p: `${BASE}/about/`, title: `About GTA 6 Hub and Disclaimer | ${BRAND}`, section: 'about',
-    desc: 'About GTA 6 Hub, the unofficial GTA 6 database by Hex Modifications: how facts are checked and labelled, where artwork, maps and data come from, and our disclaimer.',
+    p: `${BASE}/about/`, title: `About GTA6 Project and Disclaimer | ${BRAND}`, section: 'about',
+    desc: 'About GTA6 Project, the unofficial GTA 6 database by Hex Modifications: how facts are checked and labelled, where artwork, maps and data come from, and our disclaimer.',
     image: ogArt('jason-and-lucia-01'), crumbs: [['About', `${BASE}/about/`]],
-    body: `${head('About', 'About GTA 6 Hub', '')}
+    body: `${head('About', 'About GTA6 Project', '')}
 <section class="lf-section lf-tight lf-prose">
-  <p><b>GTA 6 Hub is an unofficial fan site</b> made by <a href="/">Hex Modifications</a>. It isn't affiliated with, endorsed by or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto, GTA VI and all related names, logos, images and trademarks belong to their respective owners.</p>
+  <p><b>GTA6 Project is an unofficial fan site</b> made by <a href="/">Hex Modifications</a>. It isn't affiliated with, endorsed by or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto, GTA VI and all related names, logos, images and trademarks belong to their respective owners.</p>
   <h2 class="lf-h3">How we label facts</h2>
   <p><span class="lf-badge lf-ok">Confirmed</span> means Rockstar Games has said or shown it. <span class="lf-badge lf-rep">Reported</span> means it comes from press reports, store listings or fans identifying things in Rockstar's official footage. We don't host leaked or stolen material, and we don't list rumours about real people, so the voice cast stays empty until it's officially announced.</p>
   <h2 class="lf-h3">Artwork, video and audio</h2>
@@ -828,12 +941,15 @@ ${adSlot('leader')}
 
   fs.writeFileSync(path.join(out, 'icon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#1d1d35"/><text x="32" y="46" text-anchor="middle" font-family="Impact, sans-serif" font-size="40" fill="#fdb3c2">6</text></svg>`);
 
-  // the hub used to live at /gta6/: send old links to the new address
-  for (const u of urls) {
-    const rel = u.loc.slice(`${siteUrl}${BASE}`.length);
-    const file = path.join(dist, 'gta6', rel, 'index.html');
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, `<!doctype html><meta charset="utf-8"><title>Moved to GTA 6 Hub</title><meta name="robots" content="noindex"><link rel="canonical" href="${esc(u.loc)}"><meta http-equiv="refresh" content="0;url=${esc(u.loc)}"><a href="${esc(u.loc)}">GTA 6 Hub has moved here</a>`);
+  // the site used to live at /gta6/ and /gta6hub/: send old links to the new address
+  for (const old of ['gta6', 'gta6hub']) {
+    if (`/${old}` === BASE) continue;
+    for (const u of urls) {
+      const rel = u.loc.slice(`${siteUrl}${BASE}`.length);
+      const file = path.join(dist, old, rel, 'index.html');
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, `<!doctype html><meta charset="utf-8"><title>Moved to GTA6 Project</title><meta name="robots" content="noindex"><link rel="canonical" href="${esc(u.loc)}"><meta http-equiv="refresh" content="0;url=${esc(u.loc)}"><a href="${esc(u.loc)}">GTA6 Project has moved here</a>`);
+    }
   }
   log(`gta6hub: ${urls.length} pages built (${news.length} news, ${videos.length} videos, ${landmarks.length} landmarks, ${adCount} ad slots${adsOn ? '' : ', ads off until configured'})`);
   return { urls, updated };
@@ -845,8 +961,6 @@ function decode(s) { return s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').repla
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
   const dist = path.join(root, 'dist');
-  fs.mkdirSync(path.join(dist, 'gta6hub'), { recursive: true });
-  fs.cpSync(path.join(root, 'gta6hub', 'public'), path.join(dist, 'gta6hub'), { recursive: true });
   const site = JSON.parse(fs.readFileSync(path.join(root, 'data', 'site.json'), 'utf8'));
   await buildGta6({ root, dist, siteUrl: (process.env.SITE_URL || 'https://hex-modifications.github.io').replace(/\/$/, ''), site, fetchFeed: process.env.SKIP_FEED !== '1' });
 }

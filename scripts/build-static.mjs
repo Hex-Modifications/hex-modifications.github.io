@@ -100,8 +100,7 @@ for (const p of products) {
   fs.writeFileSync(path.join(dir, 'index.html'), productPage(site, p, SITE_URL));
 }
 
-// GTA 6 Hub, the standalone GTA VI site at /gta6hub/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
-fs.cpSync(path.join(ROOT, 'gta6hub', 'public'), path.join(DIST, 'gta6hub'), { recursive: true });
+// GTA6 Project, the GTA VI modding hub and database at /gta6project/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
 const gta6 = await buildGta6({ root: ROOT, dist: DIST, siteUrl: SITE_URL, site, fetchFeed: process.env.SKIP_FEED !== '1' });
 
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, gta6.urls));

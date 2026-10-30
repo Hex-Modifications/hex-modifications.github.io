@@ -1,0 +1,606 @@
+{
+  "status": {
+    "headline": "Mods open when GTA VI comes to PC",
+    "text": "GTA VI launches on PlayStation 5 and Xbox Series X|S on November 19, 2026. Rockstar hasn't announced a PC version, and consoles don't run mods, so there's nothing to upload yet. We're building the hub, the rules and the developer guides now, so creators are ready on day one.",
+    "pcHistory": [
+      [
+        "Grand Theft Auto IV",
+        "April 2008",
+        "December 2008",
+        "7 months"
+      ],
+      [
+        "Grand Theft Auto V",
+        "September 2013",
+        "April 2015",
+        "19 months"
+      ],
+      [
+        "Red Dead Redemption 2",
+        "October 2018",
+        "November 2019",
+        "13 months"
+      ]
+    ],
+    "pcEstimate": "If Rockstar follows its own pattern, a PC version would land somewhere between late 2027 and 2028. That's our estimate, not an announcement."
+  },
+  "categories": [
+    {
+      "slug": "scripts",
+      "name": "Scripts & gameplay",
+      "icon": "{ }",
+      "text": "New mechanics, jobs, systems and quality-of-life changes built with script hooks.",
+      "examples": [
+        "Realistic fuel, hunger and fatigue",
+        "Better traffic and pedestrian AI",
+        "Expanded phone apps",
+        "Dynamic weather and events"
+      ]
+    },
+    {
+      "slug": "police",
+      "name": "Police & emergency",
+      "icon": "★",
+      "text": "Play as Leonida's police, paramedics, firefighters or Coast Guard, the way LSPDFR did for Los Santos.",
+      "examples": [
+        "Patrol callouts",
+        "Traffic stops and pursuits",
+        "Coast Guard boat patrols in the Keys",
+        "Dispatch and backup systems"
+      ]
+    },
+    {
+      "slug": "vehicles",
+      "name": "Vehicles",
+      "icon": "◧",
+      "text": "Lore-friendly cars, bikes, boats and aircraft, liveries and handling tweaks.",
+      "examples": [
+        "Original lore-friendly models",
+        "Emergency vehicle packs",
+        "Liveries and wraps",
+        "Handling and sound overhauls"
+      ]
+    },
+    {
+      "slug": "weapons",
+      "name": "Weapons",
+      "icon": "⌖",
+      "text": "Lore-friendly weapons, attachments, finishes and animation work.",
+      "examples": [
+        "New attachment sets",
+        "Weapon finishes",
+        "Recoil and ballistics tuning"
+      ]
+    },
+    {
+      "slug": "characters",
+      "name": "Characters & clothing",
+      "icon": "☺",
+      "text": "Original peds, outfits, hair and tattoos. Rockstar's story characters stay as Rockstar made them.",
+      "examples": [
+        "Outfit packs",
+        "Original ped models",
+        "Hair and tattoo sets",
+        "Uniform packs"
+      ]
+    },
+    {
+      "slug": "maps",
+      "name": "Maps & interiors",
+      "icon": "⌂",
+      "text": "New interiors, building upgrades and map additions that fit Leonida.",
+      "examples": [
+        "Enterable interiors",
+        "Furnished safehouses",
+        "Road and junction fixes",
+        "Landscaping and props"
+      ]
+    },
+    {
+      "slug": "graphics",
+      "name": "Graphics & lighting",
+      "icon": "◐",
+      "text": "Visual overhauls, lighting, weather and ReShade presets.",
+      "examples": [
+        "Timecycle and weather mods",
+        "ReShade presets",
+        "Texture upgrades",
+        "Photo-mode tools"
+      ]
+    },
+    {
+      "slug": "audio",
+      "name": "Audio",
+      "icon": "♪",
+      "text": "Original sound effects, engine sounds and ambience you made or have rights to.",
+      "examples": [
+        "Engine sound packs",
+        "Gun sounds",
+        "Ambience and siren packs"
+      ]
+    },
+    {
+      "slug": "tools",
+      "name": "Tools & libraries",
+      "icon": "⚙",
+      "text": "Script frameworks, loaders, editors and libraries other creators build on.",
+      "examples": [
+        "Script hooks and wrappers",
+        "Asset converters",
+        "Map editors",
+        "Developer libraries"
+      ]
+    }
+  ],
+  "rockstarRules": {
+    "date": "2026-09-10",
+    "source": "Rockstar Games modding guidelines, as reported by Game Developer and GamesRadar",
+    "links": [
+      [
+        "Game Developer",
+        "https://www.gamedeveloper.com/production/-do-not-rockstar-outlines-modding-rules-before-gta-vi-touches-down"
+      ],
+      [
+        "GamesRadar",
+        "https://www.gamesradar.com/games/grand-theft-auto/ahead-of-gta-6-rockstar-releases-modding-guidelines-that-axe-new-missions-maps-ports-and-more-respect-our-games/"
+      ]
+    ],
+    "rules": [
+      [
+        "Respect the story",
+        "Don't expand or change Rockstar's official storylines, missions, characters or continuity."
+      ],
+      [
+        "No cross-game ports",
+        "Don't bring maps, locations, characters or assets from one Rockstar game into another."
+      ],
+      [
+        "No unofficial ports",
+        "Don't port games to platforms Rockstar hasn't released them on."
+      ],
+      [
+        "Multiplayer through Rockstar only",
+        "Multiplayer modding goes through Rockstar's licensed Creator Platform (FiveM/RedM), unless Rockstar says otherwise."
+      ],
+      [
+        "No other people's IP",
+        "No real brands, logos, car makes, music, artwork or other games' content, and no Rockstar voice performances reused."
+      ],
+      [
+        "No real people without permission",
+        "No real person's voice, image or likeness without written permission."
+      ],
+      [
+        "No paid mods outside approved stores",
+        "Mods can only be sold through storefronts Rockstar approves; everything here is free."
+      ],
+      [
+        "No gambling, loot boxes or crypto",
+        "No real-money gambling, loot boxes, sale of in-game currency, or crypto, NFTs or memecoins."
+      ]
+    ]
+  },
+  "standards": [
+    [
+      "Rules first",
+      "Every upload must follow Rockstar's modding guidelines and our rules. Anything that breaks them is rejected, however good it is."
+    ],
+    [
+      "Your own work",
+      "Original work, or work you have written permission to use, with every contributor credited. No ripped or stolen assets."
+    ],
+    [
+      "Single-player only",
+      "Nothing that works online, gives an unfair advantage or touches GTA Online."
+    ],
+    [
+      "Proper presentation",
+      "At least three unedited in-game screenshots, a clear description, install and uninstall steps, requirements and a version number."
+    ],
+    [
+      "Tested and stable",
+      "Tested on the current game version, with no crashes, no broken saves and no major performance hit."
+    ],
+    [
+      "Clean and safe",
+      "Every file is virus-scanned. Script mods need readable code or pass a manual code review; no obfuscated installers or bundled adware."
+    ],
+    [
+      "Lore-friendly",
+      "Content that looks like it belongs in Leonida: fictional brands, original designs, Rockstar's tone."
+    ],
+    [
+      "Maintained",
+      "A changelog for every update, and a fix or a takedown when a game update breaks it."
+    ]
+  ],
+  "review": [
+    [
+      "Submit",
+      "Upload your files, screenshots and description from your creator account."
+    ],
+    [
+      "Automated checks",
+      "Virus scan, file-type and size checks, and a duplicate check against existing uploads."
+    ],
+    [
+      "Human review",
+      "A moderator installs and tests the mod against the rules and the quality bar."
+    ],
+    [
+      "Published",
+      "Approved mods go live with your name on them. Great work gets a Staff Pick."
+    ]
+  ],
+  "tiers": [
+    [
+      "Creator",
+      "Anyone with a verified account who has had a mod approved."
+    ],
+    [
+      "Verified creator",
+      "Three or more approved mods with no rule breaks. Faster reviews and a badge."
+    ],
+    [
+      "Founding creator",
+      "Creators who join before the PC launch. A permanent badge and early access to uploads."
+    ]
+  ],
+  "guide": [
+    {
+      "slug": "will-gta-6-have-mods",
+      "title": "Will GTA 6 have mods?",
+      "kicker": "Start here",
+      "summary": "Where GTA VI modding stands today: consoles, PC, Rockstar's rules and FiveM.",
+      "sections": [
+        [
+          "Consoles: no",
+          "PlayStation 5 and Xbox Series X|S don't let you load custom game files, and Rockstar has never supported mods on console. Expect GTA VI on console to stay unmodded.",
+          "fact"
+        ],
+        [
+          "PC: very likely, later",
+          "Every modern GTA reached PC after console, and each PC release grew a huge modding scene. Rockstar hasn't announced a PC version of GTA VI yet.",
+          "fact"
+        ],
+        [
+          "Rockstar's stance",
+          "Rockstar has long said it generally won't act against single-player PC mods that are non-commercial and respect other people's IP. In September 2026 it published stricter guidelines that also cover GTA VI.",
+          "fact"
+        ],
+        [
+          "FiveM is Rockstar's now",
+          "Rockstar bought Cfx.re, the team behind FiveM and RedM, in August 2023, and opened an official storefront for FiveM and RedM creators in January 2026. A FiveM-style platform for GTA VI is plausible but unannounced.",
+          "fact"
+        ],
+        [
+          "Our read",
+          "Single-player PC modding will almost certainly happen once a PC version ships. Multiplayer and roleplay modding will likely be channelled through Rockstar's own platform.",
+          "estimate"
+        ]
+      ]
+    },
+    {
+      "slug": "engine-and-specs",
+      "title": "Engine and technical specs",
+      "kicker": "Under the hood",
+      "summary": "What we know and what we expect about the engine GTA VI runs on.",
+      "sections": [
+        [
+          "RAGE",
+          "GTA VI runs on Rockstar's own engine, the Rockstar Advanced Game Engine (RAGE), which powered GTA IV, GTA V and Red Dead Redemption 2. Fans often call this version \"RAGE 9\"; Rockstar hasn't used that name.",
+          "fact"
+        ],
+        [
+          "Graphics API",
+          "On PC, expect DirectX 12. GTA V's 2025 Enhanced edition and Red Dead Redemption 2 both use it, and RDR2 also supports Vulkan.",
+          "estimate"
+        ],
+        [
+          "Ray tracing",
+          "GTA V Enhanced added ray-traced shadows, reflections and global illumination. A PC GTA VI will almost certainly build on that.",
+          "estimate"
+        ],
+        [
+          "Streaming world",
+          "Leonida is far denser than Los Santos, so assets stream in and out constantly. Mods that add a lot of map content will need to respect streaming budgets more than in GTA V.",
+          "estimate"
+        ],
+        [
+          "Physics and animation",
+          "Rockstar uses Euphoria for character physics and its own systems for vehicles. The Extended Look's weightier driving suggests a reworked vehicle model, which means handling mods will need new tuning.",
+          "estimate"
+        ]
+      ]
+    },
+    {
+      "slug": "file-formats",
+      "title": "File formats",
+      "kicker": "Assets",
+      "summary": "GTA V's file formats, and what GTA VI's are likely to look like.",
+      "table": [
+        [
+          "Archives",
+          ".rpf",
+          "RAGE Package Files hold almost everything, encrypted on PC. OpenIV and CodeWalker can read and write them.",
+          "Likely a newer RPF version with stronger encryption."
+        ],
+        [
+          "Models",
+          ".ydr / .ydd / .yft",
+          "Drawables (props and buildings), drawable dictionaries (peds and clothing) and fragments (vehicles and breakable objects).",
+          "Same idea, new versions; expect tools to need updating."
+        ],
+        [
+          "Textures",
+          ".ytd",
+          "Texture dictionaries, usually DXT/BC-compressed.",
+          "Likely BC7 and higher resolutions as standard."
+        ],
+        [
+          "Collisions",
+          ".ybn",
+          "Collision bounds for buildings, props and vehicles.",
+          "Same role."
+        ],
+        [
+          "Map placement",
+          ".ymap / .ytyp",
+          "Where objects sit in the world, and the definitions of those objects.",
+          "Same role, likely more streaming metadata."
+        ],
+        [
+          "Animation",
+          ".ycd",
+          "Clip dictionaries.",
+          "Same role."
+        ],
+        [
+          "Audio",
+          ".awc",
+          "Audio wave containers.",
+          "Same role."
+        ],
+        [
+          "Data files",
+          ".meta / .ymt (XML)",
+          "Vehicles, handling, weapons and peds are defined in XML-style metadata (vehicles.meta, handling.meta, weapons.meta).",
+          "Very likely kept: it's how Rockstar's own DLC works."
+        ],
+        [
+          "Scripts",
+          ".ysc",
+          "Rockstar's compiled game scripts, which call engine \"natives\".",
+          "Same model, with a new native table to map out."
+        ]
+      ],
+      "sections": [
+        [
+          "Read this first",
+          "The left-hand columns describe GTA V on PC, which is well documented. The last column is our estimate for GTA VI. No GTA VI files have been officially released for PC.",
+          "estimate"
+        ]
+      ]
+    },
+    {
+      "slug": "scripting",
+      "title": "Scripting and programming languages",
+      "kicker": "Code",
+      "summary": "How script mods worked in GTA V, and the languages to learn for GTA VI.",
+      "sections": [
+        [
+          "Natives",
+          "Rockstar's scripts drive the game by calling thousands of engine functions called natives (spawn a car, set a wanted level, play an animation). Script hooks let mods call the same natives.",
+          "fact"
+        ],
+        [
+          "C++",
+          "Script Hook V let C++ mods (.asi plugins) call natives directly. It appeared within days of GTA V's PC launch. Expect the same pattern for GTA VI: learn modern C++.",
+          "fact"
+        ],
+        [
+          "C#",
+          "Script Hook V .NET and RAGE Plugin Hook brought C# to GTA V; LSPDFR is built on RAGE Plugin Hook. C# is the friendliest route for gameplay mods.",
+          "fact"
+        ],
+        [
+          "Lua and JavaScript",
+          "FiveM servers run Lua and JavaScript. If Rockstar's platform supports GTA VI, those skills transfer directly.",
+          "estimate"
+        ],
+        [
+          "Shaders",
+          "Graphics mods and ReShade presets use HLSL-style shader code.",
+          "fact"
+        ],
+        [
+          "What to learn now",
+          "C# for gameplay scripts, C++ for low-level tools, Lua for roleplay, and Python for asset pipelines and converters.",
+          "estimate"
+        ]
+      ]
+    },
+    {
+      "slug": "directory-structure",
+      "title": "Game folder structure",
+      "kicker": "Files",
+      "summary": "How a GTA V install is laid out, and how GTA VI's will probably look.",
+      "tree": [
+        "Grand Theft Auto V/",
+        "├─ GTA5.exe                  game executable",
+        "├─ common.rpf, x64a…x64w.rpf  core archives",
+        "├─ update/",
+        "│  ├─ update.rpf             patch archive",
+        "│  └─ x64/dlcpacks/          each DLC as its own dlc.rpf",
+        "├─ mods/                     OpenIV's mod copy of edited archives",
+        "├─ scripts/                  Script Hook V .NET mods (.dll / .cs)",
+        "├─ plugins/                  RAGE Plugin Hook and LSPDFR",
+        "├─ ScriptHookV.dll           the script hook",
+        "└─ dinput8.dll               ASI loader for .asi plugins"
+      ],
+      "sections": [
+        [
+          "Mods folder",
+          "OpenIV's \"mods\" folder kept the original archives untouched so updates didn't break installs. A GTA VI hub should push the same safe approach.",
+          "fact"
+        ],
+        [
+          "DLC packs",
+          "Rockstar adds content as separate DLC packs; add-on mods copied that structure so they didn't overwrite base files.",
+          "fact"
+        ],
+        [
+          "GTA VI",
+          "Expect a similar layout: an executable, core archives, an update archive and per-update packs. Folder names will differ.",
+          "estimate"
+        ]
+      ]
+    },
+    {
+      "slug": "tools",
+      "title": "Tools to learn now",
+      "kicker": "Toolbox",
+      "summary": "The GTA V tools whose successors will build GTA VI's modding scene.",
+      "tools": [
+        [
+          "OpenIV",
+          "Archive explorer and editor for RAGE games, plus the safe mods folder.",
+          "https://openiv.com"
+        ],
+        [
+          "CodeWalker",
+          "Map viewer and editor for GTA V: place props, edit ymaps, explore the world.",
+          "https://github.com/dexyfex/CodeWalker"
+        ],
+        [
+          "Sollumz",
+          "Blender add-on that imports and exports GTA V models, collisions and maps.",
+          "https://github.com/Sollumz/Sollumz"
+        ],
+        [
+          "Blender",
+          "Free 3D suite most new GTA modellers start with.",
+          "https://www.blender.org"
+        ],
+        [
+          "Script Hook V",
+          "The native script hook for C++ (.asi) mods.",
+          "http://www.dev-c.com/gtav/scripthookv/"
+        ],
+        [
+          "Script Hook V .NET",
+          "C# scripting on top of Script Hook V.",
+          "https://github.com/scripthookvdotnet/scripthookvdotnet"
+        ],
+        [
+          "RAGE Plugin Hook",
+          "C# plugin framework that LSPDFR is built on; ships with LSPDFR.",
+          "https://www.lcpdfr.com"
+        ],
+        [
+          "ReShade",
+          "Post-processing injector for presets and photo modes.",
+          "https://reshade.me"
+        ],
+        [
+          "FiveM",
+          "Rockstar-owned multiplayer platform; great practice for Lua and JS scripting.",
+          "https://fivem.net"
+        ]
+      ],
+      "sections": [
+        [
+          "Practise on GTA V",
+          "GTA V Enhanced on PC is the closest thing to GTA VI you can mod today. Skills in these tools will carry straight over.",
+          "estimate"
+        ]
+      ]
+    },
+    {
+      "slug": "get-ready",
+      "title": "Get ready for day one",
+      "kicker": "Checklist",
+      "summary": "A practical plan for creators who want to be first.",
+      "steps": [
+        [
+          "Pick your lane",
+          "Scripts, vehicles, maps, graphics or police mods. Specialists get noticed first."
+        ],
+        [
+          "Learn the language",
+          "C# for gameplay, C++ for tools, Lua for roleplay, Blender for models."
+        ],
+        [
+          "Ship something in GTA V",
+          "Release a small, polished GTA V mod. It's your portfolio."
+        ],
+        [
+          "Learn Rockstar's rules",
+          "Read the modding guidelines so your first GTA VI mod isn't taken down."
+        ],
+        [
+          "Go lore-friendly",
+          "Practise original designs and fictional brands. Real-world brands aren't allowed."
+        ],
+        [
+          "Build your page",
+          "A consistent creator name, a Discord and a short showreel."
+        ],
+        [
+          "Join as a founding creator",
+          "Reserve your name on GTA6 Project and get early upload access when PC lands."
+        ]
+      ]
+    },
+    {
+      "slug": "rockstar-rules",
+      "title": "Rockstar's modding rules",
+      "kicker": "The rules",
+      "summary": "Rockstar's September 2026 modding guidelines in plain English, and what they mean for you.",
+      "sections": [
+        [
+          "What's clearly fine",
+          "Single-player PC mods that are free, original, lore-friendly and don't touch online play: scripts, graphics, interiors, original vehicles and outfits, police mods.",
+          "estimate"
+        ],
+        [
+          "Grey areas",
+          "Real-world cars and brands were a huge part of GTA V modding. Under the new guidelines they count as other people's IP, so we won't host them.",
+          "estimate"
+        ],
+        [
+          "Clearly out",
+          "Story or character edits, ports from other Rockstar games, online cheats, paid or paywalled mods, gambling and crypto.",
+          "fact"
+        ],
+        [
+          "Not legal advice",
+          "This is our reading of public guidelines. Rockstar's own wording always wins.",
+          "fact"
+        ]
+      ]
+    }
+  ],
+  "faq": [
+    [
+      "Can I upload mods now?",
+      "Not yet. Uploads open once GTA VI is on PC. You can register as a founding creator today to reserve your name."
+    ],
+    [
+      "Will mods be free?",
+      "Yes. Rockstar only allows mods to be sold through storefronts it approves, so everything on GTA6 Project is free. Creators can link a tip page."
+    ],
+    [
+      "Will you host real-world cars?",
+      "No. Rockstar's guidelines treat real brands and logos as other people's IP. We host lore-friendly vehicles only."
+    ],
+    [
+      "Is GTA6 Project official?",
+      "No. It's an independent fan project by Hex Modifications, not affiliated with Rockstar Games or Take-Two."
+    ],
+    [
+      "How do you keep files safe?",
+      "Every file is virus-scanned, script mods are code-reviewed, and a moderator tests every upload before it goes live."
+    ]
+  ]
+}

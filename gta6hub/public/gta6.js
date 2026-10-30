@@ -6,7 +6,7 @@
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const BASE = '/gta6hub';
+  const BASE = document.documentElement.dataset.base ?? '/gta6project';
 
   // ── header turns to glass once you scroll past the top ──
   const headEl = document.querySelector('.lf-head');
