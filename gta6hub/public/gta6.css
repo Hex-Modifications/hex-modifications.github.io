@@ -678,3 +678,30 @@ main { display: block; }
 .lf-rule span { color: var(--muted); font-size: 14.5px; }
 .lf-compare small { color: var(--dim); font-weight: 500; }
 .lf-status + .lf-sechead { margin-top: clamp(48px, 6vw, 80px); }
+
+/* ── brand: the Hex Modifications family, downloads, swatches ── */
+.lf-family { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.lf-fam { display: flex; align-items: center; gap: 18px; padding: 20px; border-radius: 22px; background: var(--glass); box-shadow: var(--rim); text-decoration: none; color: inherit; transition: transform .5s var(--spring), box-shadow .3s; }
+.lf-fam:hover { transform: translateY(-3px); box-shadow: var(--rim), 0 0 0 1px rgba(253, 179, 194, .5); }
+.lf-fam img { width: 64px; height: 64px; border-radius: 18px; flex: none; box-shadow: 0 0 0 1px var(--line-2); }
+.lf-fam img[src$="hex-logo.webp"] { border-radius: 50%; }
+.lf-fam span { display: grid; gap: 6px; }
+.lf-fam b { font: 800 24px/1 var(--display); text-transform: uppercase; color: #fff; }
+.lf-fam em { font-style: normal; font-size: 14px; color: var(--muted); }
+.lf-dls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 14px; }
+.lf-dl { display: grid; gap: 6px; padding: 14px 14px 18px; border-radius: 22px; background: var(--glass); box-shadow: var(--rim); text-decoration: none; color: #fff; transition: transform .5s var(--spring); }
+.lf-dl:hover { transform: translateY(-3px); }
+.lf-dl-prev { display: grid; place-items: center; aspect-ratio: 1; border-radius: 14px; margin-bottom: 8px; background: repeating-conic-gradient(rgba(255, 255, 255, .04) 0 25%, transparent 0 50%) 0 0 / 20px 20px, var(--bg-2); overflow: hidden; }
+.lf-dl-prev img { max-width: 82%; max-height: 82%; object-fit: contain; }
+.lf-dl-wide img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+.lf-dl b { font: 800 20px/1 var(--display); text-transform: uppercase; }
+.lf-dl em { font-style: normal; font-size: 13px; color: var(--dim); }
+.lf-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 14px; }
+.lf-swatch { display: grid; gap: 4px; padding: 12px 12px 16px; border-radius: 20px; background: var(--glass); box-shadow: var(--rim); }
+.lf-swatch span { height: 90px; border-radius: 12px; margin-bottom: 8px; }
+.lf-swatch b { font: 800 18px/1 var(--display); text-transform: uppercase; color: #fff; }
+.lf-swatch code { font: 600 13px/1.2 ui-monospace, Menlo, monospace; color: var(--pink); }
+.lf-swatch em { font-style: normal; font-size: 13px; color: var(--muted); }
+.lf-type-a { font: 900 64px/1 var(--display); color: #fff; }
+.lf-type-b { font: 800 40px/1.2 var(--body); color: #fff; letter-spacing: .02em; }
+.lf-dl-prev.lf-dl-wide { aspect-ratio: 16 / 9; }

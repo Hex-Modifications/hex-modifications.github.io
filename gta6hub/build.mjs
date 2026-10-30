@@ -43,11 +43,14 @@ const SECTIONS = {
 };
 
 // main menu (opened from the menu button, Rockstar-style), grouped
+// the parent studio site; absolute so it still works once GTA6 Project has its own address
+const HEX = process.env.HEX_URL || 'https://hex-modifications.github.io/';
+
 const MENU = [
   ['Mods', [['mods', 'Mods hub'], ['developers', 'Developer guide'], ['mods/guidelines', 'Upload rules'], ['mods/selling', 'Selling mods'], ['mods/police', 'Police mods'], ['mods/scripts', 'Script mods']]],
   ['Explore', [['map', 'Map'], ['locations', 'Real-life locations'], ['places', 'Regions'], ['characters', 'Characters'], ['vehicles', 'Vehicles'], ['weapons', 'Weapons'], ['businesses', 'Businesses']]],
   ['Watch & listen', [['trailers', 'Trailers'], ['music', 'Music & radio'], ['artwork', 'Artwork & covers'], ['gallery', 'Screenshots']]],
-  ['Guides', [['news', 'News'], ['leaks', 'Leaks & rumours'], ['timeline', 'Timeline'], ['gameplay', 'Gameplay'], ['editions', 'Pre-order guide'], ['faq', 'FAQ'], ['about', 'About']]],
+  ['Guides', [['news', 'News'], ['leaks', 'Leaks & rumours'], ['timeline', 'Timeline'], ['gameplay', 'Gameplay'], ['editions', 'Pre-order guide'], ['faq', 'FAQ'], ['about', 'About'], ['brand', 'Brand kit']]],
 ];
 
 export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = true, log = console.log }) {
@@ -103,7 +106,9 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
     return `<img${cls ? ` class="${cls}"` : ''} src="${BASE}/art/${slug}-${v}-sm.webp" srcset="${BASE}/art/${slug}-${v}-sm.webp ${sm}w, ${BASE}/art/${slug}-${v}.webp ${d[0]}w" sizes="${sizes}" width="${d[0]}" height="${d[1]}" alt="${esc(alt ?? `${a.title}: official GTA VI artwork`)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
   }
   const ogImage = (slug) => (imgBy[slug] ? `${siteUrl}${BASE}/img/${slug}.webp` : `${siteUrl}${BASE}/art/jason-and-lucia-01-landscape.webp`);
-  const ogArt = (slug) => `${siteUrl}${BASE}/art/${slug}-landscape.webp`;
+  // branded share cards (gta6hub/public/og) where one exists, else the plain artwork
+  const ogArt = (slug) => (fs.existsSync(path.join(root, 'gta6hub', 'public', 'og', `${slug}.jpg`)) ? `${siteUrl}${BASE}/og/${slug}.jpg` : `${siteUrl}${BASE}/art/${slug}-landscape.webp`);
+  const ogBrand = `${siteUrl}${BASE}/og/gta6project.jpg`;
   const badge = (status) => (status === 'confirmed'
     ? '<span class="lf-badge lf-ok" title="Confirmed by Rockstar Games">Confirmed</span>'
     : status === 'rumour' ? '<span class="lf-badge lf-rum" title="Rumour, leak or fan theory: treat with caution">Rumour</span>'
@@ -219,7 +224,7 @@ export async function buildGta6({ root, dist, siteUrl, site = {}, fetchFeed = tr
   <div class="lf-menu-art" aria-hidden="true">${artImg(menuArt[urls.length % menuArt.length], 'portrait', { alt: '', sizes: '40vw' })}</div>
   <nav class="lf-menu-nav" aria-label="Site">
     ${MENU.map(([h, links]) => `<div><p class="lf-menu-h">${h}</p>${links.map(([s, l]) => `<a href="${BASE}/${s}/"${s === section ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</div>`).join('')}
-    <a class="lf-by" href="/"><img src="${BASE}/hex-logo.webp" width="40" height="40" alt="" loading="lazy"><span>A Hex Modifications site</span></a>
+    <a class="lf-by" href="${HEX}"><img src="${BASE}/hex-logo.webp" width="40" height="40" alt="" loading="lazy"><span>A Hex Modifications project</span></a>
   </nav>
 </div>
 ${crumbs.length ? `<nav class="lf-crumbs" aria-label="Breadcrumb"><ol>${trail.map(([n, h], i) => (i === trail.length - 1 ? `<li aria-current="page">${esc(n)}</li>` : `<li><a href="${h}">${esc(n)}</a></li>`)).join('')}</ol></nav>` : ''}
@@ -232,7 +237,7 @@ ${adSlot('foot')}
     <div class="lf-foot-about">
       <a class="lf-brand" href="${BASE}/"><span class="lf-logo">GTA<b>6</b></span><span class="lf-logo-hub">Project</span></a>
       <p>The home of GTA VI single-player mods, plus everything known about the game: the map, the people, the cars and the news, checked every day.</p>
-      <a class="lf-by" href="/"><img src="${BASE}/hex-logo.webp" width="40" height="40" alt="" loading="lazy"><span>A Hex Modifications site</span></a>
+      <a class="lf-by" href="${HEX}"><img src="${BASE}/hex-logo.webp" width="40" height="40" alt="" loading="lazy"><span>A Hex Modifications project</span></a>
     </div>
     ${MENU.map(([h, links]) => `<nav aria-label="${h}"><p class="lf-foot-h">${h}</p>${links.map(([s, l]) => `<a href="${BASE}/${s}/">${l}</a>`).join('')}</nav>`).join('\n    ')}
     <nav aria-label="Official"><p class="lf-foot-h">Official</p>${ext(L.official, 'Rockstar: GTA VI')}${ext(L.newswire, 'Rockstar Newswire')}${ext(L.youtube, 'Rockstar on YouTube')}${ext(L.spotify, 'GTA VI on Spotify')}${ext(L.store, 'Rockstar Store')}</nav>
@@ -940,24 +945,77 @@ ${adSlot('leader')}
   }));
 
   // ═════════════ about ═════════════
+  const family = `<div class="lf-family">
+    <a class="lf-fam" href="${BASE}/"><img src="${BASE}/brand/gta6project-192.png" width="64" height="64" alt="" loading="lazy"><span><b>GTA6 Project</b><em>The GTA VI modding hub and database. You're here.</em></span></a>
+    <a class="lf-fam" href="${HEX}"><img src="${BASE}/hex-logo.webp" width="64" height="64" alt="" loading="lazy"><span><b>Hex Modifications</b><em>The studio behind it: ReShade presets, scripts and software for GTA V and beyond.</em></span></a>
+    <a class="lf-fam" href="https://www.reddit.com/r/GTA6Mods/" target="_blank" rel="noopener"><img src="${BASE}/brand/gta6mods-192.png" width="64" height="64" alt="" loading="lazy"><span><b>r/GTA6Mods</b><em>The developer community on Reddit. Plan, build and share GTA VI mods. ↗</em></span></a>
+  </div>`;
   write('about', layout({
-    p: `${BASE}/about/`, title: `About GTA6 Project and Disclaimer | ${BRAND}`, section: 'about',
-    desc: 'About GTA6 Project, the unofficial GTA 6 database by Hex Modifications: how facts are checked and labelled, where artwork, maps and data come from, and our disclaimer.',
-    image: ogArt('jason-and-lucia-01'), crumbs: [['About', `${BASE}/about/`]],
-    body: `${head('About', 'About GTA6 Project', '')}
+    p: `${BASE}/about/`, title: `About GTA6 Project | ${BRAND}`, section: 'about',
+    desc: 'About GTA6 Project, the unofficial GTA 6 modding hub and database by Hex Modifications: who runs it, how facts are labelled, where content comes from, and our disclaimer.',
+    image: ogBrand, crumbs: [['About', `${BASE}/about/`]],
+    body: `${head('About', 'About GTA6 Project', 'The home of GTA VI single-player mods, and the most complete guide to the game while we wait for them. A Hex Modifications project.')}
+<section class="lf-section lf-tight" aria-labelledby="fam-h">${sechead('fam-h', 'The Hex Modifications family')}${family}</section>
 <section class="lf-section lf-tight lf-prose">
-  <p><b>GTA6 Project is an unofficial fan site</b> made by <a href="/">Hex Modifications</a>. It isn't affiliated with, endorsed by or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto, GTA VI and all related names, logos, images and trademarks belong to their respective owners.</p>
-  <h2 class="lf-h3">How we label facts</h2>
-  <p><span class="lf-badge lf-ok">Confirmed</span> means Rockstar Games has said or shown it. <span class="lf-badge lf-rep">Reported</span> means it comes from press reports, store listings or fans identifying things in Rockstar's official footage. We don't host leaked or stolen material, and we don't list rumours about real people, so the voice cast stays empty until it's officially announced.</p>
+  <h2 class="lf-h3">Who runs it</h2>
+  <p>GTA6 Project is built and run by <a href="${HEX}">Hex Modifications</a>, an independent modding studio developed by 001hex. Hex Modifications makes ReShade presets, scripts and software, and has been releasing GTA V mods for years. GTA6 Project is its separate home for GTA VI: a place for the next generation of single-player mods, held to a higher standard.</p>
+  <h2 class="lf-h3">What it's for</h2>
+  <p>When GTA VI reaches PC, GTA6 Project will host reviewed, high-quality single-player mods from verified creators, built to Rockstar's modding guidelines. Until then it's the place to get ready: the <a href="${BASE}/developers/">developer guide</a>, the <a href="${BASE}/mods/guidelines/">upload rules</a>, founding-creator sign-up, and everything known about the game itself.</p>
+  <h2 class="lf-h3">How we label things</h2>
+  <p><span class="lf-badge lf-ok">Confirmed</span> means Rockstar Games said or showed it. <span class="lf-badge lf-rep">Reported</span> comes from the press, store listings or fans identifying things in official footage. <span class="lf-badge lf-rum">Rumour</span> covers leaks, fan theories and unverified claims, including the speculated voice cast. In the developer guide, <span class="lf-badge lf-ok">Known</span> is established fact and <span class="lf-badge lf-est">Estimate</span> is our educated guess, based on how Rockstar's RAGE engine has worked so far.</p>
+  <h2 class="lf-h3">Leaks</h2>
+  <p>The leaks page describes what has been reported, with links to press coverage. We don't host, embed or link to leaked files, videos or images.</p>
   <h2 class="lf-h3">Artwork, video and audio</h2>
-  <p>Artwork and screenshots are from Rockstar's ${ext(L.media, 'official GTA VI media pack')}, which Rockstar shares for fans to download and share, and remain © Rockstar Games. Trailers are embedded from Rockstar's YouTube channel and music from Spotify; neither loads until you press play.</p>
+  <p>Artwork and screenshots come from Rockstar's ${ext(L.media, 'official GTA VI media pack')}, which Rockstar shares for fans, and remain © Rockstar Games. Trailers are embedded from Rockstar's YouTube channel and music from Spotify. Neither loads until you press play.</p>
   <h2 class="lf-h3">Map and locations</h2>
   <p>Rockstar hasn't released the in-game map yet. Our map draws Leonida on real Florida geography from Natural Earth (public domain). Landmark names, districts and real-life matches come from the GTA VI mapping community via ${ext(L.gtadb, 'gtadb.org')}, used under the MIT licence: Copyright (C) 2025-2026 GTADB.ORG. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, subject to including this notice. The software is provided "as is", without warranty of any kind.</p>
   <h2 class="lf-h3">Privacy</h2>
   <p>This site doesn't set cookies or run analytics. Fonts load from Google Fonts. ${adsOn ? 'Ads are served by third-party networks, which may use cookies; where the law requires it you\'ll be asked for consent first.' : 'If advertising is switched on, ads are served by third-party networks, which may use cookies, and you\'ll be asked for consent first where the law requires it.'}</p>
+  <h2 class="lf-h3">Disclaimer</h2>
+  <p><b>GTA6 Project is an unofficial fan site.</b> It isn't affiliated with, endorsed by or sponsored by Rockstar Games or Take-Two Interactive. Grand Theft Auto, GTA VI and all related names, logos, images and trademarks belong to their respective owners.</p>
   <h2 class="lf-h3">Contact</h2>
-  <p>Spotted a mistake, or need something removed? Email <a href="mailto:hexmodifications@icloud.com">hexmodifications@icloud.com</a>.</p>
+  <p>Spotted a mistake, need something removed, or want to talk about GTA6 Project? Email <a href="mailto:hexmodifications@icloud.com">hexmodifications@icloud.com</a>. Press and creators: logos and colours are on the <a href="${BASE}/brand/">brand page</a>.</p>
 </section>`,
+  }));
+
+  // ═════════════ brand kit ═════════════
+  const dl = (file, name, size) => `<a class="lf-dl" href="${BASE}/brand/${file}" download><span class="lf-dl-prev${/banner|header/.test(file) ? ' lf-dl-wide' : ''}"><img src="${BASE}/brand/${file}" alt="" loading="lazy"></span><b>${name}</b><em>${size} · PNG</em></a>`;
+  const swatch = (name, hex, use, dark = false) => `<div class="lf-swatch"><span style="background:${hex}${dark ? ';box-shadow:inset 0 0 0 1px var(--line-2)' : ''}"></span><b>${name}</b><code>${hex}</code><em>${use}</em></div>`;
+  write('brand', layout({
+    p: `${BASE}/brand/`, title: `Brand Kit: GTA6 Project Logos and Colours | ${BRAND}`, section: 'brand', label: 'Brand kit',
+    desc: 'GTA6 Project brand kit: download the logo, wordmark, social banners and share cards, with colours, fonts and how to use them. A Hex Modifications project.',
+    image: ogBrand, crumbs: [['About', `${BASE}/about/`], ['Brand kit', `${BASE}/brand/`]],
+    body: `${head('GTA6 Project · Brand', 'Brand kit', 'Logos, colours and type for GTA6 Project. Free to use when you\'re writing about us, linking to us or sharing your mods from the site.')}
+<section class="lf-section lf-tight" aria-labelledby="bl-h">${sechead('bl-h', 'Logos')}
+  <div class="lf-dls">
+    ${dl('gta6project-1024.png', 'App icon', '1024 × 1024')}
+    ${dl('gta6project-wordmark.png', 'Wordmark', '923 × 280')}
+    ${dl('gta6project-hex-lockup.png', 'Hex Modifications lockup', '1145 × 230')}
+    ${dl('gta6mods-1024.png', 'r/GTA6Mods icon', '1024 × 1024')}
+  </div></section>
+<section class="lf-section" aria-labelledby="bs-h">${sechead('bs-h', 'Social banners')}
+  <div class="lf-dls">
+    ${dl('gta6project-x-header.png', 'X / Twitter header', '1500 × 500')}
+    ${dl('gta6project-discord-banner.png', 'Discord server banner', '960 × 540')}
+  </div></section>
+<section class="lf-section" aria-labelledby="bc-h">${sechead('bc-h', 'Colours')}
+  <div class="lf-swatches">
+    ${swatch('Night', '#1d1d35', 'Backgrounds', true)}${swatch('Deep night', '#0f1022', 'Gradients, footers', true)}${swatch('Flamingo', '#fdb3c2', 'The 6, pills, buttons, links')}${swatch('Cream', '#ffffd3', 'Headlines on dark')}${swatch('White', '#ffffff', 'Body headings, GTA')}
+  </div></section>
+<section class="lf-section" aria-labelledby="bt-h">${sechead('bt-h', 'Type')}
+  <div class="lf-features">
+    <article class="lf-feat"><span class="lf-type-a">GTA6</span><h2>Big Shoulders Display</h2><p>Black (900) for the logo and headlines, always in capitals. Free on Google Fonts.</p></article>
+    <article class="lf-feat"><span class="lf-type-b">Archivo</span><h2>Archivo</h2><p>Body text, labels and the PROJECT pill (ExtraBold, wide letter spacing). Free on Google Fonts.</p></article>
+  </div></section>
+<section class="lf-section" aria-labelledby="bu-h">${sechead('bu-h', 'Using the brand')}
+  <div class="lf-features">
+    <article class="lf-feat"><span class="lf-feat-n">Do</span><h2>Keep the 6 pink</h2><p>"GTA" is white, the 6 is Flamingo pink, and the pill sits to the right of the wordmark or under the icon.</p></article>
+    <article class="lf-feat"><span class="lf-feat-n">Do</span><h2>Credit Hex Modifications</h2><p>When space allows, add "by Hex Modifications" or use the lockup. GTA6 Project and Hex Modifications are separate sites from the same studio.</p></article>
+    <article class="lf-feat"><span class="lf-feat-n">Don't</span><h2>Imply it's official</h2><p>Never pair our logo with Rockstar's logo or say GTA6 Project is endorsed by Rockstar Games or Take-Two.</p></article>
+    <article class="lf-feat"><span class="lf-feat-n">Don't</span><h2>Redraw or recolour it</h2><p>No stretching, outlines, new colours or effects. Use the files above on dark backgrounds.</p></article>
+  </div>
+  <p class="lf-src">Questions or a different format? Email <a href="mailto:hexmodifications@icloud.com">hexmodifications@icloud.com</a>.</p></section>
+<section class="lf-section" aria-labelledby="bf-h">${sechead('bf-h', 'The family')}${family}</section>`,
   }));
 
   fs.writeFileSync(path.join(out, 'icon.svg'), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#1d1d35"/><text x="32" y="46" text-anchor="middle" font-family="Impact, sans-serif" font-size="40" fill="#fdb3c2">6</text></svg>`);
