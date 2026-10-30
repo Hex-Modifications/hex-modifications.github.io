@@ -468,6 +468,28 @@ a.link-card:hover { transform: translateY(-4px); }
 .progress b { position: absolute; inset: -.5px auto -.5px 0; width: 0; background: var(--grad); }
 #progPct { min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
 
+/* ── Support strip + ad slot (js/monetise.js) ── */
+.promo { max-width: 1500px; margin: clamp(70px, 9vw, 130px) auto 0; padding: 0 var(--gut); }
+.support { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 28px; padding: 14px 14px 14px 30px; border-radius: 999px; }
+.support p { margin: 0; font-size: 17px; line-height: 1.4; }
+.support p span { color: var(--muted); }
+.support-links { display: flex; gap: 10px; }
+.support-links .btn-pill { min-height: 46px; padding: 0 22px; font-size: 16px; }
+.promo-label { margin: 0 0 10px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.promo:has(ins.adsbygoogle[data-ad-status="unfilled"]) { display: none; }      /* no ad to show: no empty box */
+.sponsor { display: flex; align-items: center; gap: 20px; padding: 12px 24px 12px 12px; border-radius: var(--r-md); transition: transform .4s var(--ease); }
+.sponsor:hover { transform: translateY(-3px); }
+.sponsor img { flex: none; width: 128px; height: 76px; object-fit: cover; border-radius: 14px; }
+.sponsor-text { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.sponsor-text strong { font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
+.sponsor-text span { font-size: 15px; color: var(--muted); }
+.sponsor-cta { flex: none; font-size: 15px; font-weight: 500; }
+@media (max-width: 600px) {
+  .support { border-radius: var(--r-md); padding: 20px; }
+  .support-links { width: 100%; } .support-links .btn-pill { flex: 1; }
+  .sponsor { flex-wrap: wrap; } .sponsor img { width: 100%; height: 150px; }
+}
+
 /* ── Chat (ask hex) ── */
 .chat-fab { position: relative; display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 18px 0 8px; border-radius: 99px; font-size: 15px; font-weight: 500; transition: transform .3s var(--ease); }
 .chat-fab:hover { transform: translateY(-2px); }

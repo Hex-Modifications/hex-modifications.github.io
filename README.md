@@ -64,6 +64,26 @@ The **fresh drops** section fills itself, newest first, from every platform:
 
 On GitHub Pages the deploy workflow refreshes this **every 6 hours**. Cover images are copied onto the site itself, so visitors never load anything from other servers. If one platform is down during a refresh, it keeps the entries the live site already had. With the Node server it's live at `/api/releases`, cached for 6 hours.
 
+## Making money (ads, affiliates, support)
+
+All of this is set in `data/site.json` under `"monetise"`. Anything left empty doesn't show, so there are never empty boxes. There are two subtle placements: a support strip after the latest releases, and one clearly labelled ad slot after the software section.
+
+| Setting | What it shows |
+|---|---|
+| `support.patreon`, `support.kofi` | The support strip ("the mods are free…") with buttons. Ko-fi takes a username or a full link |
+| `adsense.client` + `adsense.slot` | A responsive Google AdSense unit. Setting `client` also writes `ads.txt` and opens the security policy to Google's ad hosts |
+| `sponsored: [{ title, text, url, image, cta, label }]` | An affiliate / sponsor card, used when AdSense isn't set (it rotates if there are several). Labelled "ad · affiliate link" and linked with `rel="sponsored"` |
+| `domain` | A custom domain, e.g. `"hexmodifications.com"`. The build writes `CNAME` and uses it for every absolute URL |
+
+**AdSense needs a custom domain.** It won't approve a `*.github.io` address. To set one up:
+1. Buy a domain (~£10/yr).
+2. At the registrar, add A records for `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`, and a CNAME for `www` → `hex-modifications.github.io`.
+3. Set `"domain"` in `site.json`, and once it's live, tick *Enforce HTTPS* in the repo's Pages settings.
+4. Apply at adsense.google.com, and in AdSense turn on *Privacy & messaging → European regulations* (Google's free consent message, required for UK/EU visitors).
+5. Make one *Display ad* unit, paste the `ca-pub-…` ID and the slot number into `site.json`, and keep *Auto ads* off so ads stay in the one slot.
+
+The AdSense script only loads after the intro has finished, so it never slows the first view.
+
 ## Intro splash
 
 The intro is rendered live, not a video. About 3,900 particles gather onto the exact halftone dots of the Hex Modifications mark, the cross flashes, and the crisp mark and wordmark settle in. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. The assets are `media/mark.webp` (157 KB) and `media/mark-dots.bin` (23 KB, the dot positions, generated from `brand/hex-modifications-official.png`), and they're only downloaded when the intro runs.
@@ -132,7 +152,8 @@ lib/releases.js        latest releases from GTA5-Mods, FiveM forum, GitHub, Patr
 public/                index.html, admin.html, css/, js/, img/
   js/app.js            page logic        js/glass3d.js   3D hero         js/liquid.js   flowing background
   js/chat.js           ask hex chat      js/persona.js   chat persona    js/timecycle.js time-of-day lighting
-  js/splash.js         intro splash      media/          intro video, poster and sound
+  js/splash.js         intro splash      js/monetise.js  support strip, ad / sponsor slot
+  media/               intro mark, particle dots and sound
 workers/chat-worker.js optional free Cloudflare Workers AI backend for the chat
 brand/                 official Hex Modifications images (transparent, sunset, night) + the script that makes them
 data/                  editable content (JSON)

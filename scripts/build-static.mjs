@@ -12,7 +12,7 @@ import { personaPrompt } from '../public/js/persona.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
-const SITE_URL = (process.env.SITE_URL || 'https://hexmodifications.github.io').replace(/\/$/, '');
+let SITE_URL = (process.env.SITE_URL || 'https://hexmodifications.github.io').replace(/\/$/, '');
 const read = (n) => JSON.parse(fs.readFileSync(path.join(ROOT, 'data', `${n}.json`), 'utf8'));
 const UA = 'Mozilla/5.0 (compatible; HexModificationsSite/1.0; +https://hex-modifications.github.io)';
 
@@ -23,6 +23,10 @@ fs.cpSync(path.join(ROOT, 'public'), DIST, {
 });
 
 const site = read('site');
+// custom domain (data/site.json → "domain"): every absolute URL uses it, and GitHub Pages picks it up from CNAME
+const domain = String(site.domain || '').trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+if (/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(domain)) SITE_URL = `https://${domain}`;
+const adsClient = /^ca-pub-\d{10,20}$/.test(site.monetise?.adsense?.client || '') ? site.monetise.adsense.client : '';
 const products = read('products');
 
 // data the frontend falls back to when there is no API
@@ -77,7 +81,11 @@ console.log('releases:', JSON.stringify(releases.status), `${releases.items.leng
 // the chat talks to Pollinations' free tier, or to the endpoint set in site.json "chat"
 const chatOrigins = ['https://text.pollinations.ai'];
 try { if (site.chat?.endpoint) chatOrigins.push(new URL(site.chat.endpoint).origin); } catch { /* ignore a bad URL */ }
-const csp = `default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' ${chatOrigins.join(' ')}; base-uri 'self'; form-action 'self'; object-src 'none'`;
+// Google AdSense loads further scripts and frames from many Google hosts, so once a publisher ID is set
+// those directives open to https: (the site itself renders no user-supplied HTML)
+const csp = adsClient
+  ? `default-src 'self'; script-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src https:; base-uri 'self'; form-action 'self'; object-src 'none'`
+  : `default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' ${chatOrigins.join(' ')}; base-uri 'self'; form-action 'self'; object-src 'none'`;
 let index = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8')
   .replace('<!--SEO_JSONLD-->', `<script type="application/ld+json">${jsonLd(site, products, SITE_URL)}</script>`)
   .replaceAll('__SITE_URL__', SITE_URL)
@@ -98,4 +106,6 @@ fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disall
 fs.writeFileSync(path.join(DIST, '404.html'), `<!doctype html><html lang="en-GB"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="8;url=/"><title>Wasted | Hex Modifications</title><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32"><link rel="stylesheet" href="/css/style.css"><script src="/js/timecycle.js"></script><body class="wasted-page"><div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div><main class="pp"><p class="label">error 404</p><h1 class="pp-title"><span class="grad">wasted</span></h1><p class="pp-desc">this page doesn't exist. respawning at the homepage in a few seconds.</p><a class="btn" href="/">respawn now</a></main></body></html>`);
 
 fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
+if (SITE_URL === `https://${domain}`) fs.writeFileSync(path.join(DIST, 'CNAME'), `${domain}\n`);
+if (adsClient) fs.writeFileSync(path.join(DIST, 'ads.txt'), `google.com, ${adsClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
 console.log(`Static site built in dist/ for ${SITE_URL} (${products.length} product pages)`);

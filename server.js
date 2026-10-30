@@ -8,7 +8,7 @@ import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
-import { securityHeaders, makeCsrf, checkCsrf, isAdmin, originAllowed, clean, EMAIL_RE } from './lib/security.js';
+import { securityHeaders, cspAds, makeCsrf, checkCsrf, isAdmin, originAllowed, clean, EMAIL_RE } from './lib/security.js';
 import { Traffic, writeJson } from './lib/traffic.js';
 import { patreonFeed, tebexPackages, shopifyProducts, discordWidget, notifyDiscord } from './lib/integrations.js';
 import { jsonLd, sitemap, robots, productPage } from './lib/seo.js';
@@ -41,6 +41,7 @@ const COMPRESSIBLE = /^(text\/|application\/(json|xml|javascript)|image\/svg)/;
 
 // ── Content store ────────────────────────────────────
 const readData = (name) => JSON.parse(fs.readFileSync(path.join(DATA, `${name}.json`), 'utf8'));
+cspAds.on = /^ca-pub-\d{10,20}$/.test(readData('site').monetise?.adsense?.client || '');
 
 async function allProducts() {
   const local = readData('products');
@@ -286,6 +287,10 @@ async function handle(req, res) {
       return await route(req, res, url.searchParams);
     }
 
+    if (pathname === '/ads.txt') {
+      const client = readData('site').monetise?.adsense?.client || '';
+      if (/^ca-pub-\d{10,20}$/.test(client)) { securityHeaders(res); return send(req, res, 200, `google.com, ${client.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`, 'text/plain; charset=utf-8'); }
+    }
     if (pathname === '/robots.txt') { securityHeaders(res); return send(req, res, 200, robots(SITE_URL), 'text/plain; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' }); }
     if (pathname === '/sitemap.xml') { securityHeaders(res); return send(req, res, 200, sitemap(await allProducts(), SITE_URL), 'application/xml; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' }); }
 

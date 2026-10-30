@@ -106,6 +106,14 @@
     <button class="btn-pill glass rel-more" type="button" id="relMore" hidden>more releases</button>
   </section>
 
+  <!-- support strip (data/site.json → monetise.support) -->
+  <aside class="promo" id="promoSupport" aria-label="Support Hex Modifications" hidden>
+    <div class="support glass reveal">
+      <p><strong>the mods are free.</strong> <span>if they've made your game better, you can help keep new ones coming.</span></p>
+      <div class="support-links" id="supportLinks"></div>
+    </div>
+  </aside>
+
   <!-- ═════════ TECHNOLOGY ═════════ -->
   <section class="section" id="tech" aria-labelledby="techTitle">
     <header class="sec-head reveal">
@@ -181,6 +189,12 @@
   </section>
 
   <!-- ═════════ ROADMAP (shown when it has entries) ═════════ -->
+  <!-- ad / sponsor slot (data/site.json → monetise.adsense or monetise.sponsored) -->
+  <aside class="promo" id="promoAd" aria-label="Advertisement" hidden>
+    <p class="promo-label" id="promoLabel">advertisement</p>
+    <div class="promo-body" id="promoBody"></div>
+  </aside>
+
   <section class="section" id="roadmap" aria-labelledby="rmTitle" hidden>
     <header class="sec-head reveal">
       <p class="label">roadmap</p>
@@ -279,6 +293,7 @@
 <script type="module" src="js/glass3d.js"></script>
 <script src="js/splash.js" defer></script>
 <script src="js/app.js" defer></script>
+<script src="js/monetise.js" defer></script>
 <script type="module" src="js/chat.js"></script>
 </body>
 </html>

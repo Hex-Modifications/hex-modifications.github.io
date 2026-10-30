@@ -19,7 +19,7 @@
     {
       "key": "gta5mods",
       "name": "GTA5-Mods",
-      "label": "gta v mods \u00b7 as Hex Spyderz",
+      "label": "gta v mods · as Hex Spyderz",
       "highlights": [
         "Advanced Helicopter UI",
         "Vaporwave HUD",
@@ -70,5 +70,17 @@
       "label": "live dev streams",
       "highlights": []
     }
-  ]
+  ],
+  "domain": "",
+  "monetise": {
+    "support": {
+      "patreon": "https://www.patreon.com/untilhex",
+      "kofi": ""
+    },
+    "adsense": {
+      "client": "",
+      "slot": ""
+    },
+    "sponsored": []
+  }
 }
