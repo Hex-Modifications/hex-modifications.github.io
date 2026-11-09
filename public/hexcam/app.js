@@ -2,20 +2,17 @@
 // Everything stays on the visitor's device: nothing is uploaded.
 import { Engine } from './engine.js';
 import { DEFAULTS, GROUPS, LOOKS, lookParams } from './looks.js';
-import { drawStamp, drawSample } from './extras.js';
+import { drawStamp } from './extras.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const canvas = $('#gl'), vid = $('#vid'), viewer = $('#viewer');
 const stampCanvas = document.createElement('canvas');
-const sampleCanvas = document.createElement('canvas');
-const SAMPLE_LEN = 20;
 
 const S = {
-  kind: null,          // 'image' | 'video' | 'sample'
-  name: 'sample',
+  kind: null,          // 'image' | 'video'
+  name: '',
   playing: false, muted: true, compare: false, exporting: false, dirty: false,
   seed: 1, lastKey: '', stampKey: '',
-  sampleOffset: 0, sampleT0: 0,
   audio: null, cancel: null,
 };
 
@@ -57,7 +54,7 @@ function decodeLook(hash) {
 }
 
 // ── helpers
-const motion = () => S.kind === 'video' || S.kind === 'sample';
+const motion = () => S.kind === 'video';
 const hash1 = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 const vnoise = (x) => { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return hash1(i) * (1 - u) + hash1(i + 1) * u; };
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -65,16 +62,8 @@ function toast(msg, ms = 3500) {
   const t = $('#toast'); t.textContent = msg; t.hidden = false;
   clearTimeout(toast.h); toast.h = setTimeout(() => { t.hidden = true; }, ms);
 }
-function duration() { return S.kind === 'video' ? (vid.duration || 0) : S.kind === 'sample' ? SAMPLE_LEN : 0; }
-function now() {
-  if (S.kind === 'video') return vid.currentTime || 0;
-  if (S.kind === 'sample') {
-    const t = S.sampleOffset + (S.playing ? (performance.now() - S.sampleT0) / 1000 : 0);
-    if (!S.exporting && t >= SAMPLE_LEN) { S.sampleOffset = 0; S.sampleT0 = performance.now(); return 0; }
-    return Math.min(t, SAMPLE_LEN);
-  }
-  return 0;
-}
+function duration() { return S.kind === 'video' ? (vid.duration || 0) : 0; }
+function now() { return S.kind === 'video' ? vid.currentTime || 0 : 0; }
 
 // per-frame randomness. A frame rate below the source's holds whole frames, grain and all.
 function frameInfo() {
@@ -111,10 +100,7 @@ function renderFrame(force) {
   const key = `${fi.key}|${S.compare}`;
   if (!force && key === S.lastKey) return;
   S.lastKey = key;
-  if (motion()) {
-    if (S.kind === 'video') { if (vid.readyState >= 2) engine.updateSource(vid); }
-    else engine.updateSource(drawSample(sampleCanvas, fi.t ?? 0));
-  }
+  if (motion() && vid.readyState >= 2) engine.updateSource(vid);
   const { W, H } = engine.sizes(P);
   updateStamp(W, H, motion() ? fi.t : 0);
   if (S.compare) engine.showOriginal(P);
@@ -181,18 +167,6 @@ function loadVideo(file) {
   }, { once: true });
 }
 
-function loadSample(asVideo) {
-  stopVideo();
-  drawSample(sampleCanvas, 0);
-  S.name = 'sample';
-  if (asVideo) {
-    S.kind = 'sample'; S.sampleOffset = 0; S.sampleT0 = performance.now(); S.playing = true;
-  } else { S.kind = 'image'; S.playing = false; }
-  engine.setSource(sampleCanvas, sampleCanvas.width, sampleCanvas.height);
-  afterLoad();
-  syncTransport();
-}
-
 function openFile(file) {
   if (!file || S.exporting) return;
   if (/^video\//.test(file.type) || /\.(mp4|m4v|mov|webm|mkv|ogv)$/i.test(file.name)) loadVideo(file);
@@ -203,16 +177,14 @@ function openFile(file) {
 // ── transport
 function setPlaying(on) {
   if (!motion()) return;
-  if (S.kind === 'video') { on ? vid.play().catch(() => {}) : vid.pause(); }
-  else if (on) { S.sampleT0 = performance.now(); } else { S.sampleOffset = now(); }
+  on ? vid.play().catch(() => {}) : vid.pause();
   S.playing = on;
   syncTransport();
   schedule();
 }
 function seek(frac) {
   const t = Math.max(0, Math.min(1, frac)) * duration();
-  if (S.kind === 'video') vid.currentTime = t;
-  else { S.sampleOffset = t; S.sampleT0 = performance.now(); }
+  vid.currentTime = t;
   engine.ghostValid = false;
   schedule();
 }
@@ -220,7 +192,6 @@ function syncTransport() {
   $('#play').textContent = S.playing ? 'pause' : 'play';
   $('#play').setAttribute('aria-pressed', S.playing);
   $('#mute').textContent = S.muted ? 'sound off' : 'sound on';
-  $('#mute').hidden = S.kind !== 'video';
 }
 vid.addEventListener('seeked', schedule);
 $('#play').onclick = () => setPlaying(!S.playing);
@@ -430,10 +401,8 @@ $('#exportVideo').onclick = async () => {
   const mime = pickMime();
   const fps = P.fps > 0 ? P.fps : 30;
   const stream = canvas.captureStream(fps);
-  if (S.kind === 'video') {
-    const a = ensureAudio();
-    if (a) { await a.ctx.resume(); a.dest.stream.getAudioTracks().forEach((t) => stream.addTrack(t)); }
-  }
+  const a = ensureAudio();
+  if (a) { await a.ctx.resume(); a.dest.stream.getAudioTracks().forEach((t) => stream.addTrack(t)); }
   let rec;
   try { rec = new MediaRecorder(stream, { ...(mime ? { mimeType: mime } : {}), videoBitsPerSecond: Math.round(P.bitrate * 1000), audioBitsPerSecond: 160000 }); }
   catch (e) { return toast(`recording failed to start: ${e.message}`); }
@@ -446,19 +415,16 @@ $('#exportVideo').onclick = async () => {
   let cancelled = false;
   const finished = new Promise((resolve) => {
     S.cancel = () => { cancelled = true; resolve(); };
-    if (S.kind === 'video') vid.addEventListener('ended', resolve, { once: true });
-    else { const check = () => (now() >= SAMPLE_LEN ? resolve() : S.exporting && setTimeout(check, 100)); check(); }
+    vid.addEventListener('ended', resolve, { once: true });
   });
 
   // start from the beginning, play once at normal speed while recording
-  if (S.kind === 'video') {
-    vid.pause(); vid.loop = false; vid.currentTime = 0;
-    await new Promise((r) => vid.addEventListener('seeked', r, { once: true }));
-  } else { S.sampleOffset = 0; }
+  vid.pause(); vid.loop = false; vid.currentTime = 0;
+  await new Promise((r) => vid.addEventListener('seeked', r, { once: true }));
   engine.ghostValid = false; S.lastKey = '';
   renderFrame(true);
   rec.start(500);
-  if (S.kind === 'video') await vid.play().catch(() => {}); else S.sampleT0 = performance.now();
+  await vid.play().catch(() => {});
   S.playing = true; syncTransport();
 
   await finished;
@@ -468,7 +434,7 @@ $('#exportVideo').onclick = async () => {
   S.exporting = false; S.cancel = null;
   document.body.classList.remove('exporting');
   $('#exportBox').hidden = true;
-  if (S.kind === 'video') { vid.loop = true; }
+  vid.loop = true;
   if (cancelled) { toast('export cancelled'); return; }
   const type = rec.mimeType || mime || 'video/webm';
   download(new Blob(chunks, { type }), `hexcam-${lookSlug()}-${stampName()}.${type.includes('mp4') ? 'mp4' : 'webm'}`);
@@ -481,8 +447,6 @@ const fileInput = $('#file');
 const pick = () => { if (!S.exporting) fileInput.click(); };
 $('#open').onclick = pick; $('#open2').onclick = pick;
 fileInput.onchange = () => { openFile(fileInput.files[0]); fileInput.value = ''; };
-$('#samplePhoto').onclick = () => loadSample(false);
-$('#sampleVideo').onclick = () => loadSample(true);
 ['dragenter', 'dragover'].forEach((ev) => window.addEventListener(ev, (e) => { e.preventDefault(); document.body.classList.add('dragging'); }));
 ['dragleave', 'drop'].forEach((ev) => window.addEventListener(ev, (e) => { e.preventDefault(); if (ev === 'drop' || e.target === document.documentElement || !e.relatedTarget) document.body.classList.remove('dragging'); }));
 window.addEventListener('drop', (e) => { const f = e.dataTransfer?.files?.[0]; if (f) openFile(f); });

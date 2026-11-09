@@ -16,9 +16,8 @@
 <meta property="og:image" content="__SITE_URL__/hexcam/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f0d18">
-<link rel="icon" href="../favicon.ico" sizes="any">
-<link rel="icon" href="../img/favicon-32.png" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -27,25 +26,24 @@
 <script type="module" src="app.js"></script>
 </head>
 <body>
+<div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
 <a class="skip" href="#viewer">skip to the editor</a>
-<header class="top">
+<header class="top glass">
   <a class="back" href="../" aria-label="Back to Hex Modifications"><img src="../img/logo-badge.png" alt="" width="30" height="30"><span>hex modifications</span></a>
-  <div class="brand"><span class="b-hex">hex</span><span class="b-cam">cam</span><span class="b-tag">photo + video</span></div>
-  <button class="btn ghost" id="open" type="button">open file</button>
+  <div class="brand"><img class="b-icon" src="../img/hexcam-icon.webp" alt="" width="34" height="34"><span class="b-hex">hex</span><span class="b-cam">cam</span></div>
+  <button class="btn glass" id="open" type="button">open file</button>
 </header>
 
 <main class="app">
   <section class="stage" aria-label="Preview">
-    <div class="viewer" id="viewer" tabindex="-1">
+    <div class="viewer glass" id="viewer" tabindex="-1">
       <canvas id="gl" aria-label="Edited preview"></canvas>
       <div class="drop" id="drop">
         <p class="drop-kicker">free · private · in your browser</p>
         <h1 class="drop-title">raw camera looks<br>for <span class="grad">photos and video</span></h1>
-        <p class="drop-text">CCD glow, real JPEG crunch, low resolution, grain, bleach bypass, VHS tape, lens distortion and date stamps. Drop a file anywhere, paste one, or try a sample.</p>
+        <p class="drop-text">CCD glow, real JPEG crunch, low resolution, grain, bleach bypass, VHS tape, lens distortion and date stamps. Drop a file anywhere, paste one, or choose one below.</p>
         <div class="drop-actions">
           <button class="btn" id="open2" type="button">choose a photo or video</button>
-          <button class="btn ghost" id="samplePhoto" type="button">sample photo</button>
-          <button class="btn ghost" id="sampleVideo" type="button">sample video</button>
         </div>
         <p class="drop-fine">JPG, PNG, WEBP · MP4, MOV, WEBM. Your files never leave this device.</p>
       </div>
@@ -53,19 +51,19 @@
       <div class="drag-hint" aria-hidden="true">drop to open</div>
     </div>
 
-    <div class="transport" id="transport" hidden>
+    <div class="transport glass" id="transport" hidden>
       <button class="btn small" id="play" type="button" aria-pressed="false">pause</button>
       <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Seek">
       <span class="time" id="time">0:00 / 0:00</span>
-      <button class="btn small ghost" id="mute" type="button">sound off</button>
+      <button class="btn small glass" id="mute" type="button">sound off</button>
     </div>
 
     <div class="bar">
       <div class="bar-l">
-        <button class="btn small ghost" id="compare" type="button" aria-pressed="false" title="hold to see the original (or hold \)">hold: original</button>
-        <button class="btn small ghost" id="random" type="button">randomise</button>
-        <button class="btn small ghost" id="reroll" type="button" title="new grain and noise pattern">reroll grain</button>
-        <button class="btn small ghost" id="share" type="button">copy look link</button>
+        <button class="btn small glass" id="compare" type="button" aria-pressed="false" title="hold to see the original (or hold \)">hold: original</button>
+        <button class="btn small glass" id="random" type="button">randomise</button>
+        <button class="btn small glass" id="reroll" type="button" title="new grain and noise pattern">reroll grain</button>
+        <button class="btn small glass" id="share" type="button">copy look link</button>
       </div>
       <div class="bar-r">
         <select id="photoFmt" aria-label="Photo format"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option></select>
@@ -73,14 +71,14 @@
         <button class="btn small hot" id="exportVideo" type="button" hidden>export video</button>
       </div>
     </div>
-    <div class="export" id="exportBox" hidden>
+    <div class="export glass" id="exportBox" hidden>
       <div class="progress" id="progress"><b></b></div>
       <span><span id="progressPct">0%</span> · recording in real time, keep this tab visible</span>
-      <button class="btn small ghost" id="cancelExport" type="button">cancel</button>
+      <button class="btn small glass" id="cancelExport" type="button">cancel</button>
     </div>
   </section>
 
-  <aside class="panel" aria-label="Controls">
+  <aside class="panel glass" aria-label="Controls">
     <div class="panel-head"><h2>looks</h2><span class="look-name" id="lookName"></span><button class="link" id="reset" type="button">reset</button></div>
     <div class="looks" id="looks"></div>
     <div id="controls"></div>
@@ -88,15 +86,11 @@
   </aside>
 </main>
 
-<section class="about">
+<section class="about glass">
   <div class="about-grid">
     <article>
       <h2>what it does</h2>
       <p>hexcam turns clean phone footage into the look of mid-2000s pocket cameras, flip phones, webcams, camcorders and film: the low resolution, the blown highlights glowing violet, the blocky JPEG artefacts, the noise and the burned-in orange date. Unlike most of these editors, every effect also works on <strong>video</strong>, with the sound kept.</p>
-    </article>
-    <article>
-      <h2>how it works</h2>
-      <p>Everything runs on your GPU with WebGL2. Compression isn't faked with a texture: the image is converted to YCbCr, chroma is subsampled (4:2:0, 4:2:2 or the 4:1:1 of DV tape), every 8×8 block goes through a discrete cosine transform and is quantised with the standard JPEG tables, then decoded again. Re-saves shift the block grid so generation loss compounds like reposting a meme.</p>
     </article>
     <article>
       <h2>video</h2>
@@ -123,7 +117,7 @@
   <span>hexcam is made by Hex Modifications. Free to use.</span>
 </footer>
 
-<div class="toast" id="toast" role="status" hidden></div>
+<div class="toast glass" id="toast" role="status" hidden></div>
 <div class="fatal" id="fatal" hidden><h2>can't start</h2><p></p></div>
 <input type="file" id="file" accept="image/*,video/*,.heic,.heif,.mov,.mkv" hidden>
 <video id="vid" playsinline muted preload="auto" hidden></video>

@@ -93,7 +93,7 @@ A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPE
 - **Pipeline (per frame):** lens (distortion, aberration, softness, shake, tape jitter, downscale) → bloom → colour grade (flash, white balance, contrast, bleach bypass, split tone, lifted blacks) → in-camera sharpening, noise and date stamp → codec → output (upscale, chroma bleed, light leak, vignette, interlace, grain, dust, ghosting, dither).
 - **Video:** frame-rate drop, handheld shake, tracking errors, chroma bleed, interlacing, ghosting trails, flicker, moving light leaks, animated grain, and a date stamp whose clock ticks. Export records in real time with MediaRecorder: MP4 (H.264) where the browser can, otherwise WebM. The bitrate slider lets the video codec add its own smear.
 - **15 looks** (ccd 2006, bleach bypass, flip phone, webcam 09, vhs tape, miniDV, super 8, y2k flash, early iphone, deep fried, mono grain, webcore, cctv, club cam, raw), each with a live thumbnail of the visitor's own picture. "copy look link" puts every setting in the URL hash.
-- **Files:** `public/hexcam/` (`engine.js` the WebGL pipeline and shaders, `looks.js` the controls and looks, `extras.js` date stamps and the sample scene, `app.js` the UI and export). To add a look, add an entry to `LOOKS` in `looks.js` listing only the settings that differ from `DEFAULTS`.
+- **Files:** `public/hexcam/` (`engine.js` the WebGL pipeline and shaders, `looks.js` the controls and looks, `extras.js` the date stamps, `app.js` the UI and export). To add a look, add an entry to `LOOKS` in `looks.js` listing only the settings that differ from `DEFAULTS`.
 
 ## Intro splash
 
