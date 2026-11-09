@@ -122,6 +122,7 @@ async function serveStatic(req, res, pathname) {
   let body = staticCache.get(file)?.etag === etag ? staticCache.get(file).body : await fsp.readFile(file);
   staticCache.set(file, { etag, body });
   if (isHtml && rel === '/index.html') body = await renderIndex(body);
+  else if (isHtml && rel === '/hexcam/index.html') body = Buffer.from(body.toString('utf8').replaceAll('__SITE_URL__', SITE_URL));
   send(req, res, 200, body, type, { ETag: etag, 'Cache-Control': cacheControl });
   return true;
 }
@@ -292,7 +293,7 @@ async function handle(req, res) {
       if (/^ca-pub-\d{10,20}$/.test(client)) { securityHeaders(res); return send(req, res, 200, `google.com, ${client.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`, 'text/plain; charset=utf-8'); }
     }
     if (pathname === '/robots.txt') { securityHeaders(res); return send(req, res, 200, robots(SITE_URL), 'text/plain; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' }); }
-    if (pathname === '/sitemap.xml') { securityHeaders(res); return send(req, res, 200, sitemap(await allProducts(), SITE_URL), 'application/xml; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' }); }
+    if (pathname === '/sitemap.xml') { securityHeaders(res); return send(req, res, 200, sitemap(await allProducts(), SITE_URL, [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }]), 'application/xml; charset=utf-8', { 'Cache-Control': 'public, max-age=3600' }); }
 
     const pm = pathname.match(/^\/p\/([a-z0-9-]{1,80})\/?$/);
     if (pm) {

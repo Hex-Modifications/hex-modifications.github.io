@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>hexcam: free digicam, CCD, VHS &amp; JPEG effects for photos and video | Hex Modifications</title>
+<meta name="description" content="hexcam is a free online editor for raw camera looks on photos AND videos: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tracking, lens distortion and date stamps. Runs in your browser, nothing is uploaded.">
+<link rel="canonical" href="__SITE_URL__/hexcam/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hex Modifications">
+<meta property="og:title" content="hexcam: raw camera effects for photos and video">
+<meta property="og:description" content="CCD glow, real JPEG crunch, low-res, grain, bleach bypass, VHS and date stamps, for photos and videos. Free, private, in your browser.">
+<meta property="og:url" content="__SITE_URL__/hexcam/">
+<meta property="og:image" content="__SITE_URL__/hexcam/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f0d18">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" href="../img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hexcam.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"hexcam","url":"__SITE_URL__/hexcam/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser with WebGL2)","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"description":"Free in-browser editor for digicam, CCD, VHS, film grain and JPEG compression effects on photos and videos.","author":{"@type":"Organization","name":"Hex Modifications","url":"__SITE_URL__/"}}</script>
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#viewer">skip to the editor</a>
+<header class="top">
+  <a class="back" href="../" aria-label="Back to Hex Modifications"><img src="../img/logo-badge.png" alt="" width="30" height="30"><span>hex modifications</span></a>
+  <div class="brand"><span class="b-hex">hex</span><span class="b-cam">cam</span><span class="b-tag">photo + video</span></div>
+  <button class="btn ghost" id="open" type="button">open file</button>
+</header>
+
+<main class="app">
+  <section class="stage" aria-label="Preview">
+    <div class="viewer" id="viewer" tabindex="-1">
+      <canvas id="gl" aria-label="Edited preview"></canvas>
+      <div class="drop" id="drop">
+        <p class="drop-kicker">free · private · in your browser</p>
+        <h1 class="drop-title">raw camera looks<br>for <span class="grad">photos and video</span></h1>
+        <p class="drop-text">CCD glow, real JPEG crunch, low resolution, grain, bleach bypass, VHS tape, lens distortion and date stamps. Drop a file anywhere, paste one, or try a sample.</p>
+        <div class="drop-actions">
+          <button class="btn" id="open2" type="button">choose a photo or video</button>
+          <button class="btn ghost" id="samplePhoto" type="button">sample photo</button>
+          <button class="btn ghost" id="sampleVideo" type="button">sample video</button>
+        </div>
+        <p class="drop-fine">JPG, PNG, WEBP · MP4, MOV, WEBM. Your files never leave this device.</p>
+      </div>
+      <span class="info" id="info" aria-live="polite"></span>
+      <div class="drag-hint" aria-hidden="true">drop to open</div>
+    </div>
+
+    <div class="transport" id="transport" hidden>
+      <button class="btn small" id="play" type="button" aria-pressed="false">pause</button>
+      <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Seek">
+      <span class="time" id="time">0:00 / 0:00</span>
+      <button class="btn small ghost" id="mute" type="button">sound off</button>
+    </div>
+
+    <div class="bar">
+      <div class="bar-l">
+        <button class="btn small ghost" id="compare" type="button" aria-pressed="false" title="hold to see the original (or hold \)">hold: original</button>
+        <button class="btn small ghost" id="random" type="button">randomise</button>
+        <button class="btn small ghost" id="reroll" type="button" title="new grain and noise pattern">reroll grain</button>
+        <button class="btn small ghost" id="share" type="button">copy look link</button>
+      </div>
+      <div class="bar-r">
+        <select id="photoFmt" aria-label="Photo format"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option></select>
+        <button class="btn small" id="savePhoto" type="button">save photo</button>
+        <button class="btn small hot" id="exportVideo" type="button" hidden>export video</button>
+      </div>
+    </div>
+    <div class="export" id="exportBox" hidden>
+      <div class="progress" id="progress"><b></b></div>
+      <span><span id="progressPct">0%</span> · recording in real time, keep this tab visible</span>
+      <button class="btn small ghost" id="cancelExport" type="button">cancel</button>
+    </div>
+  </section>
+
+  <aside class="panel" aria-label="Controls">
+    <div class="panel-head"><h2>looks</h2><span class="look-name" id="lookName"></span><button class="link" id="reset" type="button">reset</button></div>
+    <div class="looks" id="looks"></div>
+    <div id="controls"></div>
+    <p class="tip">double-click any label to reset it.</p>
+  </aside>
+</main>
+
+<section class="about">
+  <div class="about-grid">
+    <article>
+      <h2>what it does</h2>
+      <p>hexcam turns clean phone footage into the look of mid-2000s pocket cameras, flip phones, webcams, camcorders and film: the low resolution, the blown highlights glowing violet, the blocky JPEG artefacts, the noise and the burned-in orange date. Unlike most of these editors, every effect also works on <strong>video</strong>, with the sound kept.</p>
+    </article>
+    <article>
+      <h2>how it works</h2>
+      <p>Everything runs on your GPU with WebGL2. Compression isn't faked with a texture: the image is converted to YCbCr, chroma is subsampled (4:2:0, 4:2:2 or the 4:1:1 of DV tape), every 8×8 block goes through a discrete cosine transform and is quantised with the standard JPEG tables, then decoded again. Re-saves shift the block grid so generation loss compounds like reposting a meme.</p>
+    </article>
+    <article>
+      <h2>video</h2>
+      <p>Video gets extras stills can't: dropped frame rates, handheld shake, tape tracking errors, chroma bleed, interlacing, ghosting trails, exposure flicker, moving light leaks, animated grain and a date stamp whose clock ticks. Exports record in real time to MP4 (or WebM in browsers without MP4 recording), and the bitrate slider lets the video codec add its own smear.</p>
+    </article>
+    <article>
+      <h2>private by design</h2>
+      <p>Nothing is uploaded. There's no account, no tracking and no server processing. Your photos and videos are read, edited and saved entirely on your device.</p>
+    </article>
+  </div>
+  <details class="faq">
+    <summary>faq</summary>
+    <dl>
+      <dt>which browsers work?</dt><dd>Recent Chrome, Edge, Firefox and Safari on desktop, Android and iOS. Video export needs MediaRecorder: Chrome, Edge and Safari save MP4, Firefox saves WebM.</dd>
+      <dt>why does export take as long as the video?</dt><dd>Recording happens while the clip plays at normal speed, so audio stays in sync. Keep the tab visible until it finishes.</dd>
+      <dt>can I share a look?</dt><dd>Yes. "copy look link" puts every setting into the URL, so anyone opening it gets the same look.</dd>
+      <dt>what does bleach bypass do?</dt><dd>It recreates the film-lab process of skipping the bleach stage: luminance is laid back over the colour, so contrast goes up, saturation drops and highlights turn silvery.</dd>
+    </dl>
+  </details>
+</section>
+
+<footer class="foot">
+  <a href="../">← back to Hex Modifications</a>
+  <span>hexcam is made by Hex Modifications. Free to use.</span>
+</footer>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="fatal" id="fatal" hidden><h2>can't start</h2><p></p></div>
+<input type="file" id="file" accept="image/*,video/*,.heic,.heif,.mov,.mkv" hidden>
+<video id="vid" playsinline muted preload="auto" hidden></video>
+</body>
+</html>

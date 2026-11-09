@@ -103,7 +103,11 @@ for (const p of products) {
 // GTA6 Project, the GTA VI modding hub and database at /gta6project/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
 const gta6 = await buildGta6({ root: ROOT, dist: DIST, siteUrl: SITE_URL, site, fetchFeed: process.env.SKIP_FEED !== '1' });
 
-fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, gta6.urls));
+// hexcam, the photo + video effects tool at /hexcam/ (fully client-side; only its absolute URLs need filling in)
+const hexcamIndex = path.join(DIST, 'hexcam', 'index.html');
+fs.writeFileSync(hexcamIndex, fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL));
+
+fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }, ...gta6.urls]));
 fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disallow: /admin\n', '').replace('Disallow: /api/\n', ''));
 
 // "wasted" 404

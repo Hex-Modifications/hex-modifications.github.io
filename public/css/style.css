@@ -671,4 +671,8 @@ a.link-card:hover { transform: translateY(-4px); }
 .proj-cta { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 99px; background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); font-weight: 600; }
 .proj-also { margin: 18px 4px 0; color: var(--muted); font-size: 15px; }
 .proj-also a { color: inherit; text-decoration-color: currentColor; text-underline-offset: 3px; }
+.proj-card + .proj-card { margin-top: 18px; }
+.proj-hexcam { background: radial-gradient(60% 120% at 100% 110%, rgba(232, 152, 152, .4), transparent 70%), radial-gradient(60% 120% at 0% -10%, rgba(163, 115, 211, .45), transparent 70%), linear-gradient(170deg, #2a1830, #0f0d18); }
+.proj-hexcam .proj-word b, .proj-hexcam .proj-kicker { color: #E89898; }
+.proj-hexcam .proj-pill { background: #E89898; }
 @media (max-width: 640px) { .proj-card { grid-template-columns: 1fr; } }

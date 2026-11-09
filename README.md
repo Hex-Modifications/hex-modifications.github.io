@@ -84,6 +84,17 @@ All of this is set in `data/site.json` under `"monetise"`. Anything left empty d
 
 The AdSense script only loads after the intro has finished, so it never slows the first view.
 
+## hexcam (free photo + video effects tool)
+
+A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer and the "also from hex" projects section.
+
+- **Private:** it runs entirely in the visitor's browser (WebGL2). Nothing is uploaded and there's no server code, so it works the same on GitHub Pages and the Node host.
+- **Real compression, not a filter:** YCbCr conversion, chroma subsampling (4:4:4, 4:2:2, 4:2:0 or DV's 4:1:1), a separable 8×8 DCT, quantisation with the standard JPEG tables scaled by quality, then decode. "Re-saves" shift the block grid each pass, so generation loss compounds.
+- **Pipeline (per frame):** lens (distortion, aberration, softness, shake, tape jitter, downscale) → bloom → colour grade (flash, white balance, contrast, bleach bypass, split tone, lifted blacks) → in-camera sharpening, noise and date stamp → codec → output (upscale, chroma bleed, light leak, vignette, interlace, grain, dust, ghosting, dither).
+- **Video:** frame-rate drop, handheld shake, tracking errors, chroma bleed, interlacing, ghosting trails, flicker, moving light leaks, animated grain, and a date stamp whose clock ticks. Export records in real time with MediaRecorder: MP4 (H.264) where the browser can, otherwise WebM. The bitrate slider lets the video codec add its own smear.
+- **15 looks** (ccd 2006, bleach bypass, flip phone, webcam 09, vhs tape, miniDV, super 8, y2k flash, early iphone, deep fried, mono grain, webcore, cctv, club cam, raw), each with a live thumbnail of the visitor's own picture. "copy look link" puts every setting in the URL hash.
+- **Files:** `public/hexcam/` (`engine.js` the WebGL pipeline and shaders, `looks.js` the controls and looks, `extras.js` date stamps and the sample scene, `app.js` the UI and export). To add a look, add an entry to `LOOKS` in `looks.js` listing only the settings that differ from `DEFAULTS`.
+
 ## Intro splash
 
 The intro is rendered live, not a video. About 3,900 particles gather onto the exact halftone dots of the Hex Modifications mark, the cross flashes, and the crisp mark and wordmark settle in. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. The assets are `media/mark.webp` (157 KB) and `media/mark-dots.bin` (23 KB, the dot positions, generated from `brand/hex-modifications-official.png`), and they're only downloaded when the intro runs.
@@ -154,6 +165,7 @@ public/                index.html, admin.html, css/, js/, img/
   js/chat.js           ask hex chat      js/persona.js   chat persona    js/timecycle.js time-of-day lighting
   js/splash.js         intro splash      js/monetise.js  support strip, ad / sponsor slot
   media/               intro mark, particle dots and sound
+  hexcam/              hexcam, the free photo + video effects tool (WebGL2, client-side only)
 workers/chat-worker.js optional free Cloudflare Workers AI backend for the chat
 brand/                 official Hex Modifications images (transparent, sunset, night) + the script that makes them
 data/                  editable content (JSON)
