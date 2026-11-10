@@ -6,7 +6,7 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>hexcam: free digicam, CCD, VHS &amp; JPEG effects for photos and video | Hex Modifications</title>
-<meta name="description" content="hexcam is a free online editor for raw camera looks on photos AND videos: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tracking, lens distortion and date stamps. Runs in your browser, nothing is uploaded.">
+<meta name="description" content="hexcam is a free online editor for raw camera looks on photos and videos: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tracking, lens distortion and date stamps. Runs in your browser, nothing is uploaded.">
 <link rel="canonical" href="__SITE_URL__/hexcam/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hex Modifications">
@@ -15,110 +15,116 @@
 <meta property="og:url" content="__SITE_URL__/hexcam/">
 <meta property="og:image" content="__SITE_URL__/hexcam/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0f0d18">
+<meta name="theme-color" content="#E8E7EC">
 <link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hexcam.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"hexcam","url":"__SITE_URL__/hexcam/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser with WebGL2)","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"description":"Free in-browser editor for digicam, CCD, VHS, film grain and JPEG compression effects on photos and videos.","author":{"@type":"Organization","name":"Hex Modifications","url":"__SITE_URL__/"}}</script>
 <script type="module" src="app.js"></script>
 </head>
 <body>
-<div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
-<a class="skip" href="#viewer">skip to the editor</a>
-<header class="top glass">
-  <a class="back" href="../" aria-label="Back to Hex Modifications"><img src="../img/logo-badge.png" alt="" width="30" height="30"><span>hex modifications</span></a>
-  <div class="brand"><img class="b-icon" src="../img/hexcam-icon.webp" alt="" width="34" height="34"><span class="b-hex">hex</span><span class="b-cam">cam</span></div>
-  <button class="btn glass" id="open" type="button">open file</button>
-</header>
+<a class="skip" href="#controls">skip to controls</a>
+<div class="shell">
 
-<main class="app">
-  <section class="stage" aria-label="Preview">
-    <div class="viewer glass" id="viewer" tabindex="-1">
-      <canvas id="gl" aria-label="Edited preview"></canvas>
-      <div class="drop" id="drop">
-        <p class="drop-kicker">free · private · in your browser</p>
-        <h1 class="drop-title">raw camera looks<br>for <span class="grad">photos and video</span></h1>
-        <p class="drop-text">CCD glow, real JPEG crunch, low resolution, grain, bleach bypass, VHS tape, lens distortion and date stamps. Drop a file anywhere, paste one, or choose one below.</p>
-        <div class="drop-actions">
-          <button class="btn" id="open2" type="button">choose a photo or video</button>
-        </div>
-        <p class="drop-fine">JPG, PNG, WEBP · MP4, MOV, WEBM. Your files never leave this device.</p>
-      </div>
-      <span class="info" id="info" aria-live="polite"></span>
-      <div class="drag-hint" aria-hidden="true">drop to open</div>
+  <!-- looks + actions -->
+  <nav class="col nav" aria-label="hexcam">
+    <a class="item" href="../"><span class="mk">[↗]</span>HEX MODIFICATIONS</a>
+    <p class="path">/HEXCAM <span class="ver">photo + video</span></p>
+    <p class="path">/LOOKS</p>
+    <ul class="list" id="looks"></ul>
+    <p class="path">/ACTIONS</p>
+    <ul class="list">
+      <li><button class="item" id="random" type="button"><span class="mk">[ ]</span>RANDOMISE<kbd>R</kbd></button></li>
+      <li><button class="item" id="reroll" type="button"><span class="mk">[ ]</span>REROLL GRAIN<kbd>G</kbd></button></li>
+      <li><button class="item" id="undo" type="button"><span class="mk">[ ]</span>UNDO<kbd>⌘Z</kbd></button></li>
+      <li><button class="item" id="share" type="button"><span class="mk">[ ]</span>COPY LOOK LINK</button></li>
+      <li><button class="item" id="reset" type="button"><span class="mk">[ ]</span>RESET</button></li>
+    </ul>
+    <div class="nav-foot">
+      <button class="item" type="button" data-dialog="about"><span class="mk">[ ]</span>ABOUT</button>
+      <button class="item" type="button" data-dialog="keys"><span class="mk">[ ]</span>SHORTCUTS<kbd>?</kbd></button>
+      <a class="item" href="../#projects"><span class="mk">[↗]</span>MORE FROM HEX</a>
     </div>
+    <div class="peek" id="peek" aria-hidden="true"><canvas width="160" height="100"></canvas><span></span></div>
+  </nav>
 
-    <div class="transport glass" id="transport" hidden>
-      <button class="btn small" id="play" type="button" aria-pressed="false">pause</button>
-      <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Seek">
-      <span class="time" id="time">0:00 / 0:00</span>
-      <button class="btn small glass" id="mute" type="button">sound off</button>
+  <!-- controls -->
+  <aside class="col ctl" aria-label="Controls">
+    <div class="ctl-scroll" id="controls">
+      <button class="box" id="open" type="button"><span>Open file</span><kbd>Ctrl+O</kbd></button>
+      <p class="hint">[.jpg .png .webp .mp4 .mov .webm]</p>
+      <button class="item toggle" id="compare" type="button" role="switch" aria-checked="true"><span class="mk">[*]</span>Show effect<kbd>\</kbd></button>
+      <div id="groups"></div>
     </div>
-
-    <div class="bar">
-      <div class="bar-l">
-        <button class="btn small glass" id="compare" type="button" aria-pressed="false" title="hold to see the original (or hold \)">hold: original</button>
-        <button class="btn small glass" id="random" type="button">randomise</button>
-        <button class="btn small glass" id="reroll" type="button" title="new grain and noise pattern">reroll grain</button>
-        <button class="btn small glass" id="share" type="button">copy look link</button>
-      </div>
-      <div class="bar-r">
-        <select id="photoFmt" aria-label="Photo format"><option value="image/png">PNG</option><option value="image/jpeg">JPEG</option></select>
-        <button class="btn small" id="savePhoto" type="button">save photo</button>
-        <button class="btn small hot" id="exportVideo" type="button" hidden>export video</button>
-      </div>
+    <div class="ctl-foot">
+      <div class="fmt"><span>Output format</span><span class="seg" id="photoFmt" role="radiogroup" aria-label="Output format"><button type="button" role="radio" data-v="image/png" aria-checked="true">PNG</button><button type="button" role="radio" data-v="image/jpeg" aria-checked="false">JPG</button></span></div>
+      <button class="run" id="savePhoto" type="button"><span>Export image</span><kbd>Ctrl+S</kbd></button>
+      <button class="run alt" id="exportVideo" type="button" hidden><span>Export video</span><kbd>Ctrl+E</kbd></button>
     </div>
-    <div class="export glass" id="exportBox" hidden>
-      <div class="progress" id="progress"><b></b></div>
-      <span><span id="progressPct">0%</span> · recording in real time, keep this tab visible</span>
-      <button class="btn small glass" id="cancelExport" type="button">cancel</button>
-    </div>
-  </section>
-
-  <aside class="panel glass" aria-label="Controls">
-    <div class="panel-head"><h2>looks</h2><span class="look-name" id="lookName"></span><button class="link" id="reset" type="button">reset</button></div>
-    <div class="looks" id="looks"></div>
-    <div id="controls"></div>
-    <p class="tip">double-click any label to reset it.</p>
   </aside>
-</main>
 
-<section class="about glass">
-  <div class="about-grid">
-    <article>
-      <h2>what it does</h2>
-      <p>hexcam turns clean phone footage into the look of mid-2000s pocket cameras, flip phones, webcams, camcorders and film: the low resolution, the blown highlights glowing violet, the blocky JPEG artefacts, the noise and the burned-in orange date. Unlike most of these editors, every effect also works on <strong>video</strong>, with the sound kept.</p>
-    </article>
-    <article>
-      <h2>video</h2>
-      <p>Video gets extras stills can't: dropped frame rates, handheld shake, tape tracking errors, chroma bleed, interlacing, ghosting trails, exposure flicker, moving light leaks, animated grain and a date stamp whose clock ticks. Exports record in real time to MP4 (or WebM in browsers without MP4 recording), and the bitrate slider lets the video codec add its own smear.</p>
-    </article>
-    <article>
-      <h2>private by design</h2>
-      <p>Nothing is uploaded. There's no account, no tracking and no server processing. Your photos and videos are read, edited and saved entirely on your device.</p>
-    </article>
-  </div>
-  <details class="faq">
-    <summary>faq</summary>
-    <dl>
-      <dt>which browsers work?</dt><dd>Recent Chrome, Edge, Firefox and Safari on desktop, Android and iOS. Video export needs MediaRecorder: Chrome, Edge and Safari save MP4, Firefox saves WebM.</dd>
-      <dt>why does export take as long as the video?</dt><dd>Recording happens while the clip plays at normal speed, so audio stays in sync. Keep the tab visible until it finishes.</dd>
-      <dt>can I share a look?</dt><dd>Yes. "copy look link" puts every setting into the URL, so anyone opening it gets the same look.</dd>
-      <dt>what does bleach bypass do?</dt><dd>It recreates the film-lab process of skipping the bleach stage: luminance is laid back over the colour, so contrast goes up, saturation drops and highlights turn silvery.</dd>
-    </dl>
-  </details>
-</section>
+  <!-- canvas -->
+  <main class="col stage" id="stage">
+    <div class="status"><span id="fileName">no file</span><span id="info"></span><span class="look-now">look: <b id="lookName"></b></span></div>
+    <div class="viewer" id="viewer">
+      <canvas id="gl" aria-label="Edited preview"></canvas>
+      <button class="drop" id="drop" type="button">
+        <span class="drop-l1">DROP A PHOTO OR VIDEO<i class="caret">_</i></span>
+        <span class="drop-l2">or click, paste, or press Ctrl+O</span>
+        <span class="drop-l3">processed on this device. nothing is uploaded.</span>
+      </button>
+    </div>
+    <div class="transport" id="transport" hidden>
+      <button class="item" id="play" type="button"><span class="mk">[ ]</span>PAUSE</button>
+      <div class="scrub"><input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Seek"></div>
+      <span class="time" id="time">0:00 / 0:00</span>
+      <button class="item" id="mute" type="button"><span class="mk">[ ]</span>SOUND</button>
+    </div>
+    <div class="rec" id="exportBox" hidden>
+      <span class="rec-dot">● REC</span><span class="rec-bar" id="progress">[--------------------]</span><span id="progressPct">0%</span>
+      <span class="rec-note">real time. keep this tab visible.</span>
+      <button class="item" id="cancelExport" type="button"><span class="mk">[ ]</span>CANCEL</button>
+    </div>
+  </main>
+</div>
 
-<footer class="foot">
-  <a href="../">← back to Hex Modifications</a>
-  <span>hexcam is made by Hex Modifications. Free to use.</span>
-</footer>
+<p class="toast" id="toast" role="status" aria-live="polite"></p>
+<div class="drag" aria-hidden="true">[ DROP TO OPEN ]</div>
 
-<div class="toast glass" id="toast" role="status" hidden></div>
-<div class="fatal" id="fatal" hidden><h2>can't start</h2><p></p></div>
+<dialog class="sheet" id="about" aria-labelledby="aboutTitle">
+  <div class="sheet-h"><h1 id="aboutTitle">/ABOUT</h1><button class="item" type="button" data-close><span class="mk">[x]</span>CLOSE</button></div>
+  <p>hexcam turns clean phone footage into the look of mid-2000s pocket cameras, flip phones, webcams, camcorders and film: low resolution, highlights glowing violet, blocky JPEG artefacts, noise and the burned-in orange date. Every effect works on <b>video</b> as well as photos, and video exports keep their sound.</p>
+  <p>Video adds what stills can't: dropped frame rates, handheld shake, tape tracking errors, chroma bleed, interlacing, ghosting, flicker, moving light leaks, animated grain and a date stamp whose clock ticks. Exports record in real time to MP4, or WebM in browsers that can't record MP4.</p>
+  <p>Nothing is uploaded. There's no account and no tracking. Photos and videos are read, edited and saved on your device.</p>
+  <dl>
+    <dt>Which browsers work?</dt><dd>Recent Chrome, Edge, Firefox and Safari on desktop, Android and iOS.</dd>
+    <dt>Why does export take as long as the video?</dt><dd>It records while the clip plays at normal speed, so the sound stays in sync.</dd>
+    <dt>Can I share a look?</dt><dd>Copy look link puts every setting in the URL.</dd>
+    <dt>What is bleach bypass?</dt><dd>The film-lab trick of skipping the bleach stage: more contrast, less colour, silvery highlights.</dd>
+  </dl>
+  <p class="sheet-f">hexcam is a free tool by <a href="../">Hex Modifications</a>.</p>
+</dialog>
+
+<dialog class="sheet" id="keys" aria-labelledby="keysTitle">
+  <div class="sheet-h"><h1 id="keysTitle">/SHORTCUTS</h1><button class="item" type="button" data-close><span class="mk">[x]</span>CLOSE</button></div>
+  <dl class="keys">
+    <dt><kbd>Ctrl+O</kbd></dt><dd>open a photo or video</dd>
+    <dt><kbd>Ctrl+S</kbd></dt><dd>export image (or the current video frame)</dd>
+    <dt><kbd>Ctrl+E</kbd></dt><dd>export video</dd>
+    <dt><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Shift+Z</kbd></dt><dd>undo / redo</dd>
+    <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>previous / next look</dd>
+    <dt><kbd>\</kbd> hold</dt><dd>show the original</dd>
+    <dt><kbd>Space</kbd></dt><dd>play / pause</dd>
+    <dt><kbd>R</kbd> <kbd>G</kbd></dt><dd>randomise / reroll grain</dd>
+    <dt>drag a number</dt><dd>scrub its value (hold Shift for fine steps)</dd>
+    <dt>double-click a label</dt><dd>reset it to the look's value</dd>
+  </dl>
+</dialog>
+
+<div class="fatal" id="fatal" hidden><p></p></div>
 <input type="file" id="file" accept="image/*,video/*,.heic,.heif,.mov,.mkv" hidden>
 <video id="vid" playsinline muted preload="auto" hidden></video>
 </body>

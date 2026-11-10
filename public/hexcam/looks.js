@@ -30,7 +30,7 @@ const signed = (v, d = 2) => `${v > 0 ? '+' : ''}${(+v).toFixed(d)}`;
 export const GROUPS = [
   { id: 'sensor', label: 'sensor', open: true, items: [
     { k: 'res', label: 'resolution', type: 'range', min: 96, max: 1920, step: 8, fmt: (v) => `${v}px` },
-    { k: 'out', label: 'output size', type: 'select', options: [['1080', '1080p'], ['720', '720p'], ['1440', '1440p'], ['2160', '4K'], ['sensor', 'same as sensor'], ['source', 'same as source']] },
+    { k: 'out', label: 'output size', type: 'select', options: [['720', '720'], ['1080', '1080'], ['1440', '1440'], ['2160', '4K'], ['sensor', 'sensor'], ['source', 'source']], hint: 'long side of the saved file. sensor = no upscaling' },
     { k: 'pixel', label: 'pixelate upscale', type: 'toggle', hint: 'nearest-neighbour: every sensor pixel becomes a hard square' },
     { k: 'alias', label: 'jagged downscale', type: 'toggle', hint: 'skip filtering when shrinking, like cheap phone sensors' },
     { k: 'fps', label: 'frame rate', type: 'range', min: 0, max: 30, step: 1, video: true, fmt: (v) => (+v === 0 ? 'source' : `${v} fps`) },
@@ -70,7 +70,7 @@ export const GROUPS = [
   { id: 'jpeg', label: 'compression', items: [
     { k: 'jpeg', label: 'jpeg compression', type: 'toggle', hint: 'a real DCT codec: 8×8 blocks, quantised exactly like a JPEG encoder' },
     { k: 'quality', label: 'quality', type: 'range', min: 1, max: 100, step: 1, dep: 'jpeg', fmt: (v) => `${v}` },
-    { k: 'chroma', label: 'chroma subsampling', type: 'select', dep: 'jpeg', options: [['444', '4:4:4 (none)'], ['422', '4:2:2'], ['420', '4:2:0 (phones)'], ['411', '4:1:1 (DV tape)']] },
+    { k: 'chroma', label: 'chroma subsampling', type: 'select', dep: 'jpeg', options: [['444', '4:4:4'], ['422', '4:2:2'], ['420', '4:2:0'], ['411', '4:1:1']], hint: '4:2:0 is what phones save. 4:1:1 is DV tape' },
     { k: 'gens', label: 're-saves', type: 'range', min: 1, max: 8, step: 1, dep: 'jpeg', fmt: (v) => `${v}×`, hint: 'generation loss: each save shifts the block grid and compresses again' },
     { k: 'bitrate', label: 'video bitrate', type: 'range', min: 150, max: 16000, step: 50, video: true, fmt: (v) => (v >= 1000 ? `${(v / 1000).toFixed(1)} Mbps` : `${v} kbps`), hint: 'low bitrates let the video codec itself smear and block' },
   ] },
@@ -91,7 +91,7 @@ export const GROUPS = [
     { k: 'bayer', label: 'ordered dither', type: 'toggle', dep: 'bits<8' },
   ] },
   { id: 'stamp', label: 'date stamp', items: [
-    { k: 'stamp', label: 'style', type: 'select', options: [['off', 'off'], ['digicam', 'digicam (orange)'], ['camcorder', 'camcorder'], ['cctv', 'cctv'], ['custom', 'custom text']] },
+    { k: 'stamp', label: 'style', type: 'select', options: [['off', 'off'], ['digicam', 'digicam'], ['camcorder', 'camcorder'], ['cctv', 'cctv'], ['custom', 'custom']] },
     { k: 'stampDate', label: 'date', type: 'date', dep: 'stamp' },
     { k: 'stampTime', label: 'time', type: 'time', dep: 'stamp' },
     { k: 'stampText', label: 'text', type: 'text', dep: 'stamp=custom', max: 32 },
