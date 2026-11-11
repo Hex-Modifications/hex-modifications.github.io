@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "gta6project",
+    "name": "GTA6 Project",
+    "kicker": "the GTA VI modding hub",
+    "text": "the home of GTA VI single-player mods: a developer guide, upload rules and founding creators, plus the full GTA VI database with the map, characters, cars and daily news.",
+    "url": "gta6project/",
+    "icon": "img/gta6project-icon.png",
+    "status": "live",
+    "theme": "indigo"
+  },
+  {
+    "slug": "hexcam",
+    "name": "hexcam",
+    "kicker": "free tool · photos and video",
+    "text": "raw camera looks in your browser: CCD glow, real JPEG crunch, grain, bleach bypass and VHS, on photos and video. add a song and it cuts your clips to the beat.",
+    "url": "hexcam/",
+    "icon": "img/hexcam-icon.webp",
+    "status": "new",
+    "theme": "plum"
+  },
+  {
+    "slug": "mods",
+    "name": "GTA V mods",
+    "kicker": "free releases",
+    "text": "GTA V, LSPDFR and FiveM mods and ReShade presets, published under Hex Modifications.",
+    "url": "#mods",
+    "status": "ongoing"
+  },
+  {
+    "slug": "software",
+    "name": "PC tools",
+    "kicker": "mac and windows",
+    "text": "small utilities and system tuning that make Mac and Windows run the way they should.",
+    "url": "#software",
+    "status": "ongoing"
+  }
+]

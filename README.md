@@ -1,8 +1,8 @@
 # Hex Modifications
 
-The home of Hex Modifications: graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, plus QoL software for macOS and Windows. Developed by 001hex. It brings Patreon, Ko-fi, Fiverr, Tebex, Shopify and Discord into one site.
+The home of Hex Modifications, and the hub for every project 001hex builds outside of music: graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, QoL software for macOS and Windows, [GTA6 Project](https://hex-modifications.github.io/gta6project/) and [hexcam](https://hex-modifications.github.io/hexcam/). Developed by 001hex. It brings Patreon, Ko-fi, Fiverr, Tebex, Shopify and Discord into one site.
 
-- **Frontend:** editorial layout, Apple-style glass UI, the GTA VI sunset palette, time-of-day lighting, and real-time 3D glass objects rendered with three.js (transmission, dispersion and iridescence).
+- **Frontend:** editorial layout, Apple-style glass UI, the GTA VI sunset palette and time-of-day lighting. The hero is the project index.
 - **Backend:** a Node server with **zero dependencies**, so there's nothing to `npm install` and no supply-chain risk.
 - **Figma brand system:** https://www.figma.com/design/Dw8XzjKaxBXq7JNZyfWjcJ
 
@@ -18,7 +18,7 @@ Requires Node 20 or newer. On the first run the server creates a `.env` file wit
 
 - **Palette (GTA VI sunset):** coral `#E89898`, indigo `#5D549C`, slate `#6F70A2`, plum `#7E3A63`, lilac `#A373D3`.
 - **Timecycle:** the site's lighting follows each visitor's local time: dawn 05–08, day 08–17, dusk 17–20, night 20–05. Night is the dark theme. Clicking the clock in the hero skips ahead. You can preview a phase with `?phase=dawn|day|dusk|night`.
-- **Hero objects:** bubbly glass pistol, rifle, sports car, police cruiser (flashing light bar), wanted star or heist cash stack. One is picked at random per visit, never the same as the visitor's last one. Clicking the object swaps it. Preview one with `?model=car` etc.
+- **Projects hub:** the hero lists every project from `data/projects.json`, and the projects section (first after the hero) shows a card for each one that has an icon.
 
 ### Easter eggs
 Type these anywhere on the page (not inside a form field):
@@ -29,7 +29,6 @@ Type these anywhere on the page (not inside a form field):
 | `FUGITIVE` | raises the wanted level (stars, top right) |
 | `LAWYERUP` | clears the wanted level |
 | `SLOWMO` | slow motion |
-| `SKYFALL` | drops in a new 3D object |
 | `TIMECYCLE` | skips the time of day |
 
 Also:
@@ -46,7 +45,7 @@ Everything lives in `data/`. You can edit it from **/admin → Content** (valida
 | `site.json` | Your links (Patreon, Ko-fi, Fiverr, Tebex, Shopify, Discord server invite, YouTube, GitHub, X), `discordUser` (the username visitors copy, currently `001hex`), years scripting, email. The "join the server" button only appears once `links.discord` is a real invite |
 | `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
 | `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
-| `showcase.json` | The technology viewer: one `before` image plus slides (`title`, `after`, `buffer`, `text`). The current images are grey clay diagrams of each pass with technical overlays (sample rays, occlusion vectors, focal plane, blur radii, tone curves) |
+| `projects.json` | The hub: every project, in order. Each entry: `{ "slug", "name", "kicker", "text", "url", "icon", "status", "theme" }`. All of them appear in the hero index. Entries with an `icon` also get a card in the projects section. `theme` is `indigo` or `plum`. To add a new project, add an entry here (or in /admin → Content) and drop its 512×512 icon in `public/img/` |
 | `feed.json` | Updates section. Hidden while empty; fills automatically once Patreon is connected |
 | `releases-manual.json` | Extra entries for **Latest releases** from sites that block automated reading (LCPDFR). Each entry: `{ "platform": "lcpdfr", "source": "LCPDFR", "title", "url", "image", "description", "date": "2026-10-01" }`. To hide something that was picked up automatically, add `{ "url": "<its link>", "hide": true }` |
 
@@ -86,24 +85,25 @@ The AdSense script only loads after the intro has finished, so it never slows th
 
 ## hexcam (free photo + video effects tool)
 
-A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer and the "also from hex" projects section.
+A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer, the hero index and the projects section, and it links back here.
 
 - **Private:** it runs entirely in the visitor's browser (WebGL2). Nothing is uploaded and there's no server code, so it works the same on GitHub Pages and the Node host.
 - **Real compression, not a filter:** YCbCr conversion, chroma subsampling (4:4:4, 4:2:2, 4:2:0 or DV's 4:1:1), a separable 8×8 DCT, quantisation with the standard JPEG tables scaled by quality, then decode. "Re-saves" shift the block grid each pass, so generation loss compounds.
 - **Pipeline (per frame):** lens (distortion, aberration, softness, shake, tape jitter, downscale) → bloom → colour grade (flash, white balance, contrast, bleach bypass, split tone, lifted blacks) → in-camera sharpening, noise and date stamp → codec → output (upscale, chroma bleed, light leak, vignette, interlace, grain, dust, ghosting, dither).
 - **Video:** frame-rate drop, handheld shake, tracking errors, chroma bleed, interlacing, ghosting trails, flicker, moving light leaks, animated grain, and a date stamp whose clock ticks. Export records in real time with MediaRecorder: MP4 (H.264) where the browser can, otherwise WebM. The bitrate slider lets the video codec add its own smear.
 - **15 looks** (ccd 2006, bleach bypass, flip phone, webcam 09, vhs tape, miniDV, super 8, y2k flash, early iphone, deep fried, mono grain, webcore, cctv, club cam, raw), each with a live thumbnail of the visitor's own picture. "copy look link" puts every setting in the URL hash.
-- **Files:** `public/hexcam/` (`engine.js` the WebGL pipeline and shaders, `looks.js` the controls and looks, `extras.js` the date stamps, `app.js` the UI and export). To add a look, add an entry to `LOOKS` in `looks.js` listing only the settings that differ from `DEFAULTS`.
+- **Auto edit:** add a song and one or more clips. `autoedit.js` finds the tempo (spectral-flux onsets and autocorrelation), the beat grid, downbeats, loudness per beat and the drop. It then cuts on the beat, faster in louder sections, and lands a cut exactly on the drop. For each cut it picks a clip moment whose movement matches the music, drifting forward through the clips without repeats. It adds a flash on the drop and section changes, small zoom punches on loud downbeats, and burned-in text (the main line on the drop). Options: pace, length (15/30/60s or the full song), start (before the drop or from the top), format (9:16, 4:5, 1:1, 16:9 or source). Reshuffle gives a different cut. The export records the edit with the song as its soundtrack.
+- **Files:** `public/hexcam/` (`engine.js` the WebGL pipeline and shaders, `looks.js` the controls and looks, `extras.js` the date stamps, `autoedit.js` the beat-synced auto edit, `app.js` the UI and export). To add a look, add an entry to `LOOKS` in `looks.js` listing only the settings that differ from `DEFAULTS`.
 
 ## Intro splash
 
 The intro is rendered live, not a video. About 3,900 particles gather onto the exact halftone dots of the Hex Modifications mark, the cross flashes, and the crisp mark and wordmark settle in. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. The assets are `media/mark.webp` (157 KB) and `media/mark-dots.bin` (23 KB, the dot positions, generated from `brand/hex-modifications-official.png`), and they're only downloaded when the intro runs.
 
 - **Exit:** the dark opens outward from the cross, with a rim of palette light sweeping across, revealing the real page underneath. At the same time the mark and wordmark fly into their places in the nav, where the nav's own logo takes over as they land
-- **Loading bar:** follows real milestones (site data and release count, the 3D hero's first frame, fonts, assets) mixed with a shuffled, randomly timed set of build steps, so it reads differently every visit
+- **Loading bar:** follows real milestones (site data and release count, fonts, assets) mixed with a shuffled, randomly timed set of build steps, so it reads differently every visit
 - **Timing:** about 4.5 seconds in all. It only holds on the finished logo while the page is still loading, and never runs past 7.5 seconds
 - **Sound:** `media/intro.m4a` (Opus `.webm` fallback), mastered subtle at −29 LUFS with a soft fade-in, and faded out on exit. Browsers usually block sound until the visitor interacts, so if it's blocked, the first click, tap or key press starts it in sync
-- **Smoothness:** everything animated is GPU work (the WebGL canvas, opacity, transform). The 3D hero draws a few warm-up frames to compile its shaders, then idles behind the intro, and the background shader pauses until the hand-off
+- **Smoothness:** everything animated is GPU work (the WebGL canvas, opacity, transform). The background shader pauses until the hand-off
 - **When it shows:** once per browser session. It's skipped for reduced motion, Data Saver, background tabs and `?nosplash`. Without WebGL, the mark fades in and the exit is a palette wash. Esc skips it
 
 ## Chat assistant ("ask hex")
@@ -161,7 +161,7 @@ lib/integrations.js    Patreon, Tebex, Shopify, Discord
 lib/seo.js             JSON-LD, sitemap, robots, product pages
 lib/releases.js        latest releases from GTA5-Mods, FiveM forum, GitHub, Patreon
 public/                index.html, admin.html, css/, js/, img/
-  js/app.js            page logic        js/glass3d.js   3D hero         js/liquid.js   flowing background
+  js/app.js            page logic                                        js/liquid.js   flowing background
   js/chat.js           ask hex chat      js/persona.js   chat persona    js/timecycle.js time-of-day lighting
   js/splash.js         intro splash      js/monetise.js  support strip, ad / sponsor slot
   media/               intro mark, particle dots and sound

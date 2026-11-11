@@ -74,49 +74,24 @@
     observeReveal();
   }
 
-  // ── Technology showcase ────────────────────────────
-  function renderTech(data) {
-    if (!data?.slides?.length) { $('#tech').hidden = true; return; }
-    const tabs = $('#techTabs'), cmp = $('#techCmp'), range = $('.cmp-range', cmp);
-    const before = $('#techBefore'), after = $('#techAfter'), btn = $('#bufferBtn');
-    before.src = data.before;
-    $('#techNote').textContent = data.note || '';
-    tabs.insertAdjacentHTML('beforeend', data.slides.map((s, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(s.title)}</button>`).join(''));
-    // warm the cache so tab switches are instant
-    data.slides.forEach((s) => { new Image().src = s.after; if (s.buffer) new Image().src = s.buffer; });
-    let current = 0, buffer = false;
-    const show = () => {
-      const s = data.slides[current];
-      after.src = buffer && s.buffer ? s.buffer : s.after;
-      after.alt = `${s.title}${buffer ? ' buffer view' : ''}`;
-      $('#techName').textContent = s.title;
-      $('#techText').textContent = s.text;
-      $('#techLabelR').textContent = buffer ? 'buffer' : 'reshade';
-      btn.textContent = buffer ? 'back to image' : 'view buffer';
-      btn.setAttribute('aria-pressed', String(buffer));
-      btn.hidden = !s.buffer;
-    };
-    tabs.addEventListener('click', (e) => {
-      const b = e.target.closest('button'); if (!b) return;
-      current = Number(b.dataset.i); buffer = false;
-      $$('button', tabs).forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-      moveThumb(tabs, b); show();
-    });
-    btn.addEventListener('click', () => { buffer = !buffer; show(); });
-    const set = (v) => cmp.style.setProperty('--pos', `${v}%`);
-    range.addEventListener('input', () => set(range.value));
-    let pending = null;
-    cmp.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse' && !e.buttons) return;
-      if (pending === null) requestAnimationFrame(() => {
-        const r = cmp.getBoundingClientRect();
-        const v = Math.max(0, Math.min(100, ((pending - r.left) / r.width) * 100));
-        pending = null; range.value = v; set(v);
-      });
-      pending = e.clientX;
-    });
-    show();
-    requestAnimationFrame(() => moveThumb(tabs, $('[aria-selected="true"]', tabs)));
+  // ── Projects: the hub. data/projects.json drives the hero index and the projects section ──
+  function renderProjects(list) {
+    const items = Array.isArray(list) ? list.filter((p) => p && p.name && p.url) : [];
+    const ext = (u) => /^https?:/i.test(u);
+    // full links, or links within this site (gta6project/, hexcam/, #mods). Anything with a scheme other than http(s) is refused.
+    const projUrl = (u) => (/^https?:\/\//i.test(u) || /^#[\w-]+$/.test(u) || /^[\w-][\w\-./]*\/?(#[\w-]+)?$/.test(u) ? u : '#');
+    const attrs = (p) => `href="${esc(projUrl(p.url))}"${ext(p.url) ? ' target="_blank" rel="noopener"' : ''} data-track="project-${esc(p.slug || p.name)}"`;
+    $('#heroIndex').innerHTML = items.map((p, i) => `<li><a ${attrs(p)}>
+      <span class="hx-n">${String(i + 1).padStart(2, '0')}</span><span class="hx-name">${esc(p.name)}</span><span class="hx-kick">${esc(p.kicker || '')}</span><span class="hx-go" aria-hidden="true">↗</span></a></li>`).join('');
+    $('#projList').innerHTML = items.filter((p) => p.icon).map((p) => `<a class="proj-card proj-${esc(p.theme || 'indigo')} reveal" ${attrs(p)}>
+      <img class="proj-icon" src="${esc(p.icon)}" width="512" height="512" alt="" loading="lazy" decoding="async">
+      <div class="proj-copy">
+        <p class="proj-kicker">${esc(p.kicker || '')}${p.status ? ` · ${esc(p.status)}` : ''}</p>
+        <h3 class="proj-name">${esc(p.name)}</h3>
+        <p class="proj-text">${esc(p.text || '')}</p>
+        <span class="proj-cta">open ${esc(p.name)} ↗</span>
+      </div></a>`).join('');
+    observeReveal();
   }
 
   function moveThumb(group, btn) {
@@ -154,6 +129,8 @@
   function setupStore(list) {
     products = Array.isArray(list) ? list : [];
     const has = products.length > 0;
+    $('#store').hidden = !has;                                    // no listings yet: no store section, no nav link
+    $$('[data-store-link]').forEach((a) => { a.hidden = !has; });
     $('#storeEmpty').hidden = has;
     $('#storeFilters').hidden = products.length < 5;              // filters only once there's something to filter
     renderProducts();
@@ -274,7 +251,7 @@
     try { navigator.sendBeacon('/api/track', JSON.stringify({ type: 'outbound', target: a.dataset.track })); } catch { /* ignore */ }
   });
 
-  // ── Nav sheet, active link, scroll progress, reveal ──
+  // ── Nav sheet, active link, reveal ──
   const sheet = $('#sheet'), menuBtn = $('#menuBtn');
   const setSheet = (open) => { sheet.hidden = !open; menuBtn.setAttribute('aria-expanded', String(open)); };
   menuBtn.addEventListener('click', (e) => { e.stopPropagation(); setSheet(sheet.hidden); });
@@ -287,11 +264,8 @@
   }), { rootMargin: '-45% 0px -50% 0px' });
   $$('main section[id]').forEach((s) => navObs.observe(s));
 
-  const bar = $('#progBar'), pct = $('#progPct'), nav = $('.nav');
+  const nav = $('.nav');
   const onScroll = () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    const p = max > 0 ? Math.round((scrollY / max) * 100) : 0;
-    bar.style.width = `${p}%`; pct.textContent = `${p}%`;
     nav.classList.toggle('scrolled', scrollY > 60);          // wordmark gets a glass backing once content passes under it
     if (scrollY < innerHeight * 0.6) $$('.pill a.active').forEach((a) => a.classList.remove('active'));
   };
@@ -335,7 +309,6 @@
       document.dispatchEvent(new CustomEvent('hex:slowmo', { detail: on }));
       return on ? 'slow motion on' : 'slow motion off';
     },
-    SKYFALL: () => { document.dispatchEvent(new CustomEvent('hex:model')); scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' }); return 'new object dropped in'; },
   };
   let typed = '';
   document.addEventListener('keydown', (e) => {
@@ -348,12 +321,12 @@
 
   // ── Go ─────────────────────────────────────────────
   (async () => {
-    const [site, prods, road, feed, show, rel] = await Promise.all([
+    const [site, prods, road, feed, projects, rel] = await Promise.all([
       load('/api/site', 'data/site.json'),
       load('/api/products', 'data/products.json'),
       load('/api/roadmap', 'data/roadmap.json'),
       load('/api/feed', 'data/feed.json'),
-      load('/api/showcase', 'data/showcase.json'),
+      load('/api/projects', 'data/projects.json'),
       load('/api/releases', 'data/releases.json'),
     ]);
     // shared with the chat assistant (js/chat.js), which answers from the same data
@@ -361,7 +334,7 @@
     document.dispatchEvent(new CustomEvent('hex:data'));
     applySite(site);
     renderReleases(rel);
-    renderTech(show);
+    renderProjects(projects);
     setupStore(prods);
     renderRoadmap(road);
     renderFeed(feed);
