@@ -48,7 +48,6 @@ Everything lives in `data/`. You can edit it from **/admin → Content** (valida
 | `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
 | `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
 | `projects.json` | The hub: every project, in order. Each entry: `{ "slug", "name", "kicker", "text", "url", "icon", "status", "theme" }`. Entries with an `icon` get a card in the projects section. `theme` is `indigo` or `plum`. To add a new project, add an entry here (or in /admin → Content) and drop its 512×512 icon in `public/img/` |
-| `showcase.json` | The technology viewer: one `before` image plus slides (`title`, `after`, `buffer`, `text`). The current images are grey clay diagrams of each pass with technical overlays (sample rays, occlusion vectors, focal plane, blur radii, tone curves) |
 | `feed.json` | Updates section. Hidden while empty; fills automatically once Patreon is connected |
 | `releases-manual.json` | Extra entries for **Latest releases** from sites that block automated reading (LCPDFR). Each entry: `{ "platform": "lcpdfr", "source": "LCPDFR", "title", "url", "image", "description", "date": "2026-10-01" }`. To hide something that was picked up automatically, add `{ "url": "<its link>", "hide": true }` |
 

@@ -74,51 +74,6 @@
     observeReveal();
   }
 
-  // ── Technology showcase ────────────────────────────
-  function renderTech(data) {
-    if (!data?.slides?.length) { $('#tech').hidden = true; return; }
-    const tabs = $('#techTabs'), cmp = $('#techCmp'), range = $('.cmp-range', cmp);
-    const before = $('#techBefore'), after = $('#techAfter'), btn = $('#bufferBtn');
-    before.src = data.before;
-    $('#techNote').textContent = data.note || '';
-    tabs.insertAdjacentHTML('beforeend', data.slides.map((s, i) => `<button role="tab" aria-selected="${i === 0}" data-i="${i}">${esc(s.title)}</button>`).join(''));
-    // warm the cache so tab switches are instant
-    data.slides.forEach((s) => { new Image().src = s.after; if (s.buffer) new Image().src = s.buffer; });
-    let current = 0, buffer = false;
-    const show = () => {
-      const s = data.slides[current];
-      after.src = buffer && s.buffer ? s.buffer : s.after;
-      after.alt = `${s.title}${buffer ? ' buffer view' : ''}`;
-      $('#techName').textContent = s.title;
-      $('#techText').textContent = s.text;
-      $('#techLabelR').textContent = buffer ? 'buffer' : 'reshade';
-      btn.textContent = buffer ? 'back to image' : 'view buffer';
-      btn.setAttribute('aria-pressed', String(buffer));
-      btn.hidden = !s.buffer;
-    };
-    tabs.addEventListener('click', (e) => {
-      const b = e.target.closest('button'); if (!b) return;
-      current = Number(b.dataset.i); buffer = false;
-      $$('button', tabs).forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-      moveThumb(tabs, b); show();
-    });
-    btn.addEventListener('click', () => { buffer = !buffer; show(); });
-    const set = (v) => cmp.style.setProperty('--pos', `${v}%`);
-    range.addEventListener('input', () => set(range.value));
-    let pending = null;
-    cmp.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse' && !e.buttons) return;
-      if (pending === null) requestAnimationFrame(() => {
-        const r = cmp.getBoundingClientRect();
-        const v = Math.max(0, Math.min(100, ((pending - r.left) / r.width) * 100));
-        pending = null; range.value = v; set(v);
-      });
-      pending = e.clientX;
-    });
-    show();
-    requestAnimationFrame(() => moveThumb(tabs, $('[aria-selected="true"]', tabs)));
-  }
-
   // ── Projects: the hub. data/projects.json drives the hero index and the projects section ──
   function renderProjects(list) {
     const items = Array.isArray(list) ? list.filter((p) => p && p.name && p.url) : [];
@@ -371,13 +326,12 @@
 
   // ── Go ─────────────────────────────────────────────
   (async () => {
-    const [site, prods, road, feed, projects, show, rel] = await Promise.all([
+    const [site, prods, road, feed, projects, rel] = await Promise.all([
       load('/api/site', 'data/site.json'),
       load('/api/products', 'data/products.json'),
       load('/api/roadmap', 'data/roadmap.json'),
       load('/api/feed', 'data/feed.json'),
       load('/api/projects', 'data/projects.json'),
-      load('/api/showcase', 'data/showcase.json'),
       load('/api/releases', 'data/releases.json'),
     ]);
     // shared with the chat assistant (js/chat.js), which answers from the same data
@@ -386,7 +340,6 @@
     applySite(site);
     renderReleases(rel);
     renderProjects(projects);
-    renderTech(show);
     setupStore(prods);
     renderRoadmap(road);
     renderFeed(feed);

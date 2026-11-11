@@ -53,7 +53,6 @@
   <nav class="pill glass" aria-label="Primary">
     <a href="#projects">projects</a>
     <a href="#releases">new</a>
-    <a href="#tech">tech</a>
     <a href="#mods">mods</a>
     <a href="#store" data-store-link hidden>store</a>
     <a href="#software">software</a>
@@ -71,7 +70,7 @@
 
 <div class="sheet glass" id="sheet" hidden>
   <nav class="sheet-nav" aria-label="Menu">
-    <a href="#projects">projects</a><a href="#releases">latest releases</a><a href="#tech">tech</a><a href="#mods">mods</a><a href="#store" data-store-link hidden>store</a><a href="#software">software</a><a href="#contact">contact</a><a href="gta6project/">gta6 project</a><a href="hexcam/">hexcam</a>
+    <a href="#projects">projects</a><a href="#releases">latest releases</a><a href="#mods">mods</a><a href="#store" data-store-link hidden>store</a><a href="#software">software</a><a href="#contact">contact</a><a href="gta6project/">gta6 project</a><a href="hexcam/">hexcam</a>
   </nav>
   <p class="label">find hex modifications on</p>
   <ul class="sheet-plats" id="sheetPlats"></ul>
@@ -128,29 +127,6 @@
     </div>
   </aside>
 
-  <!-- ═════════ TECHNOLOGY ═════════ -->
-  <section class="section" id="tech" aria-labelledby="techTitle">
-    <header class="sec-head reveal">
-      <p class="label">technology</p>
-      <h2 id="techTitle" class="sec-title">how it<br><span class="grad">works</span></h2>
-      <p class="sec-note">ReShade runs extra shader passes on every frame a game draws. pick a technique, drag to compare with the untouched frame, then open the buffer to see the pass itself.</p>
-    </header>
-    <div class="tech glass reveal">
-      <div class="filters tech-tabs" role="tablist" aria-label="Techniques" id="techTabs"><span class="filter-thumb" aria-hidden="true"></span></div>
-      <div class="cmp" id="techCmp">
-        <img class="before" id="techBefore" alt="Untouched frame" src="img/tech/vanilla.webp" width="1600" height="1000" loading="lazy" decoding="async">
-        <img class="after" id="techAfter" alt="" src="img/tech/full.webp" width="1600" height="1000" loading="lazy" decoding="async">
-        <span class="cmp-label l" id="techLabelL">no post</span><span class="cmp-label r" id="techLabelR">reshade</span>
-        <div class="cmp-handle"></div><div class="cmp-knob" aria-hidden="true">‹ ›</div>
-        <input class="cmp-range" type="range" min="0" max="100" value="50" aria-label="Compare the stock frame with the processed frame">
-      </div>
-      <div class="tech-info">
-        <div><h3 id="techName">full preset</h3><p id="techText"></p></div>
-        <button class="btn-pill glass tech-buffer" type="button" id="bufferBtn" aria-pressed="false">view buffer</button>
-      </div>
-      <p class="tech-note" id="techNote"></p>
-    </div>
-  </section>
 
   <!-- ═════════ MODS / PLATFORMS ═════════ -->
   <section class="section" id="mods" aria-labelledby="modsTitle">

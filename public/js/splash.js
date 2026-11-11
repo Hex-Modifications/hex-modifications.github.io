@@ -46,7 +46,6 @@
     () => `building environment map · ${pick(['256', '512'])}px`,
     () => `warming transmission buffer · ${pick(['0.5', '0.75', '1.0'])}x`,
     () => 'linking light field shader',
-    () => `decoding showcase buffers · ${pick(['6', '7', '13'])} frames`,
     () => `hydrating platform links · ${Object.keys(window.hexData?.site?.links || {}).length || pick([6, 7])}`,
     () => 'mounting ask hex',
     () => `tessellating ${pick(['chassis', 'slide', 'rims', 'light bar', 'magazine'])} · ${pick(['1,284', '2,048', '3,912', '864'])} tris`,
