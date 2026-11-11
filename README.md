@@ -2,7 +2,7 @@
 
 The home of Hex Modifications, and the hub for every project 001hex builds outside of music: graphics overhauls, ReShade presets and FiveM scripts for GTA V and GTA VI, QoL software for macOS and Windows, [GTA6 Project](https://hex-modifications.github.io/gta6project/) and [hexcam](https://hex-modifications.github.io/hexcam/). Developed by 001hex. It brings Patreon, Ko-fi, Fiverr, Tebex, Shopify and Discord into one site.
 
-- **Frontend:** editorial layout, Apple-style glass UI, the GTA VI sunset palette and time-of-day lighting. The hero is the project index.
+- **Frontend:** editorial layout, Apple-style glass UI, the GTA VI sunset palette, time-of-day lighting, and real-time 3D glass objects rendered with three.js (transmission, dispersion and iridescence).
 - **Backend:** a Node server with **zero dependencies**, so there's nothing to `npm install` and no supply-chain risk.
 - **Figma brand system:** https://www.figma.com/design/Dw8XzjKaxBXq7JNZyfWjcJ
 
@@ -18,7 +18,8 @@ Requires Node 20 or newer. On the first run the server creates a `.env` file wit
 
 - **Palette (GTA VI sunset):** coral `#E89898`, indigo `#5D549C`, slate `#6F70A2`, plum `#7E3A63`, lilac `#A373D3`.
 - **Timecycle:** the site's lighting follows each visitor's local time: dawn 05–08, day 08–17, dusk 17–20, night 20–05. Night is the dark theme. Clicking the clock in the hero skips ahead. You can preview a phase with `?phase=dawn|day|dusk|night`.
-- **Projects hub:** the hero lists every project from `data/projects.json`, and the projects section (first after the hero) shows a card for each one that has an icon.
+- **Hero objects:** bubbly glass pistol, rifle, sports car, police cruiser (flashing light bar), wanted star or heist cash stack. One is picked at random per visit, never the same as the visitor's last one. Clicking the object swaps it. Preview one with `?model=car` etc.
+- **Projects hub:** the projects section, first after the hero, shows a card for every project in `data/projects.json` that has an icon.
 
 ### Easter eggs
 Type these anywhere on the page (not inside a form field):
@@ -29,6 +30,7 @@ Type these anywhere on the page (not inside a form field):
 | `FUGITIVE` | raises the wanted level (stars, top right) |
 | `LAWYERUP` | clears the wanted level |
 | `SLOWMO` | slow motion |
+| `SKYFALL` | drops in a new 3D object |
 | `TIMECYCLE` | skips the time of day |
 
 Also:
@@ -45,7 +47,8 @@ Everything lives in `data/`. You can edit it from **/admin → Content** (valida
 | `site.json` | Your links (Patreon, Ko-fi, Fiverr, Tebex, Shopify, Discord server invite, YouTube, GitHub, X), `discordUser` (the username visitors copy, currently `001hex`), years scripting, email. The "join the server" button only appears once `links.discord` is a real invite |
 | `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
 | `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
-| `projects.json` | The hub: every project, in order. Each entry: `{ "slug", "name", "kicker", "text", "url", "icon", "status", "theme" }`. All of them appear in the hero index. Entries with an `icon` also get a card in the projects section. `theme` is `indigo` or `plum`. To add a new project, add an entry here (or in /admin → Content) and drop its 512×512 icon in `public/img/` |
+| `projects.json` | The hub: every project, in order. Each entry: `{ "slug", "name", "kicker", "text", "url", "icon", "status", "theme" }`. Entries with an `icon` get a card in the projects section. `theme` is `indigo` or `plum`. To add a new project, add an entry here (or in /admin → Content) and drop its 512×512 icon in `public/img/` |
+| `showcase.json` | The technology viewer: one `before` image plus slides (`title`, `after`, `buffer`, `text`). The current images are grey clay diagrams of each pass with technical overlays (sample rays, occlusion vectors, focal plane, blur radii, tone curves) |
 | `feed.json` | Updates section. Hidden while empty; fills automatically once Patreon is connected |
 | `releases-manual.json` | Extra entries for **Latest releases** from sites that block automated reading (LCPDFR). Each entry: `{ "platform": "lcpdfr", "source": "LCPDFR", "title", "url", "image", "description", "date": "2026-10-01" }`. To hide something that was picked up automatically, add `{ "url": "<its link>", "hide": true }` |
 
@@ -85,7 +88,7 @@ The AdSense script only loads after the intro has finished, so it never slows th
 
 ## hexcam (free photo + video effects tool)
 
-A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer, the hero index and the projects section, and it links back here.
+A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer and the projects section, and it links back here.
 
 - **Private:** it runs entirely in the visitor's browser (WebGL2). Nothing is uploaded and there's no server code, so it works the same on GitHub Pages and the Node host.
 - **Real compression, not a filter:** YCbCr conversion, chroma subsampling (4:4:4, 4:2:2, 4:2:0 or DV's 4:1:1), a separable 8×8 DCT, quantisation with the standard JPEG tables scaled by quality, then decode. "Re-saves" shift the block grid each pass, so generation loss compounds.

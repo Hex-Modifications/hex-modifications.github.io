@@ -32,7 +32,7 @@ const products = read('products');
 
 // data the frontend falls back to when there is no API
 fs.mkdirSync(path.join(DIST, 'data'));
-for (const n of ['site', 'projects', 'products', 'roadmap', 'feed']) {
+for (const n of ['site', 'projects', 'products', 'roadmap', 'feed', 'showcase']) {
   fs.copyFileSync(path.join(ROOT, 'data', `${n}.json`), path.join(DIST, 'data', `${n}.json`));
 }
 

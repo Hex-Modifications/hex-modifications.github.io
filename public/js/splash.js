@@ -30,6 +30,7 @@
   const signals = {
     load: document.readyState === 'complete' ? Promise.resolve() : once(window, 'load'),
     data: window.hexData ? Promise.resolve() : once(document, 'hex:data'),
+    hero: window.hexHeroReady ? Promise.resolve() : Promise.race([once(document, 'hex:hero-ready'), wait(5000)]),
     fonts: document.fonts ? document.fonts.ready : Promise.resolve(),
   };
   Promise.all([...Object.values(signals), wait(T.minExit * 1000)]).then(() => complete());
@@ -41,10 +42,16 @@
   const clock = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   const POOL = [
     () => `resolving timecycle · ${root.dataset.phase || 'day'} ${clock()}`,
+    () => 'compiling glass shaders',
+    () => `building environment map · ${pick(['256', '512'])}px`,
+    () => `warming transmission buffer · ${pick(['0.5', '0.75', '1.0'])}x`,
     () => 'linking light field shader',
+    () => `decoding showcase buffers · ${pick(['6', '7', '13'])} frames`,
     () => `hydrating platform links · ${Object.keys(window.hexData?.site?.links || {}).length || pick([6, 7])}`,
     () => 'mounting ask hex',
+    () => `tessellating ${pick(['chassis', 'slide', 'rims', 'light bar', 'magazine'])} · ${pick(['1,284', '2,048', '3,912', '864'])} tris`,
     () => `streaming fonts · ${pick(['inter tight', 'jetbrains mono'])}`,
+    () => `checking for cheats · ${pick(['none found', 'lawyerup?', 'skyfall?'])}`,
     () => `handshake · ${location.host || 'hex modifications'}`,
     () => `baking palette · ${pick(['coral', 'lilac', 'indigo', 'plum'])}`,
     () => `syncing feeds · ${pick(['gta5-mods', 'cfx.re', 'github'])}`,
@@ -53,6 +60,7 @@
   ];
   const MILESTONES = [
     [signals.data, () => { const n = window.hexData?.releases?.length; return n ? `fetched latest releases · ${n}` : 'fetched site data'; }],
+    [signals.hero, () => (root.classList.contains('no-webgl') ? 'hero · static fallback' : `3D hero · first frame · ${document.getElementById('glass')?.dataset.model || 'ready'}`)],
     [signals.load, () => 'assets decoded'],
   ];
   let count = 0;

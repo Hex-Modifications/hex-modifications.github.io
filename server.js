@@ -28,7 +28,7 @@ if (!env.SECRET_KEY || env.SECRET_KEY === 'change-me') console.warn('[warn] SECR
 if (!env.ADMIN_TOKEN || env.ADMIN_TOKEN.length < 24) console.warn('[warn] ADMIN_TOKEN missing or < 24 chars: /admin is disabled.');
 
 const traffic = new Traffic({ dataDir: DATA, trustProxy: env.TRUST_PROXY });
-const CONTENT = ['site', 'projects', 'products', 'roadmap', 'feed', 'releases-manual'];
+const CONTENT = ['site', 'projects', 'products', 'roadmap', 'feed', 'showcase', 'releases-manual'];
 const MAX_BODY = 32 * 1024;
 
 const MIME = {
@@ -153,6 +153,7 @@ const routes = {
   'GET /api/products': async (req, res) => json(req, res, 200, await allProducts()),
   'GET /api/roadmap': (req, res) => json(req, res, 200, readData('roadmap')),
   'GET /api/projects': (req, res) => json(req, res, 200, readData('projects')),
+  'GET /api/showcase': (req, res) => json(req, res, 200, readData('showcase')),
   'GET /api/feed': async (req, res) => {
     const live = await patreonFeed(env);
     json(req, res, 200, { source: live ? 'patreon' : 'local', posts: live || readData('feed') });
