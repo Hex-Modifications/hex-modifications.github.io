@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en-GB" data-phase="day">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>hexcam: free digicam, CCD, VHS &amp; JPEG effects for photos and video | Hex Modifications</title>
+<meta name="description" content="hexcam is a free online editor for raw camera looks on photos and videos, with a beat-synced auto edit: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tracking, lens distortion and date stamps. Runs in your browser, nothing is uploaded.">
+<link rel="canonical" href="https://hex-modifications.github.io/hexcam/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hex Modifications">
+<meta property="og:title" content="hexcam: raw camera effects for photos and video">
+<meta property="og:description" content="CCD glow, real JPEG crunch, low-res, grain, bleach bypass, VHS and date stamps, for photos and videos. Free, private, in your browser.">
+<meta property="og:url" content="https://hex-modifications.github.io/hexcam/">
+<meta property="og:image" content="https://hex-modifications.github.io/hexcam/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#E8E7EC">
+<link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hexcam.css">
+<script src="../js/timecycle.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"hexcam","url":"https://hex-modifications.github.io/hexcam/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser with WebGL2)","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"description":"Free in-browser editor for digicam, CCD, VHS, film grain and JPEG compression effects on photos and videos.","author":{"@type":"Organization","name":"Hex Modifications","url":"https://hex-modifications.github.io/"}}</script>
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#controls">skip to controls</a>
+<div class="shell">
+
+  <!-- looks + actions -->
+  <nav class="col nav" aria-label="hexcam">
+    <a class="brand" href="../" aria-label="hexcam, a Hex Modifications project. Back to Hex Modifications">
+      <img src="../img/hexcam-icon.webp" alt="" width="36" height="36">
+      <span class="wm"><span class="wm-hex">hex</span><span class="wm-cam">cam</span></span>
+    </a>
+    <a class="by" href="../">a hex modifications project ↗</a>
+    <p class="path">/LOOKS</p>
+    <ul class="list" id="looks"></ul>
+    <p class="path">/ACTIONS</p>
+    <ul class="list">
+      <li><button class="item" id="random" type="button"><span class="mk">[ ]</span>RANDOMISE<kbd>R</kbd></button></li>
+      <li><button class="item" id="reroll" type="button"><span class="mk">[ ]</span>REROLL GRAIN<kbd>G</kbd></button></li>
+      <li><button class="item" id="undo" type="button"><span class="mk">[ ]</span>UNDO<kbd>⌘Z</kbd></button></li>
+      <li><button class="item" id="share" type="button"><span class="mk">[ ]</span>COPY LOOK LINK</button></li>
+      <li><button class="item" id="reset" type="button"><span class="mk">[ ]</span>RESET</button></li>
+    </ul>
+    <div class="nav-foot">
+      <button class="item" type="button" data-dialog="about"><span class="mk">[ ]</span>ABOUT</button>
+      <button class="item" type="button" data-dialog="keys"><span class="mk">[ ]</span>SHORTCUTS<kbd>?</kbd></button>
+      <a class="item" href="../#projects"><span class="mk">[↗]</span>MORE FROM HEX</a>
+    </div>
+    <div class="peek" id="peek" aria-hidden="true"><canvas width="160" height="100"></canvas><span></span></div>
+  </nav>
+
+  <!-- controls -->
+  <aside class="col ctl" aria-label="Controls">
+    <div class="ctl-scroll" id="controls">
+      <button class="box" id="open" type="button"><span>Open file</span><kbd>Ctrl+O</kbd></button>
+      <p class="hint">[.jpg .png .webp .mp4 .mov .webm]</p>
+      <button class="item toggle" id="compare" type="button" role="switch" aria-checked="true"><span class="mk">[*]</span>Show effect<kbd>\</kbd></button>
+      <section class="grp grp-edit" id="edGroup">
+        <button class="gh" type="button" aria-expanded="true"><span class="t">Auto edit</span><span class="badge">beat sync</span><span class="dots"></span><span class="pm">-</span></button>
+        <div class="gb"><div class="gi"><div class="rows">
+          <div class="row"><button class="item" id="edSongBtn" type="button"><span class="mk">[+]</span><span class="lab">Add song</span></button><p class="sub" id="edSong">mp3, wav or m4a. or drop it anywhere</p></div>
+          <div class="row"><button class="item" id="edClipBtn" type="button"><span class="mk">[+]</span><span class="lab">Add clips</span></button><p class="sub" id="edClips"></p></div>
+          <div class="row row-select"><div class="top"><span class="lab">Pace</span></div><span class="seg" data-ed="pace"><button type="button" data-v="calm">calm</button><button type="button" data-v="balanced">balanced</button><button type="button" data-v="hype">hype</button></span></div>
+          <div class="row row-select"><div class="top"><span class="lab">Length</span></div><span class="seg" data-ed="length"><button type="button" data-v="15">15s</button><button type="button" data-v="30">30s</button><button type="button" data-v="60">60s</button><button type="button" data-v="0">full song</button></span></div>
+          <div class="row row-select"><div class="top"><span class="lab" title="drop: open a few bars before the biggest moment">Start</span></div><span class="seg" data-ed="start"><button type="button" data-v="drop">before the drop</button><button type="button" data-v="intro">from the top</button></span></div>
+          <div class="row row-select"><div class="top"><span class="lab">Format</span></div><span class="seg" data-ed="format"><button type="button" data-v="9:16">9:16</button><button type="button" data-v="4:5">4:5</button><button type="button" data-v="1:1">1:1</button><button type="button" data-v="16:9">16:9</button><button type="button" data-v="source">source</button></span></div>
+          <div class="row"><button class="item toggle" type="button" role="switch" data-edt="hits" title="a flash on the drop, small zoom punches on loud downbeats"><span class="mk">[*]</span><span class="lab">Beat hits</span></button></div>
+          <div class="row"><button class="item toggle" type="button" role="switch" data-edt="text" title="burned into the picture: the main line lands on the drop"><span class="mk">[*]</span><span class="lab">Text</span></button></div>
+          <div class="row row-lines"><input class="field wide" data-edl="0" maxlength="48" placeholder="main line (lands on the drop)" aria-label="Main text line"><input class="field wide" data-edl="1" maxlength="48" placeholder="caption (optional)" aria-label="Second text line"><input class="field wide" data-edl="2" maxlength="48" placeholder="caption (optional)" aria-label="Third text line"></div>
+          <button class="box run-edit" id="edBuild" type="button"><span>Build edit</span><kbd>Ctrl+B</kbd></button>
+          <div class="ed-after" id="edAfter" hidden><button class="item" id="edShuffle" type="button"><span class="mk">[ ]</span>RESHUFFLE</button><button class="item" id="edExit" type="button"><span class="mk">[ ]</span>EXIT EDIT</button></div>
+          <p class="sub ed-status" id="edStatus" aria-live="polite"></p>
+        </div></div></div>
+      </section>
+      <div id="groups"></div>
+    </div>
+    <div class="ctl-foot">
+      <div class="fmt"><span>Output format</span><span class="seg" id="photoFmt" role="radiogroup" aria-label="Output format"><button type="button" role="radio" data-v="image/png" aria-checked="true">PNG</button><button type="button" role="radio" data-v="image/jpeg" aria-checked="false">JPG</button></span></div>
+      <button class="run" id="savePhoto" type="button"><span>Export image</span><kbd>Ctrl+S</kbd></button>
+      <button class="run alt" id="exportVideo" type="button" hidden><span>Export video</span><kbd>Ctrl+E</kbd></button>
+    </div>
+  </aside>
+
+  <!-- canvas -->
+  <main class="col stage" id="stage">
+    <div class="status"><span id="fileName">no file</span><span id="info"></span><span class="look-now">look: <b id="lookName"></b></span></div>
+    <div class="viewer" id="viewer">
+      <canvas id="gl" aria-label="Edited preview"></canvas>
+      <button class="drop" id="drop" type="button">
+        <span class="drop-l1">drop a photo or video<i class="caret">_</i></span>
+        <span class="drop-l2">or click, paste, or press Ctrl+O. for a beat-synced edit, add a song and clips in auto edit.</span>
+        <span class="drop-l3">processed on this device. nothing is uploaded.</span>
+      </button>
+    </div>
+    <canvas class="strip" id="strip" hidden aria-label="Beat timeline: click to jump"></canvas>
+    <div class="transport" id="transport" hidden>
+      <button class="item" id="play" type="button"><span class="mk">[ ]</span>PAUSE</button>
+      <div class="scrub"><input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Seek"></div>
+      <span class="time" id="time">0:00 / 0:00</span>
+      <button class="item" id="mute" type="button"><span class="mk">[ ]</span>SOUND</button>
+    </div>
+    <div class="rec" id="exportBox" hidden>
+      <span class="rec-dot">● REC</span><span class="rec-bar" id="progress">[--------------------]</span><span id="progressPct">0%</span>
+      <span class="rec-note">real time. keep this tab visible.</span>
+      <button class="item" id="cancelExport" type="button"><span class="mk">[ ]</span>CANCEL</button>
+    </div>
+  </main>
+</div>
+
+<p class="toast" id="toast" role="status" aria-live="polite"></p>
+<div class="drag" aria-hidden="true">[ DROP TO OPEN ]</div>
+
+<dialog class="sheet" id="about" aria-labelledby="aboutTitle">
+  <div class="sheet-h"><h1 id="aboutTitle">/ABOUT</h1><button class="item" type="button" data-close><span class="mk">[x]</span>CLOSE</button></div>
+  <p>hexcam turns clean phone footage into the look of mid-2000s pocket cameras, flip phones, webcams, camcorders and film: low resolution, highlights glowing violet, blocky JPEG artefacts, noise and the burned-in orange date. Every effect works on <b>video</b> as well as photos, and video exports keep their sound.</p>
+  <p>Video adds what stills can't: dropped frame rates, handheld shake, tape tracking errors, chroma bleed, interlacing, ghosting, flicker, moving light leaks, animated grain and a date stamp whose clock ticks. Exports record in real time to MP4, or WebM in browsers that can't record MP4.</p>
+  <p><b>Auto edit</b> takes a song and one or more clips. It finds the tempo, the beats, the bars and the drop, cuts on the beat (faster when the song gets louder), picks moments from your clips whose movement matches the music, and lands your main line of text on the drop. Reshuffle for a different cut of the same song.</p>
+  <p>Nothing is uploaded. There's no account and no tracking. Photos and videos are read, edited and saved on your device.</p>
+  <dl>
+    <dt>Which browsers work?</dt><dd>Recent Chrome, Edge, Firefox and Safari on desktop, Android and iOS.</dd>
+    <dt>Why does export take as long as the video?</dt><dd>It records while the clip plays at normal speed, so the sound stays in sync.</dd>
+    <dt>Can I share a look?</dt><dd>Copy look link puts every setting in the URL.</dd>
+    <dt>What is bleach bypass?</dt><dd>The film-lab trick of skipping the bleach stage: more contrast, less colour, silvery highlights.</dd>
+  </dl>
+  <p class="sheet-f">hexcam is a free tool by <a href="../">Hex Modifications</a>.</p>
+</dialog>
+
+<dialog class="sheet" id="keys" aria-labelledby="keysTitle">
+  <div class="sheet-h"><h1 id="keysTitle">/SHORTCUTS</h1><button class="item" type="button" data-close><span class="mk">[x]</span>CLOSE</button></div>
+  <dl class="keys">
+    <dt><kbd>Ctrl+O</kbd></dt><dd>open a photo or video</dd>
+    <dt><kbd>Ctrl+S</kbd></dt><dd>export image (or the current video frame)</dd>
+    <dt><kbd>Ctrl+E</kbd></dt><dd>export video (or the auto edit)</dd>
+    <dt><kbd>Ctrl+B</kbd></dt><dd>build the auto edit</dd>
+    <dt><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Shift+Z</kbd></dt><dd>undo / redo</dd>
+    <dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>previous / next look</dd>
+    <dt><kbd>\</kbd> hold</dt><dd>show the original</dd>
+    <dt><kbd>Space</kbd></dt><dd>play / pause</dd>
+    <dt><kbd>R</kbd> <kbd>G</kbd></dt><dd>randomise / reroll grain</dd>
+    <dt>drag a number</dt><dd>scrub its value (hold Shift for fine steps)</dd>
+    <dt>double-click a label</dt><dd>reset it to the look's value</dd>
+  </dl>
+</dialog>
+
+<div class="fatal" id="fatal" hidden><p></p></div>
+<input type="file" id="file" accept="image/*,video/*,audio/*,.heic,.heif,.mov,.mkv" hidden>
+<input type="file" id="songFile" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg" hidden>
+<input type="file" id="clipFiles" accept="video/*,.mov,.mkv" multiple hidden>
+<video id="vid" playsinline muted preload="auto" hidden></video>
+</body>
+</html>
