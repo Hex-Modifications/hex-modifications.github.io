@@ -57,8 +57,8 @@
     <a href="#store" data-store-link hidden>store</a>
     <a href="#software">software</a>
     <a href="#contact">contact</a>
-    <a href="gta6project/">gta6 project</a>
-    <a href="hexcam/">hexcam</a>
+    <a href="gta6project/" data-site="gta6project">gta6 project</a>
+    <a href="hexcam/" data-site="hexcam">hexcam</a>
   </nav>
   <button class="orb-btn glass" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="sheet">
     <svg viewBox="0 0 32 32" aria-hidden="true"><g fill="currentColor"><path d="M16 2.5 22 6v7l-6 3.5L10 13V6Z"/><path d="M16 15.5 22 19v7l-6 3.5L10 26v-7Z" opacity=".55"/><path d="M6.5 9 12 12.2v6.6L6.5 22 1 18.8v-6.6Z" opacity=".8"/><path d="M25.5 9 31 12.2v6.6L25.5 22 20 18.8v-6.6Z" opacity=".8"/></g></svg>
@@ -70,7 +70,7 @@
 
 <div class="sheet glass" id="sheet" hidden>
   <nav class="sheet-nav" aria-label="Menu">
-    <a href="#projects">projects</a><a href="#releases">latest releases</a><a href="#mods">mods</a><a href="#store" data-store-link hidden>store</a><a href="#software">software</a><a href="#contact">contact</a><a href="gta6project/">gta6 project</a><a href="hexcam/">hexcam</a>
+    <a href="#projects">projects</a><a href="#releases">latest releases</a><a href="#mods">mods</a><a href="#store" data-store-link hidden>store</a><a href="#software">software</a><a href="#contact">contact</a><a href="gta6project/" data-site="gta6project">gta6 project</a><a href="hexcam/" data-site="hexcam">hexcam</a>
   </nav>
   <p class="label">find hex modifications on</p>
   <ul class="sheet-plats" id="sheetPlats"></ul>
@@ -83,7 +83,7 @@
     <div class="hero-fallback" aria-hidden="true"></div>
     <div class="hero-copy">
       <h1 id="heroTitle" class="hero-title"><span>render</span><span>better</span></h1>
-      <p class="hero-lede">the home of everything 001hex builds outside of music: GTA mods and ReShade presets, the GTA6 Project, hexcam, and tools that make Mac and Windows run the way they should.</p>
+      <p class="hero-lede">the home of everything 001hex builds outside of music: GTA mods and ReShade presets, <span data-site="gta6project">the GTA6 Project, </span><span data-site="hexcam">hexcam, </span> and tools that make Mac and Windows run the way they should.</p>
     </div>
     <div class="hero-ctas">
       <a class="btn-pill dark" href="#projects">see the projects</a>
@@ -105,7 +105,7 @@
       <p class="sec-note">every project outside of music lives here. each has its own home, all built and run by 001hex.</p>
     </header>
     <div class="proj-list" id="projList"></div>
-    <p class="proj-also reveal">developer community: <a href="https://www.reddit.com/r/GTA6Mods/" target="_blank" rel="noopener">r/GTA6Mods ↗</a></p>
+    <p class="proj-also reveal" data-site="gta6project">developer community: <a href="https://www.reddit.com/r/GTA6Mods/" target="_blank" rel="noopener">r/GTA6Mods ↗</a></p>
   </section>
 
 <!-- ═════════ LATEST RELEASES ═════════ -->
@@ -255,7 +255,7 @@
     <nav class="foot-links" id="footLinks" aria-label="Platforms"></nav>
   </div>
   <p class="foot-word" aria-hidden="true">hex<span>modifications</span></p>
-  <p class="foot-legal">© <span id="yr">2026</span> Hex Modifications · developed by 001hex · not affiliated with Rockstar Games or Take-Two · <a href="gta6project/">GTA6 Project</a> · <a href="hexcam/">hexcam</a> · <a href="sitemap.xml">sitemap</a></p>
+  <p class="foot-legal"><a class="owner-link" href="hq/" rel="nofollow" title="owner">©</a> <span id="yr">2026</span> Hex Modifications · developed by 001hex · not affiliated with Rockstar Games or Take-Two<span data-site="gta6project"> · <a href="gta6project/">GTA6 Project</a></span><span data-site="hexcam"> · <a href="hexcam/">hexcam</a></span> · <a href="sitemap.xml">sitemap</a></p>
 </footer>
 
 <section class="chat glass" id="chat" role="dialog" aria-labelledby="chatTitle" hidden>

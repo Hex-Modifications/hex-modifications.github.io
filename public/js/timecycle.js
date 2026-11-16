@@ -11,6 +11,15 @@
     const q = new URLSearchParams(location.search).get('phase');
     if (PHASES.includes(q)) override = q;
   } catch { /* ignore */ }
+  // the owner can lock the site to one phase from /hq/ (the build writes data-phase-lock on <html>)
+  const locked = PHASES.includes(root.dataset.phaseLock) ? root.dataset.phaseLock : null;
+  // ?palette=neon previews a palette preset (the owner panel links here before applying one)
+  try {
+    const pal = new URLSearchParams(location.search).get('palette');
+    if (['mono', 'ocean', 'neon', 'ember'].includes(pal)) root.dataset.palette = pal;
+    else if (pal === 'sunset') delete root.dataset.palette;
+  } catch { /* ignore */ }
+  if (!override && locked) override = locked;
 
   // intro splash (homepage only, marked data-splash): once per browser session; skipped with reduced motion,
   // data saver, a background tab, or ?nosplash. The class is set here so the page never flashes before it.
@@ -54,7 +63,7 @@
       tick();
       return override;
     },
-    sync() { override = null; tick(); },
+    sync() { override = locked; tick(); },
   };
 
   root.dataset.phase = '';

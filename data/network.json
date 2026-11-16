@@ -1,0 +1,34 @@
+{
+  "_about": "The Hex Modifications network. Edited from /hq/ (owner panel). A site with live: false is parked: it isn't built or published and every link to it is hidden, but its code and data stay in the repo.",
+  "repo": "Hex-Modifications/hex-modifications.github.io",
+  "owners": [
+    "001Hex"
+  ],
+  "sites": {
+    "hexcam": {
+      "name": "hexcam",
+      "path": "hexcam/",
+      "live": true,
+      "about": "free photo and video effects tool"
+    },
+    "gta6project": {
+      "name": "GTA6 Project",
+      "path": "gta6project/",
+      "live": false,
+      "about": "GTA VI modding hub and database (parked)"
+    }
+  },
+  "theme": {
+    "phase": "auto",
+    "palette": "sunset"
+  },
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": ""
+  },
+  "indexnow": {
+    "enabled": true,
+    "key": "5569c21255162e6c749223e9f61a0d15"
+  }
+}

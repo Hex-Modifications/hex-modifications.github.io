@@ -650,3 +650,10 @@ a.link-card:hover { transform: translateY(-4px); }
 .proj-also a { color: inherit; text-decoration-color: currentColor; text-underline-offset: 3px; }
 @media (max-width: 520px) { .proj-card { grid-template-columns: 1fr; } }
 
+.owner-link { color: inherit; text-decoration: none; cursor: default; }
+
+/* ── palette presets (data/network.json → theme.palette, set from /hq/). sunset is the default above ── */
+:root[data-palette="mono"] { --c-coral: #A3A3AC; --c-indigo: #3B3B45; --c-slate: #6C6C77; --c-plum: #4B4B54; --c-lilac: #7C7C87; }
+:root[data-palette="ocean"] { --c-coral: #7FC8C2; --c-indigo: #2F5D8A; --c-slate: #5A7FA6; --c-plum: #2E4A63; --c-lilac: #4FA3C7; }
+:root[data-palette="neon"] { --c-coral: #FF6FA8; --c-indigo: #5B3DF5; --c-slate: #6C7BFF; --c-plum: #B0219B; --c-lilac: #19C6F0; }
+:root[data-palette="ember"] { --c-coral: #F2A65A; --c-indigo: #8C2F39; --c-slate: #B5654A; --c-plum: #6B1E2B; --c-lilac: #E0703E; }

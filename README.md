@@ -14,6 +14,20 @@ node server.js            # http://localhost:8080
 
 Requires Node 20 or newer. On the first run the server creates a `.env` file with secure random keys and prints your admin token. Admin dashboard: `http://localhost:8080/admin` (paste that token). Add your platform keys to `.env` later (see below).
 
+## Hex HQ (owner panel) and the network
+
+**`/hq/`** is the owner panel for every Hex Modifications site. The © in the homepage footer links to it. GitHub is its backend: you sign in with a GitHub token, and every change is a commit that the deploy workflow publishes in about two minutes. Getting in needs write access to this repo **and** a place on the owner list (`owners` in `data/network.json`); repo admins always get in. The token is kept in the tab only and wiped on lock, tab close or 30 minutes idle.
+
+- **Overview:** each site's status, live deploys, recent changes, and a rebuild button.
+- **Network:** switch sites on or off. A **parked** site is fully offline: not built, not published, out of the sitemap, and every link to it (anything marked `data-site="<key>"`) is removed. Its code and data stay in the repo. GTA6 Project (`gta6hub/`) is parked; its daily update task is paused.
+- **Theme:** palette presets (sunset, mono, ocean, neon, ember) and an optional time-of-day lock. Preview any combination with `/?palette=neon&phase=night`.
+- **Growth AI:** a live SEO health check, an AI-written Google listing you can apply (`seo` in `data/network.json`), a release kit that writes the posts for GTA5-Mods, LCPDFR/Cfx.re, Reddit, Discord, X, TikTok and YouTube, and an "ask HQ" growth assistant. It uses Pollinations' free AI and only sends public site data.
+- **Content:** edit any data file with JSON validation.
+- **Access:** add or remove people (needs a token with Administration access).
+- **IndexNow:** every deploy that isn't the 6-hourly refresh pings Bing, Yandex and other IndexNow engines with the sitemap. The key file is published at `/<indexnow.key>.txt`.
+
+Token for HQ: a fine-grained token for **Hex-Modifications/hex-modifications.github.io** with Contents and Actions read/write (and Administration read/write to manage access).
+
 ## Design system
 
 - **Palette (GTA VI sunset):** coral `#E89898`, indigo `#5D549C`, slate `#6F70A2`, plum `#7E3A63`, lilac `#A373D3`.

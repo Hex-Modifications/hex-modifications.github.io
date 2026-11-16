@@ -30,11 +30,25 @@ if (/^[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(domain)) SITE_URL = `https://${domain}`;
 const adsClient = /^ca-pub-\d{10,20}$/.test(site.monetise?.adsense?.client || '') ? site.monetise.adsense.client : '';
 const products = read('products');
 
+// the network (data/network.json, edited from /hq/): which sites are live, theme, SEO overrides, IndexNow
+const network = fs.existsSync(path.join(ROOT, 'data', 'network.json')) ? read('network') : {};
+const isLive = (key) => network.sites?.[key]?.live !== false;
+const parked = Object.keys(network.sites || {}).filter((k) => !isLive(k));
+// a parked site's links (anything marked data-site="<key>") come out of the page
+const unpark = (html) => parked.reduce((h, k) => h.replace(new RegExp(`<(a|span|p|li)\\b[^>]*\\bdata-site="${k}"[^>]*>[\\s\\S]*?</\\1>`, 'g'), ''), html);
+const PHASES = ['dawn', 'day', 'dusk', 'night'], PALETTES = ['sunset', 'mono', 'ocean', 'neon', 'ember'];
+const theme = network.theme || {};
+const themeAttrs = `${PALETTES.includes(theme.palette) && theme.palette !== 'sunset' ? ` data-palette="${theme.palette}"` : ''}${PHASES.includes(theme.phase) ? ` data-phase-lock="${theme.phase}"` : ''}`;
+const withTheme = (html) => html.replace(/<html lang="en-GB"/, `<html lang="en-GB"${themeAttrs}`);
+const indexnowKey = /^[a-f0-9]{32}$/.test(network.indexnow?.key || '') && network.indexnow?.enabled !== false ? network.indexnow.key : '';
+
 // data the frontend falls back to when there is no API
 fs.mkdirSync(path.join(DIST, 'data'));
-for (const n of ['site', 'projects', 'products', 'roadmap', 'feed']) {
+for (const n of ['site', 'products', 'roadmap', 'feed']) {
   fs.copyFileSync(path.join(ROOT, 'data', `${n}.json`), path.join(DIST, 'data', `${n}.json`));
 }
+// parked sites drop out of the projects list
+fs.writeFileSync(path.join(DIST, 'data', 'projects.json'), JSON.stringify(read('projects').filter((p) => isLive(p.slug))));
 
 // latest releases, fetched fresh every build (the workflow also runs every few hours).
 // A platform that fails this time keeps whatever the live site already shows for it.
@@ -87,7 +101,14 @@ try { if (site.chat?.endpoint) chatOrigins.push(new URL(site.chat.endpoint).orig
 const csp = adsClient
   ? `default-src 'self'; script-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src https:; base-uri 'self'; form-action 'self'; object-src 'none'`
   : `default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' ${chatOrigins.join(' ')}; base-uri 'self'; form-action 'self'; object-src 'none'`;
-let index = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8')
+// SEO overrides from /hq/ (blank keeps what's written in index.html)
+const seo = network.seo || {};
+const attr = (v) => String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+let index = withTheme(unpark(fs.readFileSync(path.join(DIST, 'index.html'), 'utf8')))
+  .replace(/<title>[^<]*<\/title>/, (m) => (seo.title ? `<title>${attr(seo.title)}</title>` : m))
+  .replace(/<meta name="description" content="[^"]*">/, (m) => (seo.description ? `<meta name="description" content="${attr(seo.description)}">` : m))
+  .replace(/<meta property="og:description" content="[^"]*">/, (m) => (seo.description ? `<meta property="og:description" content="${attr(seo.description)}">` : m))
+  .replace(/<meta name="keywords" content="[^"]*">/, (m) => (seo.keywords ? `<meta name="keywords" content="${attr(seo.keywords)}">` : m))
   .replace('<!--SEO_JSONLD-->', `<script type="application/ld+json">${jsonLd(site, products, SITE_URL)}</script>`)
   .replaceAll('__SITE_URL__', SITE_URL)
   .replace('<meta charset="utf-8">', `<meta charset="utf-8">\n<meta http-equiv="Content-Security-Policy" content="${csp}">\n<meta name="referrer" content="strict-origin-when-cross-origin">`);
@@ -97,23 +118,27 @@ fs.writeFileSync(path.join(DIST, 'index.html'), index);
 for (const p of products) {
   const dir = path.join(DIST, 'p', p.slug);
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), productPage(site, p, SITE_URL));
+  fs.writeFileSync(path.join(dir, 'index.html'), withTheme(productPage(site, p, SITE_URL)));
 }
 
-// GTA6 Project, the GTA VI modding hub and database at /gta6project/ (also pulls new GTA VI videos from Rockstar's YouTube feed)
-const gta6 = await buildGta6({ root: ROOT, dist: DIST, siteUrl: SITE_URL, site, fetchFeed: process.env.SKIP_FEED !== '1' });
+// GTA6 Project, the GTA VI modding hub and database at /gta6project/ (also pulls new GTA VI videos from Rockstar's YouTube feed).
+// Parked by default: its code and data stay in gta6hub/ and it comes back when it's switched on in /hq/.
+const gta6 = isLive('gta6project') ? await buildGta6({ root: ROOT, dist: DIST, siteUrl: SITE_URL, site, fetchFeed: process.env.SKIP_FEED !== '1' }) : { urls: [] };
 
 // hexcam, the photo + video effects tool at /hexcam/ (fully client-side; only its absolute URLs need filling in)
 const hexcamIndex = path.join(DIST, 'hexcam', 'index.html');
-fs.writeFileSync(hexcamIndex, fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL));
+if (isLive('hexcam')) fs.writeFileSync(hexcamIndex, fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL));
+else fs.rmSync(path.join(DIST, 'hexcam'), { recursive: true, force: true });
 
-fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }, ...gta6.urls]));
-fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disallow: /admin\n', '').replace('Disallow: /api/\n', ''));
+fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [...(isLive('hexcam') ? [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }] : []), ...gta6.urls]));
+// IndexNow: search engines (Bing, Yandex, Seznam, Naver) fetch this key to trust the deploy workflow's URL pings
+if (indexnowKey) fs.writeFileSync(path.join(DIST, `${indexnowKey}.txt`), indexnowKey);
+fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disallow: /admin\n', 'Disallow: /hq/\n').replace('Disallow: /api/\n', ''));
 
 // "wasted" 404
-fs.writeFileSync(path.join(DIST, '404.html'), `<!doctype html><html lang="en-GB"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="8;url=/"><title>Wasted | Hex Modifications</title><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32"><link rel="stylesheet" href="/css/style.css"><script src="/js/timecycle.js"></script><body class="wasted-page"><div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div><main class="pp"><p class="label">error 404</p><h1 class="pp-title"><span class="grad">wasted</span></h1><p class="pp-desc">this page doesn't exist. respawning at the homepage in a few seconds.</p><a class="btn" href="/">respawn now</a></main></body></html>`);
+fs.writeFileSync(path.join(DIST, '404.html'), withTheme(`<!doctype html><html lang="en-GB"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="8;url=/"><title>Wasted | Hex Modifications</title><link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32"><link rel="stylesheet" href="/css/style.css"><script src="/js/timecycle.js"></script><body class="wasted-page"><div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div><main class="pp"><p class="label">error 404</p><h1 class="pp-title"><span class="grad">wasted</span></h1><p class="pp-desc">this page doesn't exist. respawning at the homepage in a few seconds.</p><a class="btn" href="/">respawn now</a></main></body></html>`));
 
 fs.writeFileSync(path.join(DIST, '.nojekyll'), '');
 if (SITE_URL === `https://${domain}`) fs.writeFileSync(path.join(DIST, 'CNAME'), `${domain}\n`);
 if (adsClient) fs.writeFileSync(path.join(DIST, 'ads.txt'), `google.com, ${adsClient.replace('ca-', '')}, DIRECT, f08c47fec0942fa0\n`);
-console.log(`Static site built in dist/ for ${SITE_URL} (${products.length} product pages, ${gta6.urls.length} GTA VI pages)`);
+console.log(`Static site built in dist/ for ${SITE_URL} (${products.length} product pages${gta6.urls.length ? `, ${gta6.urls.length} GTA VI pages` : ''}${parked.length ? `; parked: ${parked.join(', ')}` : ''})`);

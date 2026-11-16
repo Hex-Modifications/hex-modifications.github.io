@@ -1,7 +1,7 @@
 # Rebuilds the static site and publishes it to the gh-pages branch on every push to main,
 # so editing data/*.json (products, links, roadmap) on GitHub updates the live site.
-# It also runs every 6 hours to pull in new releases from GTA5-Mods, the FiveM forum and GitHub,
-# and new GTA VI videos from Rockstar's YouTube channel for GTA 6 Hub at /gta6hub/.
+# It also runs every 6 hours to pull in new releases from GTA5-Mods, the FiveM forum and GitHub.
+# After a real change (not the 6-hourly refresh) it tells search engines through IndexNow.
 name: Deploy site
 on:
   push:
@@ -41,3 +41,20 @@ jobs:
           git add -A
           git commit -q -m "Deploy ${GITHUB_SHA::7}"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+      - name: Tell search engines (IndexNow)
+        if: github.event_name != 'schedule'
+        continue-on-error: true
+        run: |
+          node -e '
+            const fs = require("fs");
+            const net = JSON.parse(fs.readFileSync("data/network.json", "utf8"));
+            const key = net.indexnow && net.indexnow.enabled !== false ? net.indexnow.key : "";
+            if (!/^[a-f0-9]{32}$/.test(key || "")) { console.log("IndexNow off"); process.exit(0); }
+            const urls = [...fs.readFileSync("dist/sitemap.xml", "utf8").matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+            const host = new URL(urls[0]).host;
+            setTimeout(async () => {
+              const r = await fetch("https://api.indexnow.org/indexnow", { method: "POST", headers: { "Content-Type": "application/json; charset=utf-8" },
+                body: JSON.stringify({ host, key, keyLocation: `https://${host}/${key}.txt`, urlList: urls }) });
+              console.log("IndexNow:", r.status, urls.length, "URLs");
+            }, 60000);   // give GitHub Pages a minute to serve the new key file
+          '
