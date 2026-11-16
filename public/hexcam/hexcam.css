@@ -312,3 +312,113 @@ body { transition: background-color .6s; }
 .strip { display: block; width: auto; height: 44px; margin: 12px 22px 0; cursor: pointer; border-bottom: 1px solid var(--line); }
 body.editing .viewer canvas { max-height: calc(100vh - 210px); }
 @media (max-width: 900px) { .strip { margin: 10px 14px 0; } }
+
+/* ═════════ one site with Hex Modifications ═════════
+   hexcam sits on the main site's own background (the same flowing light field, js/liquid.js), under the
+   same header, with the tool's columns as glass panels. Palette and time of day follow the main site,
+   including the owner's palette preset from /hq/. Moving between the two is a view transition: the
+   header stays put and the content crossfades. */
+:root {
+  --c-coral: #E89898; --c-indigo: #5D549C; --c-slate: #6F70A2; --c-plum: #7E3A63; --c-lilac: #A373D3;
+  --coral: var(--c-coral); --lilac: var(--c-lilac); --plum: var(--c-plum); --indigo: var(--c-indigo);
+  --bg: #E8E7EC; --g1: var(--c-slate); --g2: var(--c-lilac); --g3: var(--c-coral); --g4: var(--c-indigo); --aura-op: .3;
+  --glass: linear-gradient(135deg, rgba(255, 255, 255, .58), rgba(255, 255, 255, .3));
+  --glass-border: rgba(255, 255, 255, .62); --glass-hi: rgba(255, 255, 255, .88);
+  --glass-shadow: 0 1px 1px rgba(30, 20, 60, .05), 0 14px 34px -14px rgba(45, 35, 90, .28);
+  --pill-active: rgba(255, 255, 255, .82);
+  --bg-nav: transparent; --bg-ctl: transparent; --bg-stage: rgba(255, 255, 255, .7);
+  --gut: clamp(16px, 2.2vw, 40px); --head: 88px; --panel-r: 26px;
+}
+:root[data-palette="mono"] { --c-coral: #A3A3AC; --c-indigo: #3B3B45; --c-slate: #6C6C77; --c-plum: #4B4B54; --c-lilac: #7C7C87; }
+:root[data-palette="ocean"] { --c-coral: #7FC8C2; --c-indigo: #2F5D8A; --c-slate: #5A7FA6; --c-plum: #2E4A63; --c-lilac: #4FA3C7; }
+:root[data-palette="neon"] { --c-coral: #FF6FA8; --c-indigo: #5B3DF5; --c-slate: #6C7BFF; --c-plum: #B0219B; --c-lilac: #19C6F0; }
+:root[data-palette="ember"] { --c-coral: #F2A65A; --c-indigo: #8C2F39; --c-slate: #B5654A; --c-plum: #6B1E2B; --c-lilac: #E0703E; }
+:root[data-phase="dawn"] { --bg: #E9E4E8; --g1: var(--c-coral); --g2: var(--c-lilac); --g3: var(--c-slate); --g4: var(--c-coral); --aura-op: .32; --bg-nav: transparent; --bg-ctl: transparent; --bg-stage: rgba(255, 255, 255, .7); }
+:root[data-phase="dusk"] { --bg: #E2DADF; --g1: var(--c-coral); --g2: var(--c-plum); --g3: var(--c-indigo); --g4: var(--c-lilac); --aura-op: .36; --bg-nav: transparent; --bg-ctl: transparent; --bg-stage: rgba(255, 255, 255, .66); }
+:root[data-phase="night"] {
+  --bg: #14131A; --g1: var(--c-indigo); --g2: var(--c-plum); --g3: var(--c-lilac); --g4: var(--c-slate); --aura-op: .42;
+  --glass: linear-gradient(135deg, rgba(64, 60, 88, .46), rgba(26, 25, 36, .34));
+  --glass-border: rgba(255, 255, 255, .1); --glass-hi: rgba(255, 255, 255, .14); --glass-shadow: 0 14px 40px -14px rgba(0, 0, 0, .7);
+  --pill-active: rgba(255, 255, 255, .12);
+  --bg-nav: transparent; --bg-ctl: transparent; --bg-stage: rgba(20, 19, 26, .78);
+}
+html, body { background: var(--bg); }
+body { overflow: hidden; transition: background-color .6s; }
+
+/* the flowing light field, exactly as on the main site */
+.aura { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.aura i { position: absolute; border-radius: 50%; opacity: var(--aura-op); background: radial-gradient(closest-side, var(--c) 0%, color-mix(in srgb, var(--c) 55%, transparent) 38%, transparent 100%); }
+.aura .a1 { width: 70vw; height: 70vw; left: -12vw; top: 40vh; --c: var(--g3); }
+.aura .a2 { width: 62vw; height: 62vw; right: -10vw; top: -8vh; --c: var(--g1); }
+.aura .a3 { width: 54vw; height: 54vw; left: 38vw; top: 70vh; --c: var(--g2); }
+.aura .liquid-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.liquid .aura i { display: none; }
+
+/* the main site's header: same wordmark, same glass pill, same place */
+.site-head { position: relative; z-index: 5; height: var(--head); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px var(--gut); font-family: var(--f-d); }
+.sh-word { display: flex; align-items: center; gap: 12px; margin-left: -6px; padding: 5px 16px 5px 5px; border-radius: 16px; text-decoration: none; color: var(--ink); view-transition-name: hex-word; }
+.sh-badge { width: 42px; height: 42px; border-radius: 11px; box-shadow: 0 6px 18px -6px rgba(20, 19, 26, .55), inset 0 0 0 1px rgba(255, 255, 255, .12); transition: transform .5s var(--ease); }
+.sh-word:hover .sh-badge { transform: rotate(-6deg) scale(1.06); }
+.sh-text { display: flex; align-items: baseline; gap: 7px; }
+.sh-hex { font: 600 34px/1 var(--f-d); letter-spacing: -.06em; }
+.sh-sub { font: 500 15px/1 var(--f-d); letter-spacing: -.02em; color: var(--muted); }
+.sh-pill { display: flex; gap: 2px; padding: 5px; border-radius: 999px; background: var(--glass); border: 1px solid var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); view-transition-name: hex-pill; }
+.sh-pill a { padding: 9px 16px; border-radius: 999px; font: 500 15px/1.2 var(--f-d); color: var(--muted); text-decoration: none; transition: color .2s, background .3s var(--ease); }
+.sh-pill a:hover { color: var(--ink); }
+.sh-pill a.active { color: var(--ink); background: var(--pill-active); box-shadow: 0 2px 8px -2px rgba(45, 35, 90, .2), inset 0 1px 0 var(--glass-hi); }
+.sh-end { width: 52px; flex: none; }
+.sh-here { display: none; margin-right: auto; font: 500 30px/1 var(--f-d); letter-spacing: -.06em; color: var(--ink); text-decoration: none; }
+.sh-here span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* the tool: three glass panels floating on the field */
+.shell { position: relative; z-index: 1; height: calc(100vh - var(--head)); height: calc(100dvh - var(--head)); gap: 14px; padding: 0 var(--gut) var(--gut); }
+.nav, .ctl, .stage { border: 1px solid var(--glass-border); border-radius: var(--panel-r); background: var(--glass); box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%); overflow: hidden; }
+.nav { padding: 20px 14px 14px; overflow-y: auto; border-right: 1px solid var(--glass-border); }
+.ctl { border-right: 1px solid var(--glass-border); }
+.stage { overflow: auto; }
+.ctl-foot { background: transparent; border-top-color: var(--line); }
+
+/* the name, set like the main site's titles: no icon */
+.brand { padding: 0 2px; }
+.wm { font: 500 46px/.9 var(--f-d); letter-spacing: -.065em; }
+.wm-cam { padding-right: .04em; }
+.by { margin: 10px 0 8px 3px; font-size: 11px; color: var(--muted); }
+.look:hover { background: rgba(255, 255, 255, .4); }
+
+/* floating bits follow the new layout */
+.toast { left: calc(var(--gut) + 252px + 280px + 28px + 22px); }
+.peek { left: calc(var(--gut) + 262px); }
+.drag { inset: calc(var(--head) - 8px) var(--gut) var(--gut); border-radius: var(--panel-r); background: color-mix(in srgb, var(--bg) 88%, transparent); }
+
+/* arriving from the main site: a short settle for browsers without view transitions */
+@media (prefers-reduced-motion: no-preference) {
+  .shell { animation: hx-arrive .5s var(--ease) both; }
+  @keyframes hx-arrive { from { opacity: 0; transform: translateY(10px); } }
+}
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: .28s ease both hx-vt-out; }
+::view-transition-new(root) { animation: .42s cubic-bezier(.2, .8, .2, 1) both hx-vt-in; }
+@keyframes hx-vt-out { to { opacity: 0; } }
+@keyframes hx-vt-in { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
+
+@media (max-width: 900px) {
+  :root { --head: 76px; }
+  body { overflow: auto; }
+  .site-head { padding: 14px 16px; }
+  .sh-pill, .sh-end { display: none; }
+  .site-head { justify-content: flex-start; gap: 10px; }
+  .sh-here { display: block; }
+  .sh-text { display: none; }
+  .sh-word { padding-right: 4px; }
+  .sh-hex { font-size: 30px; }
+  .shell { height: auto; padding: 0 12px 12px; gap: 12px; }
+  .nav, .ctl, .stage { border-top: 1px solid var(--glass-border); overflow: visible; }
+  .stage { padding-bottom: 16px; }
+  .ctl-foot { background: color-mix(in srgb, var(--bg) 92%, transparent); border-radius: 0 0 var(--panel-r) var(--panel-r); }
+  .wm { font-size: 40px; }
+  .toast { left: 12px; }
+  .drag { inset: 10px; }
+}

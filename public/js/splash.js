@@ -1,9 +1,10 @@
-/* Intro splash, rendered live (no video): ~3,900 particles gather onto the exact halftone dots of the
+/* Intro splash, rendered live (no video): ~3,900 particles stream onto the exact halftone dots of the
    Hex Modifications mark, the crisp mark fades in over them, and the wordmark lands. Drawn with WebGL at the
    screen's own resolution and refresh rate. A loading bar reports real page milestones mixed with a shuffled
    set of build steps. On exit the mark and wordmark fly into their places in the nav while the dark lifts
    into the page's colours, so the splash hands off to the site instead of cutting away.
-   About 4.5s in all; held on the finished logo only while the page is still loading; never over 7.5s.
+   It opens straight on the stream (no scattered-dots build-up): about 3s in all; held on the finished logo
+   only while the page is still loading; never over 5.5s.
    The timecycle script decides in <head> whether it runs at all (class "splash-on"). */
 (() => {
   'use strict';
@@ -17,8 +18,9 @@
   const $ = (s) => el.querySelector(s);
   const canvas = $('.splash-gl'), mark = $('.splash-mark'), word = $('.splash-word');
   const bar = $('.splash-bar b'), label = $('.splash-step'), pct = $('.splash-pct');
-  const MAX_MS = 7500, REVEAL_MS = 1300;
-  const T = { arrive: 2.7, cross: 2.75, mark: 0.4, word: 2.95, minExit: 3.45 };   // seconds into the intro
+  const MAX_MS = 5500, REVEAL_MS = 1050;
+  const T = { arrive: 1.5, cross: 1.55, mark: 0.35, word: 1.7, minExit: 2.15 };   // seconds into the intro
+  const AUDIO_SKIP = 2.75 - T.cross;              // the sound was cut for the longer intro: start it where its swell meets the cross
   const CROSS = [0.52, 0.47];                    // centre of the cross within the mark
   const t0 = performance.now();
   const now = () => (performance.now() - t0) / 1000;
@@ -30,7 +32,7 @@
   const signals = {
     load: document.readyState === 'complete' ? Promise.resolve() : once(window, 'load'),
     data: window.hexData ? Promise.resolve() : once(document, 'hex:data'),
-    hero: window.hexHeroReady ? Promise.resolve() : Promise.race([once(document, 'hex:hero-ready'), wait(5000)]),
+    hero: window.hexHeroReady ? Promise.resolve() : Promise.race([once(document, 'hex:hero-ready'), wait(3000)]),
     fonts: document.fonts ? document.fonts.ready : Promise.resolve(),
   };
   Promise.all([...Object.values(signals), wait(T.minExit * 1000)]).then(() => complete());
@@ -70,13 +72,13 @@
     if (done || shown >= steps.length) return;
     say(steps[shown++]());
     target = Math.min(86, target + 6 + Math.random() * 12);
-    setTimeout(nextStep, 260 + Math.random() * 480);
+    setTimeout(nextStep, 180 + Math.random() * 300);
   })();
   MILESTONES.forEach(([p, text]) => p.then(() => { if (!done) { say(text()); target = Math.min(92, target + 8 + Math.random() * 6); } }));
   function complete() {
     if (done || target >= 100) return;
     target = 100; say(pick(['ready', 'all systems go', 'done · welcome in', 'ready · enjoy']));
-    setTimeout(() => finish(), 260);
+    setTimeout(() => finish(), 180);
   }
 
   /* ── sound: subtle (-29 LUFS, soft fade-in); if autoplay sound is blocked, the first click, tap
@@ -85,7 +87,7 @@
   const startSound = () => {
     if (done || !audio) return;
     audio.volume = 1;
-    try { audio.currentTime = Math.min(now(), 4.5); } catch { /* not seekable yet */ }
+    try { audio.currentTime = Math.min(now() + AUDIO_SKIP, 4.5); } catch { /* not seekable yet */ }
     audio.play().catch(() => {
       if (soundArmed) return;
       soundArmed = true;
@@ -129,8 +131,8 @@
         vec3 rim = mix(vec3(0.91, 0.6, 0.6), vec3(0.64, 0.45, 0.83), 0.5 + 0.5 * sin(ang * 2. + uTime));
         gl_FragColor = vec4(col * keep + rim * ring * 0.55, min(1., keep + ring * 0.25));
       }`);
-    // three stages, like the original: crisp dots appear scattered, gather into a cloud, then flow into
-    // the figure head-first with a stream sweeping in from the lower left
+    // particles fade in as a loose cloud around the figure, tighten, and flow into it head-first
+    // with a stream sweeping in from the lower left
     const pts = compile(`precision highp float;
       attribute vec4 aA;      // scatter.xy, cloud.xy (clip space)
       attribute vec4 aB;      // curve control.xy, target.xy
@@ -148,7 +150,7 @@
         gl_Position = vec4(p, 0., 1.);
         float land = smoothstep(0.7, 1., k), dotPx = aI.x * uScale * uDpr * 2.;
         gl_PointSize = max(1., mix(min(2.6 * uDpr, dotPx + uDpr), dotPx, land));   // crisp travelling dots, halftone-sized on arrival
-        vA = smoothstep(aT.x, aT.x + 0.4, t) * uAlpha;
+        vA = smoothstep(aT.x, aT.x + 0.22, t) * uAlpha;
         vB = mix(0.92, aI.y, land);
       }`, `precision highp float;
       varying float vA, vB;
@@ -178,16 +180,15 @@
         for (let i = 0; i < n; i++) {
           const xN = v.getUint16(i * 6, true) / 65535, yN = v.getUint16(i * 6 + 2, true) / 65535;
           const ex = rect.left + xN * rect.width, ey = rect.top + yN * mh;
-          // 1. scattered across the middle of the screen
-          const sx = innerWidth * 0.48 + gauss() * Math.max(innerWidth * 0.19, mh * 0.5), sy = innerHeight * 0.44 + gauss() * Math.max(innerHeight * 0.2, mh * 0.4);
-          // 2. a dense cloud just above the figure's centre
+          // 1. a dense cloud just above the figure's centre, fading in slightly looser and drawing together
           const cx = mcx + gauss() * mh * 0.24, cy = mcy + gauss() * mh * 0.17;
-          // 3. flow in head-first; the lower-left of the figure fills last, its dots bowing in from below left
+          const sx = cx + gauss() * mh * 0.12, sy = cy + gauss() * mh * 0.1;
+          // 2. flow in head-first; the lower-left of the figure fills last, its dots bowing in from below left
           const order = 0.68 * yN + 0.32 * (1 - xN);
           const bow = (0.3 + 0.7 * order) * sweep * (0.6 + Math.random() * 0.6);
           const kx = (cx + ex) / 2 - mh * 0.34 * bow, ky = (cy + ey) / 2 + mh * (0.2 + tilt) * bow;
-          const fade = Math.pow(Math.random(), 1.3) * 1.0, gather = 0.25 + Math.random() * 0.45;   // sparse at first, filling in
-          const flow = 0.95 + order * 0.95 + Math.random() * 0.12, dur = 0.5 + Math.random() * 0.22;
+          const fade = Math.pow(Math.random(), 1.5) * 0.2, gather = 0;
+          const flow = 0.1 + order * 0.72 + Math.random() * 0.08, dur = 0.42 + Math.random() * 0.16;
           out.set([toX(sx), toY(sy), toX(cx), toY(cy), toX(kx), toY(ky), toX(ex), toY(ey), fade, gather, flow, dur,
             v.getUint8(i * 6 + 4) / 10, 0.6 + 0.4 * (v.getUint8(i * 6 + 5) / 255)], i * 14);
         }
@@ -215,7 +216,7 @@
         gl.uniform2f(bgU.res, W, H);
         gl.uniform2f(bgU.cross, (r.left + CROSS[0] * r.width) / innerWidth, 1 - (r.top + CROSS[1] * r.height) / innerHeight);
         gl.uniform1f(bgU.time, t); gl.uniform1f(bgU.reveal, reveal);
-        gl.uniform1f(bgU.glow, smooth(0, 0.9, t));
+        gl.uniform1f(bgU.glow, smooth(0, 0.5, t));
         gl.uniform1f(bgU.flash, smooth(T.cross - 0.25, T.cross, t) * (1 - smooth(T.cross, T.cross + 0.9, t)));
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         if (!count || markShown >= 1) return;
@@ -274,11 +275,11 @@
         const b = badge.getBoundingClientRect(), m = mark.getBoundingClientRect(), s = (b.height / m.height) * 1.3;
         fly(mark, { left: b.left + b.width / 2 - (m.width * s) / 2, top: b.top + b.height / 2 - (m.height * s) / 2 }, s);
       }
-      setTimeout(() => root.classList.add('splash-landing'), 780);      // nav wordmark takes over as the clones arrive
+      setTimeout(() => root.classList.add('splash-landing'), 640);      // nav wordmark takes over as the clones arrive
       setTimeout(() => {
         el.remove(); audio?.remove();
         root.classList.remove('splash-on', 'splash-leaving', 'splash-landing');
-      }, 1400);
+      }, 1150);
     };
     // let the last frame settle (mark fully in) before measuring and flying
     requestAnimationFrame(() => requestAnimationFrame(go));

@@ -16,27 +16,36 @@
 <meta property="og:image" content="__SITE_URL__/hexcam/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#E8E7EC">
-<link rel="icon" href="icon-32.png" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" href="../img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hexcam.css">
 <script src="../js/timecycle.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"hexcam","url":"__SITE_URL__/hexcam/","applicationCategory":"MultimediaApplication","operatingSystem":"Any (web browser with WebGL2)","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"description":"Free in-browser editor for digicam, CCD, VHS, film grain and JPEG compression effects on photos and videos.","author":{"@type":"Organization","name":"Hex Modifications","url":"__SITE_URL__/"}}</script>
+<script type="module" src="../js/liquid.js"></script>
 <script type="module" src="app.js"></script>
 </head>
 <body>
 <a class="skip" href="#controls">skip to controls</a>
+<div class="aura" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
+
+<!-- the main site's header, so moving between Hex Modifications and hexcam feels like one site -->
+<header class="site-head">
+  <a class="sh-word" href="../" aria-label="Hex Modifications home"><img class="sh-badge" src="../img/logo-badge.png" alt="" width="42" height="42"><span class="sh-text"><span class="sh-hex">hex</span><span class="sh-sub">modifications</span></span></a>
+  <a class="sh-here" href="./" aria-hidden="true" tabindex="-1">hex<span>cam</span></a>
+  <nav class="sh-pill" aria-label="Hex Modifications"><a href="../#projects">projects</a><a href="../#releases">new</a><a href="../#mods">mods</a><a href="../#software">software</a><a href="../#contact">contact</a><a href="./" class="active" aria-current="page">hexcam</a></nav>
+  <span class="sh-end" aria-hidden="true"></span>
+</header>
+
 <div class="shell">
 
   <!-- looks + actions -->
   <nav class="col nav" aria-label="hexcam">
-    <a class="brand" href="../" aria-label="hexcam, a Hex Modifications project. Back to Hex Modifications">
-      <img src="../img/hexcam-icon.webp" alt="" width="36" height="36">
-      <span class="wm"><span class="wm-hex">hex</span><span class="wm-cam">cam</span></span>
-    </a>
-    <a class="by" href="../">a hex modifications project ↗</a>
+    <a class="brand" href="./" aria-label="hexcam"><span class="wm"><span class="wm-hex">hex</span><span class="wm-cam">cam</span></span></a>
+    <p class="by">raw camera looks for photos and video</p>
     <p class="path">/LOOKS</p>
     <ul class="list" id="looks"></ul>
     <p class="path">/ACTIONS</p>

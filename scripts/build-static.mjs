@@ -127,7 +127,7 @@ const gta6 = isLive('gta6project') ? await buildGta6({ root: ROOT, dist: DIST, s
 
 // hexcam, the photo + video effects tool at /hexcam/ (fully client-side; only its absolute URLs need filling in)
 const hexcamIndex = path.join(DIST, 'hexcam', 'index.html');
-if (isLive('hexcam')) fs.writeFileSync(hexcamIndex, fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL));
+if (isLive('hexcam')) fs.writeFileSync(hexcamIndex, withTheme(fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL)));
 else fs.rmSync(path.join(DIST, 'hexcam'), { recursive: true, force: true });
 
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [...(isLive('hexcam') ? [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }] : []), ...gta6.urls]));

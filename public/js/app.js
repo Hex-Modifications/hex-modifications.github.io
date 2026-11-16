@@ -84,8 +84,10 @@
     const idx = $('#heroIndex');                                  // optional: only when the hero shows the project index
     if (idx) idx.innerHTML = items.map((p, i) => `<li><a ${attrs(p)}>
       <span class="hx-n">${String(i + 1).padStart(2, '0')}</span><span class="hx-name">${esc(p.name)}</span><span class="hx-kick">${esc(p.kicker || '')}</span><span class="hx-go" aria-hidden="true">↗</span></a></li>`).join('');
-    $('#projList').innerHTML = items.filter((p) => p.icon).map((p) => `<a class="proj-card proj-${esc(p.theme || 'indigo')} reveal" ${attrs(p)}>
-      <img class="proj-icon" src="${esc(p.icon)}" width="512" height="512" alt="" loading="lazy" decoding="async">
+    // a project shows its icon, or its name set as type ("mark": "hex|cam" → hex + gradient cam)
+    const markOf = (p) => { const [a, b = ''] = String(p.mark).split('|'); return `<span class="proj-mark" aria-hidden="true">${esc(a)}<span class="grad">${esc(b)}</span></span>`; };
+    $('#projList').innerHTML = items.filter((p) => p.icon || p.mark).map((p) => `<a class="proj-card proj-${esc(p.theme || 'indigo')} reveal" ${attrs(p)}>
+      ${p.icon ? `<img class="proj-icon" src="${esc(p.icon)}" width="512" height="512" alt="" loading="lazy" decoding="async">` : markOf(p)}
       <div class="proj-copy">
         <p class="proj-kicker">${esc(p.kicker || '')}${p.status ? ` · ${esc(p.status)}` : ''}</p>
         <h3 class="proj-name">${esc(p.name)}</h3>

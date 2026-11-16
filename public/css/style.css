@@ -117,7 +117,7 @@ html.splash-on { overflow: hidden; }
 .splash-word .wm-hex { font-size: calc(var(--mh) * .15); }
 .splash-word .wm-sub { font-size: calc(var(--mh) * .15 * 15 / 34); color: rgba(236, 232, 245, .62); }
 .splash.word-in .splash-word { opacity: 1; transform: none; }
-.splash-load { position: absolute; left: 50%; bottom: max(28px, 6.5vh); width: min(340px, calc(100vw - 64px)); transform: translateX(-50%); opacity: 0; animation: splash-in .6s ease .3s forwards;
+.splash-load { position: absolute; left: 50%; bottom: max(28px, 6.5vh); width: min(340px, calc(100vw - 64px)); transform: translateX(-50%); opacity: 0; animation: splash-in .4s ease .1s forwards;
   font: 500 12px/1.2 var(--f-mono); letter-spacing: .02em; color: rgba(236, 232, 245, .62); font-variant-numeric: tabular-nums; }
 .splash-meta { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 9px; white-space: nowrap; }
 .splash-step { overflow: hidden; text-overflow: ellipsis; text-transform: lowercase; }
@@ -132,8 +132,8 @@ html.splash-on { overflow: hidden; }
 .splash.no-gl.out .splash-tint { animation: splash-tint 1.2s cubic-bezier(.4, 0, .2, 1) forwards; }
 .splash.no-gl.out .splash-wash { animation: splash-wash 1.2s cubic-bezier(.4, 0, .2, 1) forwards; }
 .splash.out .splash-load { animation: splash-out .3s ease forwards; }
-.splash.out .splash-mark { transition: transform 1.05s cubic-bezier(.65, 0, .25, 1), opacity .35s ease; }
-.splash.out .splash-word { transition: transform 1.05s cubic-bezier(.65, 0, .25, 1), opacity .35s ease, color .5s ease .35s; color: var(--ink); }
+.splash.out .splash-mark { transition: transform .85s cubic-bezier(.65, 0, .25, 1), opacity .35s ease; }
+.splash.out .splash-word { transition: transform .85s cubic-bezier(.65, 0, .25, 1), opacity .35s ease, color .5s ease .35s; color: var(--ink); }
 .splash.out .splash-word .wm-sub { transition: color .5s ease .35s; color: var(--muted); }
 .splash-landing .splash-mark, .splash-landing .splash-word { opacity: 0 !important; }
 @keyframes splash-out { to { opacity: 0; } }
@@ -640,6 +640,9 @@ a.link-card:hover { transform: translateY(-4px); }
 .proj-card:hover::after { opacity: 1; }
 .proj-plum { background: linear-gradient(170deg, #34203d, #120f1a); }
 .proj-icon { width: clamp(72px, 7vw, 104px); height: auto; border-radius: 22%; box-shadow: 0 16px 30px -16px rgba(0, 0, 0, .7); }
+.proj-mark { display: flex; flex-direction: column; justify-content: center; align-items: center; line-height: .86 !important; padding-bottom: .08em; width: clamp(72px, 7vw, 104px); aspect-ratio: 1; border-radius: 22%; font: 500 clamp(24px, 2.3vw, 34px)/1 var(--f-body); letter-spacing: -.065em; color: #fff;
+  background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 16px 30px -16px rgba(0, 0, 0, .7); }
+.proj-mark .grad { display: block; }
 .proj-copy { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100%; }
 .proj-kicker { margin: 2px 0 8px; font: 500 12px/1.3 var(--f-mono); letter-spacing: .04em; color: #f2b8c3; }
 .proj-name { margin: 0 0 10px; font: 500 clamp(30px, 3vw, 42px)/1 var(--f-body); letter-spacing: -.045em; }
@@ -657,3 +660,13 @@ a.link-card:hover { transform: translateY(-4px); }
 :root[data-palette="ocean"] { --c-coral: #7FC8C2; --c-indigo: #2F5D8A; --c-slate: #5A7FA6; --c-plum: #2E4A63; --c-lilac: #4FA3C7; }
 :root[data-palette="neon"] { --c-coral: #FF6FA8; --c-indigo: #5B3DF5; --c-slate: #6C7BFF; --c-plum: #B0219B; --c-lilac: #19C6F0; }
 :root[data-palette="ember"] { --c-coral: #F2A65A; --c-indigo: #8C2F39; --c-slate: #B5654A; --c-plum: #6B1E2B; --c-lilac: #E0703E; }
+
+/* ── moving between Hex Modifications and its sub-sites (hexcam): the header stays put, the page crossfades ── */
+@view-transition { navigation: auto; }
+.nav .wordmark { view-transition-name: hex-word; }
+.nav .pill { view-transition-name: hex-pill; }
+::view-transition-old(root) { animation: .28s ease both hx-vt-out; }
+::view-transition-new(root) { animation: .42s cubic-bezier(.2, .8, .2, 1) both hx-vt-in; }
+@keyframes hx-vt-out { to { opacity: 0; } }
+@keyframes hx-vt-in { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }

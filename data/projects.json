@@ -15,9 +15,9 @@
     "kicker": "free tool · photos and video",
     "text": "raw camera looks in your browser: CCD glow, real JPEG crunch, grain, bleach bypass and VHS, on photos and video. add a song and it cuts your clips to the beat.",
     "url": "hexcam/",
-    "icon": "img/hexcam-icon.webp",
     "status": "new",
-    "theme": "plum"
+    "theme": "plum",
+    "mark": "hex|cam"
   },
   {
     "slug": "mods",

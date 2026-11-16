@@ -33,7 +33,7 @@ Token for HQ: a fine-grained token for **Hex-Modifications/hex-modifications.git
 - **Palette (GTA VI sunset):** coral `#E89898`, indigo `#5D549C`, slate `#6F70A2`, plum `#7E3A63`, lilac `#A373D3`.
 - **Timecycle:** the site's lighting follows each visitor's local time: dawn 05–08, day 08–17, dusk 17–20, night 20–05. Night is the dark theme. Clicking the clock in the hero skips ahead. You can preview a phase with `?phase=dawn|day|dusk|night`.
 - **Hero objects:** bubbly glass pistol, rifle, sports car, police cruiser (flashing light bar), wanted star or heist cash stack. One is picked at random per visit, never the same as the visitor's last one. Clicking the object swaps it. Preview one with `?model=car` etc.
-- **Projects hub:** the projects section, first after the hero, shows a card for every project in `data/projects.json` that has an icon.
+- **Projects hub:** the projects section, first after the hero, shows a card for every project in `data/projects.json` that has an `icon` or a `mark`.
 
 ### Easter eggs
 Type these anywhere on the page (not inside a form field):
@@ -61,7 +61,7 @@ Everything lives in `data/`. You can edit it from **/admin → Content** (valida
 | `site.json` | Your links (Patreon, Ko-fi, Fiverr, Tebex, Shopify, Discord server invite, YouTube, GitHub, X), `discordUser` (the username visitors copy, currently `001hex`), years scripting, email. The "join the server" button only appears once `links.discord` is a real invite |
 | `products.json` | Store listings (category: `reshade`, `graphics`, `scripts`, `software`, `services`; platform: `tebex`, `kofi`, `patreon`, `shopify`, `fiverr`) |
 | `roadmap.json` | Planned mods and scripts (status: `shipped`, `in-progress`, `planned`, `research`) |
-| `projects.json` | The hub: every project, in order. Each entry: `{ "slug", "name", "kicker", "text", "url", "icon", "status", "theme" }`. Entries with an `icon` get a card in the projects section. `theme` is `indigo` or `plum`. To add a new project, add an entry here (or in /admin → Content) and drop its 512×512 icon in `public/img/` |
+| `projects.json` | The hub: every project, in order. Each entry: `{ "slug", "name", "kicker", "text", "url", "icon" or "mark", "status", "theme" }`. Entries with an `icon` (a 512×512 image in `public/img/`) or a `mark` (the name set as type: `"hex|cam"` gives hex + gradient cam) get a card in the projects section. `theme` is `indigo` or `plum`. To add a new project, add an entry here (or in /admin → Content) |
 | `feed.json` | Updates section. Hidden while empty; fills automatically once Patreon is connected |
 | `releases-manual.json` | Extra entries for **Latest releases** from sites that block automated reading (LCPDFR). Each entry: `{ "platform": "lcpdfr", "source": "LCPDFR", "title", "url", "image", "description", "date": "2026-10-01" }`. To hide something that was picked up automatically, add `{ "url": "<its link>", "hide": true }` |
 
@@ -101,7 +101,7 @@ The AdSense script only loads after the intro has finished, so it never slows th
 
 ## hexcam (free photo + video effects tool)
 
-A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer and the projects section, and it links back here.
+A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPEG compression, low resolution, film grain, bleach bypass, VHS tape, lens distortion and burned-in date stamps. Unlike the phone apps it imitates, **every effect also works on video**, and exports keep the audio. It's linked from the nav, the menu, the footer and the projects section. It shares the main site's header, flowing background, glass panels, palette and time of day, and in browsers with cross-document view transitions the header stays put while the page crossfades, so it feels like one site.
 
 - **Private:** it runs entirely in the visitor's browser (WebGL2). Nothing is uploaded and there's no server code, so it works the same on GitHub Pages and the Node host.
 - **Real compression, not a filter:** YCbCr conversion, chroma subsampling (4:4:4, 4:2:2, 4:2:0 or DV's 4:1:1), a separable 8×8 DCT, quantisation with the standard JPEG tables scaled by quality, then decode. "Re-saves" shift the block grid each pass, so generation loss compounds.
@@ -113,11 +113,11 @@ A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPE
 
 ## Intro splash
 
-The intro is rendered live, not a video. About 3,900 particles gather onto the exact halftone dots of the Hex Modifications mark, the cross flashes, and the crisp mark and wordmark settle in. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. The assets are `media/mark.webp` (157 KB) and `media/mark-dots.bin` (23 KB, the dot positions, generated from `brand/hex-modifications-official.png`), and they're only downloaded when the intro runs.
+The intro is rendered live, not a video. About 3,900 particles stream straight onto the exact halftone dots of the Hex Modifications mark, the cross flashes, and the crisp mark and wordmark settle in. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. The assets are `media/mark.webp` (157 KB) and `media/mark-dots.bin` (23 KB, the dot positions, generated from `brand/hex-modifications-official.png`), and they're only downloaded when the intro runs.
 
 - **Exit:** the dark opens outward from the cross, with a rim of palette light sweeping across, revealing the real page underneath. At the same time the mark and wordmark fly into their places in the nav, where the nav's own logo takes over as they land
 - **Loading bar:** follows real milestones (site data and release count, fonts, assets) mixed with a shuffled, randomly timed set of build steps, so it reads differently every visit
-- **Timing:** about 4.5 seconds in all. It only holds on the finished logo while the page is still loading, and never runs past 7.5 seconds
+- **Timing:** it opens on the particles already streaming in (no scattered-dots build-up): about 3 seconds in all. It only holds on the finished logo while the page is still loading, and never runs past 5.5 seconds. The sound starts part-way in so its swell still lands on the cross
 - **Sound:** `media/intro.m4a` (Opus `.webm` fallback), mastered subtle at −29 LUFS with a soft fade-in, and faded out on exit. Browsers usually block sound until the visitor interacts, so if it's blocked, the first click, tap or key press starts it in sync
 - **Smoothness:** everything animated is GPU work (the WebGL canvas, opacity, transform). The background shader pauses until the hand-off
 - **When it shows:** once per browser session. It's skipped for reduced motion, Data Saver, background tabs and `?nosplash`. Without WebGL, the mark fades in and the exit is a palette wash. Esc skips it
