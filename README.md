@@ -113,11 +113,11 @@ A public tool at **`/hexcam/`** for raw camera looks: CCD digicam glow, real JPE
 
 ## Intro splash
 
-The intro is rendered live, not a video. About 3,900 particles stream straight onto the exact halftone dots of the Hex Modifications mark, the cross flashes, and the crisp mark and wordmark settle in. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. The assets are `media/mark.webp` (157 KB) and `media/mark-dots.bin` (23 KB, the dot positions, generated from `brand/hex-modifications-official.png`), and they're only downloaded when the intro runs.
+The intro is rendered live, not a video. The Hex Modifications mark rises in out of the dark (a quick fade, slight scale and unblur), the cross flashes, and the wordmark lands. It's drawn with WebGL at the screen's own resolution and refresh rate, so it stays sharp on any display at 60, 120 or 144fps. Background gradients are dithered, so they don't band. Its only image is `media/mark.webp` (157 KB), downloaded only when the intro runs.
 
 - **Exit:** the dark opens outward from the cross, with a rim of palette light sweeping across, revealing the real page underneath. At the same time the mark and wordmark fly into their places in the nav, where the nav's own logo takes over as they land
 - **Loading bar:** follows real milestones (site data and release count, fonts, assets) mixed with a shuffled, randomly timed set of build steps, so it reads differently every visit
-- **Timing:** it opens on the particles already streaming in (no scattered-dots build-up): about 3 seconds in all. It only holds on the finished logo while the page is still loading, and never runs past 5.5 seconds. The sound starts part-way in so its swell still lands on the cross
+- **Timing:** it opens straight on the logo: about 2.5 seconds in all. It only holds on the finished logo while the page is still loading, and never runs past 5 seconds. The sound starts part-way in so its swell still lands on the cross
 - **Sound:** `media/intro.m4a` (Opus `.webm` fallback), mastered subtle at −29 LUFS with a soft fade-in, and faded out on exit. Browsers usually block sound until the visitor interacts, so if it's blocked, the first click, tap or key press starts it in sync
 - **Smoothness:** everything animated is GPU work (the WebGL canvas, opacity, transform). The background shader pauses until the hand-off
 - **When it shows:** once per browser session. It's skipped for reduced motion, Data Saver, background tabs and `?nosplash`. Without WebGL, the mark fades in and the exit is a palette wash. Esc skips it

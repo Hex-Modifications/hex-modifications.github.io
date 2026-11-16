@@ -1,10 +1,9 @@
-/* Intro splash, rendered live (no video): ~3,900 particles stream onto the exact halftone dots of the
-   Hex Modifications mark, the crisp mark fades in over them, and the wordmark lands. Drawn with WebGL at the
-   screen's own resolution and refresh rate. A loading bar reports real page milestones mixed with a shuffled
-   set of build steps. On exit the mark and wordmark fly into their places in the nav while the dark lifts
-   into the page's colours, so the splash hands off to the site instead of cutting away.
-   It opens straight on the stream (no scattered-dots build-up): about 3s in all; held on the finished logo
-   only while the page is still loading; never over 5.5s.
+/* Intro splash, rendered live (no video): the Hex Modifications mark rises in out of the dark, the cross
+   flashes, and the wordmark lands. The background is drawn with WebGL at the screen's own resolution and
+   refresh rate. A loading bar reports real page milestones mixed with a shuffled set of build steps. On exit
+   the mark and wordmark fly into their places in the nav while the dark lifts into the page's colours, so the
+   splash hands off to the site instead of cutting away.
+   About 2.5s in all; held on the finished logo only while the page is still loading; never over 5s.
    The timecycle script decides in <head> whether it runs at all (class "splash-on"). */
 (() => {
   'use strict';
@@ -18,9 +17,9 @@
   const $ = (s) => el.querySelector(s);
   const canvas = $('.splash-gl'), mark = $('.splash-mark'), word = $('.splash-word');
   const bar = $('.splash-bar b'), label = $('.splash-step'), pct = $('.splash-pct');
-  const MAX_MS = 5500, REVEAL_MS = 1050;
-  const T = { arrive: 1.5, cross: 1.55, mark: 0.35, word: 1.7, minExit: 2.15 };   // seconds into the intro
-  const AUDIO_SKIP = 2.75 - T.cross;              // the sound was cut for the longer intro: start it where its swell meets the cross
+  const MAX_MS = 5000, REVEAL_MS = 1050;
+  const T = { arrive: 0.08, cross: 0.6, mark: 0.55, word: 0.78, minExit: 1.45 };   // seconds into the intro
+  const AUDIO_SKIP = 2.75 - T.cross;              // the sound was cut for a longer intro: start it where its swell meets the cross
   const CROSS = [0.52, 0.47];                    // centre of the cross within the mark
   const t0 = performance.now();
   const now = () => (performance.now() - t0) / 1000;
@@ -57,14 +56,12 @@
     () => `baking palette · ${pick(['coral', 'lilac', 'indigo', 'plum'])}`,
     () => `syncing feeds · ${pick(['gta5-mods', 'cfx.re', 'github'])}`,
     () => `linking projects · ${pick(['gta6 project', 'hexcam'])}`,
-    () => `placing particles · ${count ? count.toLocaleString('en-GB') : '3,894'}`,
   ];
   const MILESTONES = [
     [signals.data, () => { const n = window.hexData?.releases?.length; return n ? `fetched latest releases · ${n}` : 'fetched site data'; }],
     [signals.hero, () => (root.classList.contains('no-webgl') ? 'hero · static fallback' : `3D hero · first frame · ${document.getElementById('glass')?.dataset.model || 'ready'}`)],
     [signals.load, () => 'assets decoded'],
   ];
-  let count = 0;
   const steps = shuffle(POOL.slice()).slice(0, 4 + Math.floor(Math.random() * 3));
   let shown = 0, target = 0, cur = 0, stallUntil = 0;
   const say = (t) => { if (label) label.textContent = t; };
@@ -98,7 +95,7 @@
   if (audio) { audio.preload = 'auto'; startSound(); }
   addEventListener('keydown', (e) => { if (e.key === 'Escape') finish(); });
 
-  /* ── WebGL: background glows (dithered, so no banding) + particles ── */
+  /* ── WebGL: background glows (dithered, so no banding), the cross flash, and the exit reveal ── */
   const gl = canvas.getContext('webgl', { alpha: true, antialias: false, depth: false, stencil: false, premultipliedAlpha: true, powerPreference: 'high-performance' });
   let markLoaded = mark.complete && mark.naturalWidth > 0;
   mark.addEventListener('load', () => { markLoaded = true; }, { once: true });
@@ -131,109 +128,38 @@
         vec3 rim = mix(vec3(0.91, 0.6, 0.6), vec3(0.64, 0.45, 0.83), 0.5 + 0.5 * sin(ang * 2. + uTime));
         gl_FragColor = vec4(col * keep + rim * ring * 0.55, min(1., keep + ring * 0.25));
       }`);
-    // particles fade in as a loose cloud around the figure, tighten, and flow into it head-first
-    // with a stream sweeping in from the lower left
-    const pts = compile(`precision highp float;
-      attribute vec4 aA;      // scatter.xy, cloud.xy (clip space)
-      attribute vec4 aB;      // curve control.xy, target.xy
-      attribute vec4 aT;      // fade-in, gather start, flow start, flow duration (s)
-      attribute vec2 aI;      // halftone dot radius (px at 1000px mark height), brightness
-      uniform float uTime, uScale, uDpr, uAlpha, uAspect;
-      varying float vA, vB;
-      float sm(float x){ return x * x * (3. - 2. * x); }
-      void main(){
-        float t = uTime, seed = aT.x * 37.1 + aT.y * 11.3;
-        vec2 drift = vec2(sin(t * 0.7 + seed), cos(t * 0.6 + seed * 1.7)) * vec2(0.006 / uAspect, 0.006);
-        vec2 p1 = mix(aA.xy + drift, aA.zw + drift * 0.5, sm(clamp((t - aT.y) / 0.8, 0., 1.)));
-        float k = clamp((t - aT.z) / aT.w, 0., 1.), e = sm(k);
-        vec2 p = mix(mix(p1, aB.xy, e), mix(aB.xy, aB.zw, e), e);
-        gl_Position = vec4(p, 0., 1.);
-        float land = smoothstep(0.7, 1., k), dotPx = aI.x * uScale * uDpr * 2.;
-        gl_PointSize = max(1., mix(min(2.6 * uDpr, dotPx + uDpr), dotPx, land));   // crisp travelling dots, halftone-sized on arrival
-        vA = smoothstep(aT.x, aT.x + 0.22, t) * uAlpha;
-        vB = mix(0.92, aI.y, land);
-      }`, `precision highp float;
-      varying float vA, vB;
-      void main(){
-        float d = length(gl_PointCoord - 0.5) * 2.;
-        float a = (1. - smoothstep(0.62, 1., d)) * vA;
-        gl_FragColor = vec4(vec3(0.95, 0.93, 1.) * vB * a, a);
-      }`);
-    if (bg && pts) {
+    if (bg) {
       const tri = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, tri); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       const U = (p, n) => gl.getUniformLocation(p, n);
       const bgU = { res: U(bg, 'uRes'), cross: U(bg, 'uCross'), time: U(bg, 'uTime'), flash: U(bg, 'uFlash'), glow: U(bg, 'uGlow'), reveal: U(bg, 'uReveal') };
-      const pU = { time: U(pts, 'uTime'), scale: U(pts, 'uScale'), dpr: U(pts, 'uDpr'), alpha: U(pts, 'uAlpha'), aspect: U(pts, 'uAspect') };
-      const A = ['aA', 'aB', 'aT', 'aI'].map((n) => gl.getAttribLocation(pts, n));
-      const buf = gl.createBuffer();
-      let dots = null, W = 0, H = 0, dpr = 1, rect = null;
+      let W = 0, H = 0, dpr = 1;
 
-      // particles: targets are the mark's real halftone dots; the scatter, cloud and stream differ every visit
-      const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
-      const build = () => {
-        if (!dots) return;
-        rect = mark.getBoundingClientRect();
-        const n = dots.byteLength / 6, v = new DataView(dots), out = new Float32Array(n * 14);
-        const toX = (px) => (px / innerWidth) * 2 - 1, toY = (py) => 1 - (py / innerHeight) * 2;
-        const mh = rect.height, mcx = rect.left + rect.width * 0.42, mcy = rect.top + mh * 0.36;
-        const sweep = 0.75 + Math.random() * 0.5, tilt = (Math.random() - 0.5) * 0.3;
-        for (let i = 0; i < n; i++) {
-          const xN = v.getUint16(i * 6, true) / 65535, yN = v.getUint16(i * 6 + 2, true) / 65535;
-          const ex = rect.left + xN * rect.width, ey = rect.top + yN * mh;
-          // 1. a dense cloud just above the figure's centre, fading in slightly looser and drawing together
-          const cx = mcx + gauss() * mh * 0.24, cy = mcy + gauss() * mh * 0.17;
-          const sx = cx + gauss() * mh * 0.12, sy = cy + gauss() * mh * 0.1;
-          // 2. flow in head-first; the lower-left of the figure fills last, its dots bowing in from below left
-          const order = 0.68 * yN + 0.32 * (1 - xN);
-          const bow = (0.3 + 0.7 * order) * sweep * (0.6 + Math.random() * 0.6);
-          const kx = (cx + ex) / 2 - mh * 0.34 * bow, ky = (cy + ey) / 2 + mh * (0.2 + tilt) * bow;
-          const fade = Math.pow(Math.random(), 1.5) * 0.2, gather = 0;
-          const flow = 0.1 + order * 0.72 + Math.random() * 0.08, dur = 0.42 + Math.random() * 0.16;
-          out.set([toX(sx), toY(sy), toX(cx), toY(cy), toX(kx), toY(ky), toX(ex), toY(ey), fade, gather, flow, dur,
-            v.getUint8(i * 6 + 4) / 10, 0.6 + 0.4 * (v.getUint8(i * 6 + 5) / 255)], i * 14);
-        }
-        count = n;
-        gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, out, gl.STATIC_DRAW);
-      };
       const resize = () => {
         dpr = Math.min(devicePixelRatio || 1, 2);
         W = Math.round(innerWidth * dpr); H = Math.round(innerHeight * dpr);
         canvas.width = W; canvas.height = H; gl.viewport(0, 0, W, H);
-        build();
       };
-      fetch('media/mark-dots.bin').then((r) => (r.ok ? r.arrayBuffer() : null)).then((b) => { dots = b; build(); }).catch(() => {});
       addEventListener('resize', resize);
       resize();
 
       const smooth = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
       draw = (t, reveal = 0) => {
-        gl.disable(gl.BLEND);
         gl.useProgram(bg);
         gl.bindBuffer(gl.ARRAY_BUFFER, tri);
-        for (const l of A) if (l >= 0) gl.disableVertexAttribArray(l);
         gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-        const r = rect || mark.getBoundingClientRect();
+        const r = mark.getBoundingClientRect();
         gl.uniform2f(bgU.res, W, H);
         gl.uniform2f(bgU.cross, (r.left + CROSS[0] * r.width) / innerWidth, 1 - (r.top + CROSS[1] * r.height) / innerHeight);
         gl.uniform1f(bgU.time, t); gl.uniform1f(bgU.reveal, reveal);
-        gl.uniform1f(bgU.glow, smooth(0, 0.5, t));
+        gl.uniform1f(bgU.glow, smooth(0, 0.45, t));
         gl.uniform1f(bgU.flash, smooth(T.cross - 0.25, T.cross, t) * (1 - smooth(T.cross, T.cross + 0.9, t)));
         gl.drawArrays(gl.TRIANGLES, 0, 3);
-        if (!count || markShown >= 1) return;
-        gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.useProgram(pts);
-        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-        gl.disableVertexAttribArray(0);
-        [4, 4, 4, 2].forEach((size, i) => { if (A[i] < 0) return; gl.enableVertexAttribArray(A[i]); gl.vertexAttribPointer(A[i], size, gl.FLOAT, false, 56, i * 16); });
-        gl.uniform1f(pU.time, t); gl.uniform1f(pU.scale, r.height / 1000); gl.uniform1f(pU.dpr, dpr); gl.uniform1f(pU.aspect, innerWidth / innerHeight);
-        gl.uniform1f(pU.alpha, 1 - markShown);
-        gl.drawArrays(gl.POINTS, 0, count);
       };
     }
   }
   if (!draw) el.classList.add('no-gl');
 
-  /* ── frame loop: particles, then the crisp mark crossfades in over them, then the wordmark ── */
+  /* ── frame loop: the mark rises in out of the dark, then the wordmark ── */
   let markShown = 0, markStart = 0, revealStart = 0, glReady = false;
   const easeInOut = (k) => 0.5 - 0.5 * Math.cos(Math.PI * k);          // gentle start and finish, even middle
   (function frame() {
@@ -242,7 +168,12 @@
     if (draw && !glReady) { glReady = true; requestAnimationFrame(() => el.classList.add('gl-ready')); }   // canvas now covers the base
     if (t >= T.arrive && markLoaded && !markStart) markStart = t;
     markShown = markStart ? Math.min(1, (t - markStart) / T.mark) : 0;
-    mark.style.opacity = draw ? markShown : '';
+    if (!done) {
+      const e = 1 - Math.pow(1 - markShown, 3);                  // ease-out: quick to appear, gentle to settle
+      mark.style.opacity = draw ? e : '';
+      mark.style.transform = draw && markShown < 1 ? `scale(${(0.94 + 0.06 * e).toFixed(4)})` : '';
+      mark.style.filter = draw && markShown < 1 ? `blur(${((1 - e) * 6).toFixed(2)}px)` : '';
+    }
     if (t >= T.word) el.classList.add('word-in');
     if (draw) draw(t, revealStart ? easeInOut(Math.min(1, (performance.now() - revealStart) / REVEAL_MS)) : 0);
     // the bar eases toward its target and now and then stalls for a beat, like a real loader
@@ -258,7 +189,7 @@
   function finish() {
     if (done) return;
     done = true;
-    markShown = 1; mark.style.opacity = 1; el.classList.add('word-in');
+    markShown = 1; mark.style.opacity = 1; mark.style.transform = ''; mark.style.filter = ''; el.classList.add('word-in');
     const navWord = document.querySelector('.nav .wm-text'), navHex = document.querySelector('.nav .wm-hex'), badge = document.querySelector('.nav .wm-badge');
     const fly = (node, to, scale) => {
       const from = node.getBoundingClientRect();

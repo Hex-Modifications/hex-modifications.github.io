@@ -111,7 +111,7 @@ html.splash-on { overflow: hidden; }
   background: radial-gradient(38% 34% at 50% 44%, var(--g2), transparent 70%), radial-gradient(40% 36% at 38% 62%, var(--g3), transparent 72%), radial-gradient(36% 34% at 64% 58%, var(--g1), transparent 72%); }
 .splash-logo { --mh: min(44vh, 66vw); position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: calc(var(--mh) * .085); }
 .splash-mark { display: block; height: var(--mh); width: auto; max-width: none; aspect-ratio: 1030 / 1200; opacity: 0; will-change: transform, opacity; }
-.splash.no-gl .splash-mark { animation: splash-in .9s ease .4s forwards; }
+.splash.no-gl .splash-mark { animation: splash-in .55s ease .08s forwards; }
 .splash-word { display: flex; align-items: baseline; gap: calc(var(--mh) * .15 * 7 / 34); color: #fff; opacity: 0; transform: translateY(14px); white-space: nowrap;
   transition: opacity .6s ease, transform 1s cubic-bezier(.2, .8, .2, 1); will-change: transform, opacity; }
 .splash-word .wm-hex { font-size: calc(var(--mh) * .15); }
