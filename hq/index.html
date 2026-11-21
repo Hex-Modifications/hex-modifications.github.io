@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://avatars.githubusercontent.com; connect-src 'self' https://api.github.com https://text.pollinations.ai; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hex HQ</title>
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hq.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><img src="/img/logo-badge.png" alt="" width="34" height="34"><span>hex <b>hq</b></span></a>
+  <span class="who mono" id="who"></span>
+  <button class="btn ghost" id="lock" type="button" hidden>lock</button>
+</header>
+
+<!-- ═════════ sign in ═════════ -->
+<section class="login" id="login">
+  <form id="loginForm" autocomplete="off">
+    <p class="mono kick">owner access</p>
+    <h1>sign in</h1>
+    <p class="muted">Use a GitHub token for the Hex Modifications repo. Only accounts with write access that are on the owner list can get in. The token stays in this tab and is wiped when you lock, close the tab, or leave it idle for 30 minutes.</p>
+    <input type="password" id="token" placeholder="github_pat_…" required spellcheck="false" aria-label="GitHub token">
+    <button class="btn" type="submit">unlock</button>
+    <p class="err mono" id="loginErr" role="alert"></p>
+    <details class="how">
+      <summary>how to make a token</summary>
+      <ol>
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li>Resource owner: <b>Hex-Modifications</b>. Repository access: <b>only select repositories</b> → <b>hex-modifications.github.io</b>.</li>
+        <li>Permissions: <b>Contents</b> read and write, <b>Actions</b> read and write, and <b>Administration</b> read and write if you want to manage who has access here.</li>
+        <li>Pick an expiry (90 days is sensible), generate, and paste it above. If GitHub says the organisation needs to approve it, approve it under the organisation's settings.</li>
+      </ol>
+    </details>
+  </form>
+</section>
+
+<!-- ═════════ dashboard ═════════ -->
+<main class="dash" id="dash" hidden>
+  <nav class="tabs mono" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="overview">overview</button>
+    <button role="tab" aria-selected="false" data-tab="network">network</button>
+    <button role="tab" aria-selected="false" data-tab="theme">theme</button>
+    <button role="tab" aria-selected="false" data-tab="growth">growth ai</button>
+    <button role="tab" aria-selected="false" data-tab="content">content</button>
+    <button role="tab" aria-selected="false" data-tab="access">access</button>
+  </nav>
+
+  <section class="panel" data-panel="overview">
+    <div class="grid">
+      <div class="card"><h2>sites</h2><ul class="rows" id="ovSites"></ul></div>
+      <div class="card">
+        <h2>deploys <button class="btn small" id="rebuild" type="button">rebuild now</button></h2>
+        <ul class="rows" id="ovRuns"></ul>
+      </div>
+      <div class="card"><h2>recent changes</h2><ul class="rows" id="ovCommits"></ul></div>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="network" hidden>
+    <div class="card">
+      <h2>the network</h2>
+      <p class="muted">Every site Hex Modifications runs. A parked site is taken fully offline: it isn't built or published and every link to it disappears, but its code and data stay in the repo, ready to switch back on. Changes go live after the next deploy (about two minutes).</p>
+      <ul class="sites" id="netSites"></ul>
+      <div class="bar"><button class="btn" id="netSave" type="button">save network</button><span class="mono msg" id="netMsg"></span></div>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="theme" hidden>
+    <div class="grid">
+      <div class="card">
+        <h2>palette</h2>
+        <div class="palettes" id="palettes"></div>
+      </div>
+      <div class="card">
+        <h2>time of day</h2>
+        <p class="muted">The site normally follows each visitor's clock (dawn, day, dusk, night). Lock it to one look if you want.</p>
+        <div class="chips" id="phases"></div>
+      </div>
+    </div>
+    <div class="bar"><a class="btn ghost" id="themePreview" href="/" target="_blank" rel="noopener">preview</a><button class="btn" id="themeSave" type="button">apply theme</button><span class="mono msg" id="themeMsg"></span></div>
+  </section>
+
+  <section class="panel" data-panel="growth" hidden>
+    <div class="grid">
+      <div class="card">
+        <h2>seo health <button class="btn small ghost" id="seoRun" type="button">check again</button></h2>
+        <ul class="checks" id="seoChecks"></ul>
+        <p class="muted small">Automatic: every deploy pings Bing, Yandex and other IndexNow engines with your sitemap. For Google, add the site to <a href="https://search.google.com/search-console" target="_blank" rel="noopener">Search Console</a> and submit <span class="mono">sitemap.xml</span>; <a href="https://www.bing.com/webmasters" target="_blank" rel="noopener">Bing Webmaster Tools</a> can import it from there.</p>
+      </div>
+      <div class="card">
+        <h2>search listing</h2>
+        <p class="muted">How the homepage shows up on Google. AI writes it from your site data; edit anything before applying.</p>
+        <label>title <span class="count mono" data-for="seoTitle"></span><input id="seoTitle" maxlength="70"></label>
+        <label>description <span class="count mono" data-for="seoDesc"></span><textarea id="seoDesc" rows="3" maxlength="170"></textarea></label>
+        <label>keywords<input id="seoKeys"></label>
+        <div class="serp" id="serp" aria-label="Search result preview"></div>
+        <div class="bar"><button class="btn ghost" id="seoAi" type="button">write with ai</button><button class="btn" id="seoApply" type="button">apply to site</button><span class="mono msg" id="seoMsg"></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>release kit</h2>
+      <p class="muted">Dropping a mod or preset? Describe it once and get every post you need, written for each platform: GTA5-Mods, LCPDFR, the Cfx.re forum, Reddit, Discord, X, TikTok and YouTube.</p>
+      <div class="form2">
+        <label>name<input id="rkName" placeholder="e.g. Advanced Helicopter UI 2.0"></label>
+        <label>type<select id="rkType"><option>GTA V mod</option><option>LSPDFR plugin</option><option>FiveM script</option><option>ReShade preset</option><option>PC tool</option><option>hexcam update</option></select></label>
+        <label class="wide">what it does / what's new<textarea id="rkWhat" rows="3"></textarea></label>
+        <label class="wide">download link<input id="rkLink" placeholder="https://"></label>
+      </div>
+      <div class="bar"><button class="btn" id="rkGo" type="button">write the posts</button><span class="mono msg" id="rkMsg"></span></div>
+      <div class="kit" id="rkOut"></div>
+    </div>
+    <div class="card">
+      <h2>ask hq</h2>
+      <p class="muted">Your growth assistant. It knows your sites, platforms and releases.</p>
+      <div class="chips" id="askQuick"></div>
+      <div class="chatlog" id="askLog" aria-live="polite"></div>
+      <form class="ask" id="askForm"><input id="askIn" placeholder="ask anything about growing hex modifications…" autocomplete="off"><button class="btn" type="submit">ask</button></form>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="content" hidden>
+    <div class="card">
+      <div class="bar">
+        <select id="edFile" aria-label="Data file"><option>site</option><option>projects</option><option>products</option><option>roadmap</option><option>feed</option><option>releases-manual</option><option>network</option></select>
+        <button class="btn ghost" id="edLoad" type="button">load</button>
+        <button class="btn" id="edSave" type="button">save</button>
+        <span class="mono msg" id="edMsg"></span>
+      </div>
+      <textarea id="editor" spellcheck="false" aria-label="JSON editor"></textarea>
+      <p class="muted small">The raw data behind the site. JSON is checked before saving, and every save is a commit you can undo from the repo's history.</p>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="access" hidden>
+    <div class="grid">
+      <div class="card"><h2>you</h2><div id="me"></div></div>
+      <div class="card">
+        <h2>give someone access</h2>
+        <p class="muted">Adds their GitHub account to the repo with write access and to the owner list. They sign in here with their own token.</p>
+        <div class="bar"><input id="invUser" placeholder="github username" spellcheck="false"><button class="btn" id="invGo" type="button">give access</button></div>
+        <p class="mono msg" id="invMsg"></p>
+      </div>
+    </div>
+    <div class="card"><h2>people with access</h2><ul class="rows" id="people"></ul></div>
+  </section>
+</main>
+<div class="toast mono" id="toast" role="status" hidden></div>
+<script src="hq.js" defer></script>
+</body>
+</html>
