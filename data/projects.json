@@ -20,6 +20,16 @@
     "mark": "hex|cam"
   },
   {
+    "slug": "hexfw",
+    "name": "HexFW",
+    "kicker": "flipper zero firmware",
+    "text": "a vaporwave custom firmware for flipper zero: a diagnostics and system-monitoring centre, gpio tools for builders and plain-english guides to every radio.",
+    "url": "flipper/",
+    "status": "in development",
+    "theme": "plum",
+    "mark": "hex|fw"
+  },
+  {
     "slug": "mods",
     "name": "GTA V mods",
     "kicker": "free releases",

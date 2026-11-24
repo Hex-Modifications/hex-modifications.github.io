@@ -1,0 +1,11 @@
+{
+  "_about": "HexFW (Flipper Zero firmware) download page at /flipper/. Releases are added by the firmware release pipeline (a copy of each build's release.json) after the owner approves them. The build mirrors each listed .tgz onto the site so Flipper Lab can install it (needs CORS, which GitHub Pages sends). Leave releases empty to show the 'in development' state.",
+  "name": "HexFW",
+  "status": "in development",
+  "upstreamBase": "official firmware 1.5.1",
+  "support": {
+    "paypal": "https://paypal.me/untilhex",
+    "kofi": ""
+  },
+  "releases": []
+}

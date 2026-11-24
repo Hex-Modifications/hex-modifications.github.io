@@ -130,7 +130,29 @@ const hexcamIndex = path.join(DIST, 'hexcam', 'index.html');
 if (isLive('hexcam')) fs.writeFileSync(hexcamIndex, withTheme(fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL)));
 else fs.rmSync(path.join(DIST, 'hexcam'), { recursive: true, force: true });
 
-fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [...(isLive('hexcam') ? [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }] : []), ...gta6.urls]));
+// HexFW, the Flipper Zero firmware page at /flipper/. Each listed release's .tgz is mirrored onto the site
+// (checked against its SHA-256) so Flipper Lab can install it: GitHub Pages sends the CORS header Lab needs.
+const firmware = isLive('hexfw') ? read('firmware') : null;
+if (firmware) {
+  fs.mkdirSync(path.join(DIST, 'flipper', 'fw'), { recursive: true });
+  for (const rel of firmware.releases || []) {
+    const tgz = (rel.files || []).find((f) => f.type === 'update_tgz');
+    if (!tgz || !/^https:\/\//.test(tgz.url || '') || !/^[\w.-]+\.tgz$/.test(tgz.name || '')) continue;
+    try {
+      const res = await fetch(tgz.url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(60000) });
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (res.ok && crypto.createHash('sha256').update(buf).digest('hex') === tgz.sha256) {
+        fs.writeFileSync(path.join(DIST, 'flipper', 'fw', tgz.name), buf);
+        rel.mirror = `fw/${tgz.name}`;
+      } else console.warn(`hexfw: ${tgz.name} not mirrored (HTTP ${res.status} or checksum mismatch)`);
+    } catch (e) { console.warn(`hexfw: ${tgz.name} not mirrored (${e.message})`); }
+  }
+  fs.writeFileSync(path.join(DIST, 'data', 'firmware.json'), JSON.stringify(firmware));
+  const fwIndex = path.join(DIST, 'flipper', 'index.html');
+  fs.writeFileSync(fwIndex, withTheme(fs.readFileSync(fwIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL)));
+} else fs.rmSync(path.join(DIST, 'flipper'), { recursive: true, force: true });
+
+fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [...(isLive('hexcam') ? [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }] : []), ...(firmware ? [{ loc: `${SITE_URL}/flipper/`, priority: '0.8' }] : []), ...gta6.urls]));
 // IndexNow: search engines (Bing, Yandex, Seznam, Naver) fetch this key to trust the deploy workflow's URL pings
 if (indexnowKey) fs.writeFileSync(path.join(DIST, `${indexnowKey}.txt`), indexnowKey);
 fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disallow: /admin\n', 'Disallow: /hq/\n').replace('Disallow: /api/\n', ''));

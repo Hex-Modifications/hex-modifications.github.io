@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en-GB" data-phase="night">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HexFW: Flipper Zero firmware by Hex Modifications</title>
+<meta name="description" content="HexFW is a custom Flipper Zero firmware by Hex Modifications: a retro-futurist vaporwave interface, a hardware diagnostics and system monitoring centre, GPIO developer tools and beginner-friendly explanations. Downloads, install guide, checksums and recovery.">
+<link rel="canonical" href="__SITE_URL__/flipper/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hex Modifications">
+<meta property="og:title" content="HexFW: Flipper Zero firmware by Hex Modifications">
+<meta property="og:description" content="A vaporwave-styled custom firmware for Flipper Zero with a diagnostics centre, GPIO tools and plain-English explanations.">
+<meta property="og:url" content="__SITE_URL__/flipper/">
+<meta property="og:image" content="__SITE_URL__/flipper/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0B0B2B">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" href="../img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flipper.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"HexFW","url":"__SITE_URL__/flipper/","applicationCategory":"UtilitiesApplication","operatingSystem":"Flipper Zero","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"description":"Custom Flipper Zero firmware by Hex Modifications.","author":{"@type":"Organization","name":"Hex Modifications","url":"__SITE_URL__/"}}</script>
+<script type="module" src="flipper.js"></script>
+</head>
+<body>
+<a class="skip" href="#download">skip to downloads</a>
+
+<!-- vaporwave sky: sun + perspective grid, drawn in SVG so it stays sharp at any size -->
+<div class="sky" aria-hidden="true">
+  <svg class="sky-sun" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax meet">
+    <defs>
+      <linearGradient id="sunG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD36E"/><stop offset=".45" stop-color="#FF8C42"/><stop offset="1" stop-color="#FF3E9A"/></linearGradient>
+      <mask id="sunM"><rect width="400" height="200" fill="#fff"/><g fill="#000"><rect y="118" width="400" height="4"/><rect y="134" width="400" height="6"/><rect y="150" width="400" height="8"/><rect y="166" width="400" height="10"/><rect y="182" width="400" height="12"/></g></mask>
+    </defs>
+    <circle cx="200" cy="200" r="150" fill="url(#sunG)" mask="url(#sunM)"/>
+  </svg>
+  <div class="sky-grid"></div>
+</div>
+
+<header class="site-head">
+  <a class="sh-word" href="../" aria-label="Hex Modifications home"><img class="sh-badge" src="../img/logo-badge.png" alt="" width="42" height="42"><span class="sh-text"><span class="sh-hex">hex</span><span class="sh-sub">modifications</span></span></a>
+  <a class="sh-here" href="./" aria-hidden="true" tabindex="-1">hex<span>fw</span></a>
+  <nav class="sh-pill" aria-label="Hex Modifications"><a href="../#projects">projects</a><a href="../#releases">new</a><a href="../#mods">mods</a><a href="../#software">software</a><a href="./" class="active" aria-current="page">firmware</a></nav>
+  <span class="sh-end" aria-hidden="true"></span>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="kicker">flipper zero firmware <span class="chip" id="statusChip">in development</span></p>
+      <h1 class="wm"><span class="wm-hex">hex</span><span class="wm-fw">fw</span></h1>
+      <p class="lede">a custom firmware for flipper zero with a retro-futurist look, a full diagnostics and system-monitoring centre, gpio tools for builders, and plain-english explanations of what every radio actually does.</p>
+      <div class="ctas">
+        <a class="btn btn-sun" href="#download">get the firmware</a>
+        <a class="btn btn-ghost" href="#install">how to install</a>
+      </div>
+    </div>
+    <figure class="device">
+      <div class="bezel"><div class="lcd"><img id="heroScreen" src="img/screen-boot.png" width="128" height="64" alt="HexFW boot screen: a striped synthwave sun over a perspective grid with the HEX wordmark"></div></div>
+      <figcaption>boot screen · design preview, 128×64 1-bit</figcaption>
+    </figure>
+  </section>
+
+  <section class="sec" id="screens" aria-labelledby="screensT">
+    <div class="sec-head"><p class="path">/SCREENS</p><h2 id="screensT">vaporwave, in one bit</h2><p class="note">the flipper's screen is 128×64 pixels and strictly black and white, so the whole look is hand-built pixel art: striped suns, grid horizons, palm silhouettes, nothing that costs you legibility. these are design previews, not final screenshots.</p></div>
+    <div class="screens">
+      <figure class="shot"><div class="lcd"><img src="img/screen-boot.png" width="128" height="64" alt="Boot screen with HEX wordmark, striped sun and grid" loading="lazy"></div><figcaption><b>boot</b>the hex mark rises over the grid</figcaption></figure>
+      <figure class="shot"><div class="lcd"><img src="img/screen-home.png" width="128" height="64" alt="Home screen with clock, battery, a palm tree and a setting sun over the sea" loading="lazy"></div><figcaption><b>home</b>clock, battery and a sunset that never ends</figcaption></figure>
+      <figure class="shot"><div class="lcd"><img src="img/screen-control.png" width="128" height="64" alt="Control Centre listing battery, free heap, SD card and internal storage with bars" loading="lazy"></div><figcaption><b>control centre</b>everything about your flipper, on one screen</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="sec" id="features" aria-labelledby="featT">
+    <div class="sec-head"><p class="path">/FEATURES</p><h2 id="featT">useful first, flashy second</h2><p class="note">hexfw doesn't try to cram in every app ever made. each feature has to earn its place, and most of them run from the sd card so the firmware stays fast and leaves room for your stuff.</p></div>
+    <ul class="feats">
+      <li class="feat"><span class="st st-b">building</span><h3>control centre</h3><p>battery health, charge and temperature, free memory, storage, firmware and radio versions, and uptime, all live on one screen.</p></li>
+      <li class="feat"><span class="st st-b">building</span><h3>hardware diagnostics</h3><p>guided tests for buttons, screen, backlight, led, vibration, speaker, sd card speed and gpio pins. results save to the sd card for support.</p></li>
+      <li class="feat"><span class="st">planned</span><h3>your dashboard</h3><p>pick what the home screen shows, reorder or hide menu apps, and set shortcuts for the things you use most.</p></li>
+      <li class="feat"><span class="st">planned</span><h3>profiles</h3><p>save backlight, sound, vibration, favourites and menu layout as named profiles and switch between them in one press.</p></li>
+      <li class="feat"><span class="st">planned</span><h3>gpio lab</h3><p>live pin monitor, i²c scanner, uart terminal with baud detection and a pwm generator for anyone building with the header.</p></li>
+      <li class="feat"><span class="st">planned</span><h3>better files</h3><p>copy, move, rename, search, folder sizes and a hex viewer, so you can manage the sd card without a computer.</p></li>
+      <li class="feat"><span class="st">planned</span><h3>app compatibility check</h3><p>scans your installed apps and tells you which will run on this firmware and why, before you hit an "api mismatch".</p></li>
+      <li class="feat"><span class="st">planned</span><h3>learn mode</h3><p>plain-english guides to sub-ghz, nfc, rfid, infrared, ibutton and gpio, with the legal basics for the uk and eu.</p></li>
+      <li class="feat"><span class="st">planned</span><h3>safe updates</h3><p>stable and experimental channels, one-click browser installs and a clear way back to official firmware at any time.</p></li>
+    </ul>
+  </section>
+
+  <section class="sec" id="download" aria-labelledby="dlT">
+    <div class="sec-head"><p class="path">/DOWNLOAD</p><h2 id="dlT">get hexfw</h2><p class="note"><b>stable</b> builds have been tested on a real flipper. <b>experimental</b> builds are betas: new features first, rough edges included.</p></div>
+    <div class="tabs" role="tablist" aria-label="Release channel">
+      <button role="tab" type="button" id="tab-stable" aria-controls="panel" aria-selected="true" data-ch="stable">stable</button>
+      <button role="tab" type="button" id="tab-experimental" aria-controls="panel" aria-selected="false" data-ch="experimental">experimental</button>
+    </div>
+    <div class="panel" id="panel" role="tabpanel" aria-live="polite">
+      <div class="empty"><p class="empty-t">the first beta is in the works</p><p>there's no download yet. it'll appear here as soon as a build has been tested on a real flipper.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="install" aria-labelledby="insT">
+    <div class="sec-head"><p class="path">/INSTALL</p><h2 id="insT">install in a few minutes</h2><p class="note">your saved files on the sd card aren't touched, and the updater backs up your settings before it flashes anything.</p></div>
+    <div class="steps">
+      <article class="step"><p class="n">01</p><h3>in your browser</h3><p>easiest. on a computer with chrome or edge, plug your flipper in with a data usb cable, press <b>install in browser</b> next to a release, and follow flipper lab's prompts.</p><p class="small">close qflipper first. only one app can talk to the flipper at a time.</p></article>
+      <article class="step"><p class="n">02</p><h3>with qflipper</h3><p>download the <code>.tgz</code>, open <a href="https://flipper.net/pages/downloads" rel="noopener">qflipper</a>, connect your flipper and choose <b>install from file</b>. pick the <code>.tgz</code> and wait for the restart.</p></article>
+      <article class="step"><p class="n">03</p><h3>from the sd card</h3><p>extract the <code>.tgz</code> and copy its folder to <code>/update</code> on the sd card. on the flipper, open <b>archive</b>, browse to that folder, select <code>update</code> and choose <b>run in app</b>.</p></article>
+    </div>
+  </section>
+
+  <section class="sec two" id="verify" aria-labelledby="verT">
+    <div>
+      <div class="sec-head"><p class="path">/VERIFY</p><h2 id="verT">check the file</h2><p class="note">every release lists a sha-256 checksum. if the one you compute matches, the file is exactly the one we built.</p></div>
+      <div class="code"><p class="code-h">windows (powershell)</p><pre><code>Get-FileHash .\flipper-z-f7-update-*.tgz -Algorithm SHA256</code></pre><p class="code-h">macos</p><pre><code>shasum -a 256 flipper-z-f7-update-*.tgz</code></pre><p class="code-h">linux</p><pre><code>sha256sum flipper-z-f7-update-*.tgz</code></pre></div>
+    </div>
+    <div id="recovery">
+      <div class="sec-head"><p class="path">/RECOVERY</p><h2>back to official, any time</h2></div>
+      <ol class="rec">
+        <li><b>uninstall:</b> install the official firmware with qflipper or <a href="https://lab.flipper.net" rel="noopener">lab.flipper.net</a>, just like any update. your sd card stays as it is.</li>
+        <li><b>frozen flipper:</b> hold <kbd>left</kbd> + <kbd>back</kbd> for a couple of seconds, then let go to restart it.</li>
+        <li><b>won't boot:</b> hold <kbd>left</kbd> + <kbd>back</kbd>, release <kbd>back</kbd> and keep holding <kbd>left</kbd> until the led turns blue and the dfu screen appears. connect to qflipper and choose <b>repair</b>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="changelog" aria-labelledby="chT">
+    <div class="sec-head"><p class="path">/CHANGELOG</p><h2 id="chT">what's changed</h2></div>
+    <div class="log" id="log"><p class="muted">nothing has shipped yet. the full history of every release will live here.</p></div>
+  </section>
+
+  <section class="sec" id="help" aria-labelledby="helpT">
+    <div class="sec-head"><p class="path">/TROUBLESHOOTING</p><h2 id="helpT">something not right?</h2></div>
+    <div class="faq">
+      <details><summary>flipper lab can't find my flipper</summary><p>use chrome or edge on a computer (not a phone), use a usb cable that carries data, close qflipper and any serial terminals, then reconnect and try again.</p></details>
+      <details><summary>an app says "api mismatch"</summary><p>the app was built for a different firmware version. update the app, or check its page for a build that matches this release. the app compatibility check will flag these for you once it ships.</p></details>
+      <details><summary>the update stopped with an error code</summary><p>the updater checks everything before it writes and can retry safely. restart the flipper and run the update again. if it still fails, use the recovery steps above and reinstall.</p></details>
+      <details><summary>will i lose my saved signals, cards or keys?</summary><p>no. those live on the sd card, which the update doesn't touch, and the internal settings are backed up and restored automatically. backing up your sd card first is still a good habit.</p></details>
+      <details><summary>is this from flipper devices?</summary><p>no. hexfw is an independent project by hex modifications, built on the official flipper zero firmware. it isn't affiliated with or endorsed by flipper devices inc.</p></details>
+    </div>
+  </section>
+
+  <section class="sec support" id="support" aria-labelledby="supT">
+    <div><p class="path">/SUPPORT</p><h2 id="supT">keep it going</h2><p class="note">hexfw is free. if it's useful to you, a tip helps fund new features and test hardware.</p></div>
+    <div class="support-links" id="supportLinks"><a class="btn btn-sun" href="https://paypal.me/untilhex" rel="noopener">donate with paypal</a></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>hexfw by <a href="../">hex modifications</a>. built on the official flipper zero firmware. not affiliated with flipper devices inc.</p>
+  <p>use radio features only where it's legal and only on devices you own or have permission to test.</p>
+</footer>
+</body>
+</html>

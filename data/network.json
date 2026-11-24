@@ -16,6 +16,12 @@
       "path": "gta6project/",
       "live": false,
       "about": "GTA VI modding hub and database (parked)"
+    },
+    "hexfw": {
+      "name": "HexFW",
+      "path": "flipper/",
+      "live": true,
+      "about": "Flipper Zero firmware: downloads, install guide and docs"
     }
   },
   "theme": {
