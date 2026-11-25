@@ -133,3 +133,66 @@ document.addEventListener('click', async (e) => {
 });
 $('#flashClose')?.addEventListener('click', () => { if (dlg.dataset.state !== 'busy') dlg.close(); });
 dlg?.addEventListener('cancel', (e) => { if (dlg.dataset.state === 'busy') e.preventDefault(); });
+
+// ---------- editions: hexfw / hexfw pro, one page, seamless switch ----------
+const root = document.documentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const edTabs = [...document.querySelectorAll('.edition [role=tab]')];
+const panel = (ed) => document.getElementById(`ed-${ed}`);
+const markTabs = (ed) => edTabs.forEach((t) => { t.setAttribute('aria-selected', String(t.dataset.edition === ed)); t.tabIndex = t.dataset.edition === ed ? 0 : -1; });
+const setEdition = (ed, { animate = true, push = true } = {}) => {
+  const cur = root.dataset.edition || 'std';
+  if (ed === cur && !panel(ed).hidden) return;
+  markTabs(ed);
+  if (push) history.replaceState(null, '', ed === 'pro' ? '#pro' : location.pathname + location.search);
+  const from = panel(cur), to = panel(ed);
+  const swap = () => {
+    from.hidden = true;
+    from.classList.remove('is-leaving');
+    root.dataset.edition = ed;
+    to.hidden = false;
+    if (animate && !reduce) {
+      to.classList.add('is-entering');
+      requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove('is-entering')));
+    }
+    document.title = ed === 'pro' ? 'HexFW Pro: Flipper Zero firmware by Hex Modifications' : 'HexFW: Flipper Zero firmware by Hex Modifications';
+  };
+  if (animate && !reduce && from !== to) {
+    from.classList.add('is-leaving');
+    if (scrollY > 200) scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(swap, 240);
+  } else swap();
+};
+edTabs.forEach((t, i) => {
+  t.addEventListener('click', () => setEdition(t.dataset.edition));
+  t.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const n = edTabs[(i + 1) % edTabs.length];
+    n.focus(); setEdition(n.dataset.edition);
+  });
+});
+root.dataset.edition = 'std';
+if (/^#pro/.test(location.hash)) setEdition('pro', { animate: false, push: false });
+addEventListener('hashchange', () => { if (/^#pro/.test(location.hash)) setEdition('pro', { push: false }); });
+
+// pro hero screen cycles through the pro previews
+if (!reduce) {
+  const img = $('#proScreen');
+  const frames = [['img/screen-pro-boot.png', 'hexfw pro'], ['img/screen-pro-logic.png', 'logic lab'], ['img/screen-pro-vault.png', 'signal vault'], ['img/screen-pro-sensors.png', 'sensors']];
+  frames.forEach(([src]) => { new Image().src = src; });
+  let k = 0;
+  setInterval(() => {
+    if (root.dataset.edition !== 'pro') return;
+    k = (k + 1) % frames.length;
+    img.src = frames[k][0];
+    img.alt = `HexFW Pro ${frames[k][1]} design preview`;
+    img.closest('figure').querySelector('figcaption').textContent = `${frames[k][1]} · design preview, 128×64 1-bit`;
+  }, 3200);
+}
+
+// ---------- trailer ----------
+const tDlg = $('#trailerDialog'), tVid = $('#trailerVideo');
+$('#trailerOpen')?.addEventListener('click', () => { tDlg.showModal(); tVid.play().catch(() => {}); });
+$('#trailerClose')?.addEventListener('click', () => tDlg.close());
+tDlg?.addEventListener('close', () => { tVid.pause(); });
+tDlg?.addEventListener('click', (e) => { if (e.target === tDlg) tDlg.close(); });

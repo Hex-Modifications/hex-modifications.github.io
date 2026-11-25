@@ -42,6 +42,17 @@
   <div class="sky-grid"></div>
 </div>
 
+<div class="sky sky-pro" aria-hidden="true">
+  <svg class="sky-sun" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax meet">
+    <defs>
+      <linearGradient id="sunP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3B8FF"/><stop offset=".45" stop-color="#B967FF"/><stop offset="1" stop-color="#5B2BD6"/></linearGradient>
+      <mask id="sunPM"><rect width="400" height="200" fill="#fff"/><g fill="#000"><rect y="112" width="400" height="3"/><rect y="124" width="400" height="4"/><rect y="137" width="400" height="5"/><rect y="150" width="400" height="7"/><rect y="164" width="400" height="9"/><rect y="179" width="400" height="12"/></g></mask>
+    </defs>
+    <circle cx="200" cy="200" r="150" fill="url(#sunP)" mask="url(#sunPM)"/>
+  </svg>
+  <div class="sky-grid"></div>
+</div>
+
 <header class="site-head">
   <a class="sh-word" href="../" aria-label="Hex Modifications home"><img class="sh-badge" src="../img/logo-badge.png" alt="" width="42" height="42"><span class="sh-text"><span class="sh-hex">hex</span><span class="sh-sub">modifications</span></span></a>
   <a class="sh-here" href="./" aria-hidden="true" tabindex="-1">hex<span>fw</span></a>
@@ -50,6 +61,12 @@
 </header>
 
 <main>
+  <div class="edition" role="tablist" aria-label="HexFW edition">
+    <button role="tab" type="button" id="tab-ed-std" aria-controls="ed-std" aria-selected="true" data-edition="std">hexfw</button>
+    <button role="tab" type="button" id="tab-ed-pro" aria-controls="ed-pro" aria-selected="false" data-edition="pro">hexfw <b>pro</b></button>
+    <i class="edition-glide" aria-hidden="true"></i>
+  </div>
+  <div class="ed" id="ed-std" role="tabpanel" aria-labelledby="tab-ed-std">
   <section class="hero">
     <div class="hero-copy">
       <p class="kicker">flipper zero firmware <span class="chip" id="statusChip">in development</span></p>
@@ -64,6 +81,14 @@
       <div class="bezel"><div class="lcd"><img id="heroScreen" src="img/screen-boot.png" width="128" height="64" alt="HexFW boot screen: a striped synthwave sun over a perspective grid with the HEX wordmark"></div></div>
       <figcaption>boot screen · design preview, 128×64 1-bit</figcaption>
     </figure>
+  </section>
+
+  <section class="sec trailer" aria-label="Trailer">
+    <button class="trailer-card" type="button" id="trailerOpen" aria-label="Play the HexFW trailer (40 seconds)">
+      <img src="media/trailer-poster.jpg" width="960" height="540" alt="" loading="lazy">
+      <span class="trailer-play" aria-hidden="true"></span>
+      <span class="trailer-meta"><b>watch the trailer</b>40 seconds, sound on</span>
+    </button>
   </section>
 
   <section class="sec" id="screens" aria-labelledby="screensT">
@@ -148,6 +173,93 @@
     <div><p class="path">/SUPPORT</p><h2 id="supT">keep it going</h2><p class="note">hexfw is free. if it's useful to you, a tip helps fund new features and test hardware.</p></div>
     <div class="support-links" id="supportLinks"><a class="btn btn-sun" href="https://paypal.me/untilhex" rel="noopener">donate with paypal</a></div>
   </section>
+  </div>
+
+  <div class="ed" id="ed-pro" role="tabpanel" aria-labelledby="tab-ed-pro" hidden>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="kicker">flipper zero firmware <span class="chip chip-pro">coming soon</span></p>
+        <h1 class="wm"><span class="wm-hex">hex</span><span class="wm-fw">fw</span> <span class="wm-pro">pro</span></h1>
+        <p class="lede">everything in hexfw, plus a toolkit of practical pro apps you won't find on any other flipper: a logic analyser, an encrypted signal vault, sensor dashboards, routines and more. one price, one licence per flipper.</p>
+        <div class="ctas">
+          <a class="btn btn-pro" href="#pro-buy">£10, get pro</a>
+          <a class="btn btn-ghost" href="#pro-features">what's in pro</a>
+        </div>
+      </div>
+      <figure class="device">
+        <div class="bezel"><div class="lcd"><img id="proScreen" src="img/screen-pro-boot.png" width="128" height="64" alt="HexFW Pro boot screen with the HEX wordmark and a PRO badge"></div></div>
+        <figcaption>hexfw pro · design preview, 128×64 1-bit</figcaption>
+      </figure>
+    </section>
+
+    <section class="sec" aria-labelledby="proScreensT">
+      <div class="sec-head"><p class="path">/PRO SCREENS</p><h2 id="proScreensT">serious tools, still in one bit</h2><p class="note">pro apps follow the same pixel-art language as hexfw, tuned for the work you actually do with a flipper. design previews of apps in development.</p></div>
+      <div class="screens">
+        <figure class="shot"><div class="lcd"><img src="img/screen-pro-logic.png" width="128" height="64" alt="Logic Lab showing four decoded channels: SDA, SCL, TX and RX" loading="lazy"></div><figcaption><b>logic lab</b>4-channel logic analyser with i²c and uart decoding</figcaption></figure>
+        <figure class="shot"><div class="lcd"><img src="img/screen-pro-vault.png" width="128" height="64" alt="Signal Vault listing saved Sub-GHz, IR, NFC and RFID entries, encrypted with a PIN" loading="lazy"></div><figcaption><b>signal vault</b>your saved signals, organised and encrypted</figcaption></figure>
+        <figure class="shot"><div class="lcd"><img src="img/screen-pro-sensors.png" width="128" height="64" alt="Sensor dashboard reading a BME280: temperature, humidity, pressure and a live graph" loading="lazy"></div><figcaption><b>sensors</b>plug in a sensor, get live graphs and csv logs</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="sec" id="pro-features" aria-labelledby="proFeatT">
+      <div class="sec-head"><p class="path">/WHAT'S IN PRO</p><h2 id="proFeatT">practical, and only on hexfw pro</h2><p class="note">each pro app solves a real job, runs from the sd card, and keeps to the law: receive-only radio tools, and transmit features only within the official regional limits.</p></div>
+      <ul class="feats feats-pro">
+        <li class="feat"><span class="st">in development</span><h3>logic lab</h3><p>a 4-channel logic analyser on the gpio header. decode i²c, spi and uart on the screen, then export captures for pulseview or as csv.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>signal vault</h3><p>tag, search and organise every sub-ghz, ir, nfc and rfid file you've saved. lock any folder behind a pin with on-device encryption.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>sensor dashboard</h3><p>plug in common i²c sensors (bme280, sht31, mpu6050 and more). they're detected automatically, graphed live and logged to csv.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>routines</h3><p>chain your own ir remotes and badusb scripts into timed routines, like switching the tv and soundbar off at midnight.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>spectrum scope</h3><p>a receive-only sub-ghz waterfall and signal meter for finding interference and checking your own devices are transmitting.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>remote studio</h3><p>design your own ir remote layouts and macros on the flipper, then share them as a single file.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>battery lab</h3><p>battery health history, charge cycles and a per-app power profiler, so you know what drains your flipper.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>theme studio</h3><p>extra pro animation packs and icon sets, plus your own idle animations made from pngs right here on the website.</p></li>
+        <li class="feat"><span class="st">in development</span><h3>priority updates</h3><p>pro builds ship first, installed in one click from this page with your licence carried over.</p></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="pro-how" aria-labelledby="proHowT">
+      <div class="sec-head"><p class="path">/HOW PRO WORKS</p><h2 id="proHowT">bought once, yours to keep</h2></div>
+      <div class="steps">
+        <article class="step"><p class="n">01</p><h3>buy</h3><p>check out securely by card, apple pay, google pay or paypal. you'll get a receipt and your licence key by email.</p></article>
+        <article class="step"><p class="n">02</p><h3>install</h3><p>plug in your flipper and press <b>install pro</b> on this page. it reads your flipper's id, activates your licence and installs the pro pack in one go.</p></article>
+        <article class="step"><p class="n">03</p><h3>keep it</h3><p>your licence covers one flipper and every 1.x pro update. moving to a new flipper? you can transfer it.</p></article>
+      </div>
+    </section>
+
+    <section class="sec" id="pro-buy" aria-labelledby="proBuyT">
+      <div class="price-card">
+        <div>
+          <p class="path">/HEXFW PRO</p>
+          <h2 id="proBuyT">£10 <span>one-off</span></h2>
+          <ul class="price-list">
+            <li>every pro app and theme pack</li>
+            <li>all 1.x pro updates, one-click installs</li>
+            <li>one licence per flipper, transferable</li>
+            <li>hexfw itself stays free, forever</li>
+          </ul>
+        </div>
+        <div class="price-cta">
+          <button class="btn btn-pro btn-lg" type="button" disabled aria-describedby="proSoon">checkout opens at launch</button>
+          <p class="small" id="proSoon">pro is in development. no payment is taken until it's ready. watch <a href="https://github.com/001Hex/hexfw-releases" rel="noopener">hexfw on github</a> to hear first.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="proFaqT">
+      <div class="sec-head"><p class="path">/PRO FAQ</p><h2 id="proFaqT">good questions</h2></div>
+      <div class="faq">
+        <details><summary>is hexfw still free?</summary><p>yes. the standard firmware and its updates stay free. pro adds a pack of extra apps and themes on top.</p></details>
+        <details><summary>do i need to reinstall my firmware?</summary><p>no. pro installs on top of hexfw from this page, and your saved files and settings stay where they are.</p></details>
+        <details><summary>can i use one licence on two flippers?</summary><p>each licence is tied to one flipper. you can move it to a new flipper if you replace yours.</p></details>
+        <details><summary>does pro unlock extra radio frequencies?</summary><p>no. pro's radio tools are receive-only or stay within the official regional limits.</p></details>
+        <details><summary>refunds?</summary><p>if pro doesn't work on your flipper, you get your money back. details will be on the checkout page at launch.</p></details>
+      </div>
+    </section>
+  </div>
+
+  <dialog class="trailer-dlg" id="trailerDialog" aria-label="HexFW trailer">
+    <video id="trailerVideo" src="media/hexfw-trailer.mp4" poster="media/trailer-poster.jpg" controls playsinline preload="none"></video>
+    <button class="btn btn-ghost btn-sm" type="button" id="trailerClose">close</button>
+  </dialog>
   <dialog class="flash" id="flashDialog" data-state="ready" aria-labelledby="flashTitle">
     <p class="path">/INSTALL</p>
     <h2 id="flashTitle">install hexfw</h2>
