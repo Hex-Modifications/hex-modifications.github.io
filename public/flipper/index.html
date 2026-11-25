@@ -83,12 +83,10 @@
     </figure>
   </section>
 
-  <section class="sec trailer" aria-label="Trailer">
-    <button class="trailer-card" type="button" id="trailerOpen" aria-label="Play the HexFW trailer (40 seconds)">
-      <img src="media/trailer-poster.jpg" width="960" height="540" alt="" loading="lazy">
-      <span class="trailer-play" aria-hidden="true"></span>
-      <span class="trailer-meta"><b>watch the trailer</b>40 seconds, sound on</span>
-    </button>
+  <section class="film" aria-label="HexFW trailer">
+    <video class="film-video" id="filmLoop" src="media/hexfw-trailer.mp4" poster="media/trailer-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+    <div class="film-fade" aria-hidden="true"></div>
+    <button class="film-sound" type="button" id="trailerOpen" aria-label="Watch the HexFW trailer with sound (40 seconds)"><span class="film-sound-i" aria-hidden="true"></span>watch with sound</button>
   </section>
 
   <section class="sec" id="screens" aria-labelledby="screensT">

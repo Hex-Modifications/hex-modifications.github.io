@@ -192,7 +192,16 @@ if (!reduce) {
 
 // ---------- trailer ----------
 const tDlg = $('#trailerDialog'), tVid = $('#trailerVideo');
-$('#trailerOpen')?.addEventListener('click', () => { tDlg.showModal(); tVid.play().catch(() => {}); });
+$('#trailerOpen')?.addEventListener('click', () => { film?.pause(); tDlg.showModal(); tVid.play().catch(() => {}); });
 $('#trailerClose')?.addEventListener('click', () => tDlg.close());
-tDlg?.addEventListener('close', () => { tVid.pause(); });
+tDlg?.addEventListener('close', () => { tVid.pause(); if (film && !reduce) film.play().catch(() => {}); });
 tDlg?.addEventListener('click', (e) => { if (e.target === tDlg) tDlg.close(); });
+
+// background film: plays muted while on screen, pauses off screen, and stays still for reduced motion
+const film = $('#filmLoop');
+if (film && !reduce) {
+  const play = () => film.play().catch(() => {});
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([en]) => { if (en.isIntersecting && root.dataset.edition !== 'pro') play(); else film.pause(); }, { threshold: 0.15 }).observe(film);
+  } else play();
+}

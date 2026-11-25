@@ -277,3 +277,16 @@ html[data-edition="pro"] .sky-pro { opacity: 1; }
   .price-card { grid-template-columns: minmax(0, 1fr); }
 }
 #ed-pro .wm { font-size: clamp(76px, 11.5vw, 156px); white-space: nowrap; }
+
+/* ── trailer as a living backdrop: muted loop, edges dissolved into the page ── */
+.film { position: relative; left: 50%; width: 100vw; margin-left: -50vw; margin-top: clamp(-40px, -3vw, -10px); aspect-ratio: 16 / 7; max-height: 620px; overflow: hidden; pointer-events: none; }
+.film-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; filter: saturate(1.15) contrast(1.05);
+  -webkit-mask-image: radial-gradient(closest-side at 50% 50%, #000 45%, transparent 100%); mask-image: radial-gradient(closest-side at 50% 50%, #000 45%, transparent 100%); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; }
+.film-fade { display: none; }
+.film-sound { position: absolute; right: max(var(--gut), calc(50vw - 560px)); bottom: 14%; pointer-events: auto; display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border-radius: 999px; border: 1px solid var(--glass-border);
+  background: rgba(12, 10, 40, .55); color: var(--ink); font: 500 14px/1 var(--f-d); cursor: pointer; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); transition: background .3s, transform .3s var(--ease); }
+.film-sound:hover { background: rgba(40, 26, 90, .7); transform: translateY(-1px); }
+.film-sound-i { width: 22px; height: 22px; border-radius: 50%; background: var(--sunset); position: relative; }
+.film-sound-i::after { content: ""; position: absolute; left: 8px; top: 6px; border-left: 8px solid #170a2c; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+@media (max-width: 720px) { .film { aspect-ratio: 4 / 3; } .film-video { opacity: .5; } .film-sound { right: 16px; bottom: 10%; } }
+@media (prefers-reduced-motion: reduce) { .film-video { opacity: .4; } }
