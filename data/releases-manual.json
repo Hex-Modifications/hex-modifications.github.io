@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "platform": "github",
+    "source": "GitHub",
+    "title": "HexFW",
+    "url": "https://hex-modifications.github.io/flipper/",
+    "image": "https://hex-modifications.github.io/flipper/og.png",
+    "description": "HexFW v0.1.0-beta.1, a vaporwave custom firmware for Flipper Zero. Install it from your browser in one click.",
+    "date": "2026-11-25"
+  }
+]

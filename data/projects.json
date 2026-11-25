@@ -22,10 +22,10 @@
   {
     "slug": "hexfw",
     "name": "HexFW",
-    "kicker": "flipper zero firmware",
-    "text": "a vaporwave custom firmware for flipper zero: a diagnostics and system-monitoring centre, gpio tools for builders and plain-english guides to every radio.",
+    "kicker": "flipper zero firmware · beta",
+    "text": "a vaporwave custom firmware for flipper zero. install it from your browser in one click, with a diagnostics centre, gpio tools and plain-english guides on the way.",
     "url": "flipper/",
-    "status": "in development",
+    "status": "beta",
     "theme": "plum",
     "mark": "hex|fw"
   },

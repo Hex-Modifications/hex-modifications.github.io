@@ -23,6 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="flipper.css">
+<link rel="modulepreload" href="flasher.js">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"HexFW","url":"__SITE_URL__/flipper/","applicationCategory":"UtilitiesApplication","operatingSystem":"Flipper Zero","offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"description":"Custom Flipper Zero firmware by Hex Modifications.","author":{"@type":"Organization","name":"Hex Modifications","url":"__SITE_URL__/"}}</script>
 <script type="module" src="flipper.js"></script>
 </head>
@@ -69,7 +70,7 @@
     <div class="sec-head"><p class="path">/SCREENS</p><h2 id="screensT">vaporwave, in one bit</h2><p class="note">the flipper's screen is 128×64 pixels and strictly black and white, so the whole look is hand-built pixel art: striped suns, grid horizons, palm silhouettes, nothing that costs you legibility. these are design previews, not final screenshots.</p></div>
     <div class="screens">
       <figure class="shot"><div class="lcd"><img src="img/screen-boot.png" width="128" height="64" alt="Boot screen with HEX wordmark, striped sun and grid" loading="lazy"></div><figcaption><b>boot</b>the hex mark rises over the grid</figcaption></figure>
-      <figure class="shot"><div class="lcd"><img src="img/screen-home.png" width="128" height="64" alt="Home screen with clock, battery, a palm tree and a setting sun over the sea" loading="lazy"></div><figcaption><b>home</b>clock, battery and a sunset that never ends</figcaption></figure>
+      <figure class="shot"><div class="lcd"><img src="img/screen-home.png" width="128" height="64" alt="Home screen with clock, battery, a palm tree and a setting sun over the sea" loading="lazy"></div><figcaption><b>home</b>sunset drive, on your flipper in hexfw 0.1</figcaption></figure>
       <figure class="shot"><div class="lcd"><img src="img/screen-control.png" width="128" height="64" alt="Control Centre listing battery, free heap, SD card and internal storage with bars" loading="lazy"></div><figcaption><b>control centre</b>everything about your flipper, on one screen</figcaption></figure>
     </div>
   </section>
@@ -77,6 +78,9 @@
   <section class="sec" id="features" aria-labelledby="featT">
     <div class="sec-head"><p class="path">/FEATURES</p><h2 id="featT">useful first, flashy second</h2><p class="note">hexfw doesn't try to cram in every app ever made. each feature has to earn its place, and most of them run from the sd card so the firmware stays fast and leaves room for your stuff.</p></div>
     <ul class="feats">
+      <li class="feat"><span class="st st-s">shipped in 0.1</span><h3>vaporwave desktop</h3><p>two original idle scenes replace the stock animations: sunset drive, with a palm, a striped sun and a shimmering sea, and grid run, the hex mark over a scrolling neon grid.</p></li>
+      <li class="feat"><span class="st st-s">shipped in 0.1</span><h3>one-click install</h3><p>flash hexfw straight from this page over usb. it checks every download's sha-256 and hands over to the flipper's own updater, the same way qflipper does.</p></li>
+      <li class="feat"><span class="st st-s">shipped in 0.1</span><h3>your apps still work</h3><p>built on the official 1.5.1 firmware with the same app api, so apps from the official catalogue and the flipper mobile app keep working.</p></li>
       <li class="feat"><span class="st st-b">building</span><h3>control centre</h3><p>battery health, charge and temperature, free memory, storage, firmware and radio versions, and uptime, all live on one screen.</p></li>
       <li class="feat"><span class="st st-b">building</span><h3>hardware diagnostics</h3><p>guided tests for buttons, screen, backlight, led, vibration, speaker, sd card speed and gpio pins. results save to the sd card for support.</p></li>
       <li class="feat"><span class="st">planned</span><h3>your dashboard</h3><p>pick what the home screen shows, reorder or hide menu apps, and set shortcuts for the things you use most.</p></li>
@@ -90,7 +94,7 @@
   </section>
 
   <section class="sec" id="download" aria-labelledby="dlT">
-    <div class="sec-head"><p class="path">/DOWNLOAD</p><h2 id="dlT">get hexfw</h2><p class="note"><b>stable</b> builds have been tested on a real flipper. <b>experimental</b> builds are betas: new features first, rough edges included.</p></div>
+    <div class="sec-head"><p class="path">/DOWNLOAD</p><h2 id="dlT">get hexfw</h2><p class="note"><b>stable</b> builds have been tested on a real flipper. <b>experimental</b> builds are betas: new features first, rough edges included. every file is also on <a href="https://github.com/001Hex/hexfw-releases" rel="noopener">github</a>.</p></div>
     <div class="tabs" role="tablist" aria-label="Release channel">
       <button role="tab" type="button" id="tab-stable" aria-controls="panel" aria-selected="true" data-ch="stable">stable</button>
       <button role="tab" type="button" id="tab-experimental" aria-controls="panel" aria-selected="false" data-ch="experimental">experimental</button>
@@ -103,7 +107,7 @@
   <section class="sec" id="install" aria-labelledby="insT">
     <div class="sec-head"><p class="path">/INSTALL</p><h2 id="insT">install in a few minutes</h2><p class="note">your saved files on the sd card aren't touched, and the updater backs up your settings before it flashes anything.</p></div>
     <div class="steps">
-      <article class="step"><p class="n">01</p><h3>in your browser</h3><p>easiest. on a computer with chrome or edge, plug your flipper in with a data usb cable, press <b>install in browser</b> next to a release, and follow flipper lab's prompts.</p><p class="small">close qflipper first. only one app can talk to the flipper at a time.</p></article>
+      <article class="step"><p class="n">01</p><h3>right here, one click</h3><p>on a computer with chrome or edge, plug your flipper in with a data usb cable and press <b>install to flipper</b> next to a release. this page copies the update over usb and your flipper installs it itself.</p><p class="small">prefer flipper's own tool? <b>install with flipper lab</b> does the same through lab.flipper.net. close qflipper first: only one app can talk to the flipper at a time.</p></article>
       <article class="step"><p class="n">02</p><h3>with qflipper</h3><p>download the <code>.tgz</code>, open <a href="https://flipper.net/pages/downloads" rel="noopener">qflipper</a>, connect your flipper and choose <b>install from file</b>. pick the <code>.tgz</code> and wait for the restart.</p></article>
       <article class="step"><p class="n">03</p><h3>from the sd card</h3><p>extract the <code>.tgz</code> and copy its folder to <code>/update</code> on the sd card. on the flipper, open <b>archive</b>, browse to that folder, select <code>update</code> and choose <b>run in app</b>.</p></article>
     </div>
@@ -144,6 +148,21 @@
     <div><p class="path">/SUPPORT</p><h2 id="supT">keep it going</h2><p class="note">hexfw is free. if it's useful to you, a tip helps fund new features and test hardware.</p></div>
     <div class="support-links" id="supportLinks"><a class="btn btn-sun" href="https://paypal.me/untilhex" rel="noopener">donate with paypal</a></div>
   </section>
+  <dialog class="flash" id="flashDialog" data-state="ready" aria-labelledby="flashTitle">
+    <p class="path">/INSTALL</p>
+    <h2 id="flashTitle">install hexfw</h2>
+    <ol class="flash-pre">
+      <li>plug your flipper into this computer with a usb cable that carries data.</li>
+      <li>unlock it and go back to the desktop. close qflipper and any other app using it.</li>
+      <li>make sure it has a microSD card inserted.</li>
+    </ol>
+    <div class="flash-prog" aria-hidden="true"><i id="flashBar"></i></div>
+    <p class="flash-step" id="flashStep" role="status" aria-live="polite"></p>
+    <div class="flash-actions">
+      <button class="btn btn-sun" type="button" id="flashGo">connect &amp; install</button>
+      <button class="btn btn-ghost" type="button" id="flashClose">close</button>
+    </div>
+  </dialog>
 </main>
 
 <footer class="foot">

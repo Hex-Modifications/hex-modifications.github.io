@@ -2,6 +2,8 @@
 // Release entries are copies of the firmware pipeline's release.json; the site build adds `mirror`
 // (a same-origin copy of the .tgz) so Flipper Lab can fetch it.
 
+import { installToFlipper, webSerialSupported } from './flasher.js';
+
 const $ = (s, el = document) => el.querySelector(s);
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const mb = (n) => (n ? `${(n / 1048576).toFixed(1)} MB` : '');
@@ -24,15 +26,19 @@ function card(rel) {
       <span class="rel-hw${rel.hardwareTested ? '' : ' no'}">${rel.hardwareTested ? 'tested on hardware' : 'not hardware tested'}</span></div>
     ${notes ? `<ul class="rel-notes">${notes}</ul>` : ''}
     <div class="rel-actions">
-      <a class="btn btn-sun btn-sm" href="${esc(labUrl(rel, tgz))}" rel="noopener">install in browser</a>
+      ${rel.mirror ? `<button class="btn btn-sun btn-sm" type="button" data-flash="${esc(rel.version)}">install to flipper</button>` : ''}
+      <a class="btn btn-ghost btn-sm" href="${esc(labUrl(rel, tgz))}" rel="noopener">install with flipper lab</a>
       ${dl ? `<a class="btn btn-ghost btn-sm" href="${esc(dl)}" download>download .tgz</a>` : ''}
     </div>
     <div class="hash"><code title="SHA-256">${esc(tgz.sha256)}</code><button type="button" data-copy="${esc(tgz.sha256)}">copy sha-256</button></div>
   </article>`;
 }
 
+let RELEASES = [];
+
 function render(data) {
   const rels = (data.releases || []).filter((r) => r && r.version).sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+  RELEASES = rels;
   const by = (ch) => rels.filter((r) => r.channel === ch);
   const panel = $('#panel');
   const show = (ch) => {
@@ -92,3 +98,38 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
 }
 
 fetch('../data/firmware.json', { cache: 'no-cache' }).then((r) => r.json()).then(render).catch(() => { /* static empty state stays */ });
+
+// ---------- in-browser install (Web Serial) ----------
+const dlg = $('#flashDialog');
+const setFlash = (state, text) => {
+  dlg.dataset.state = state;
+  if (text !== undefined) $('#flashStep').textContent = text;
+};
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-flash]');
+  if (!b) return;
+  const rel = RELEASES.find((r) => r.version === b.dataset.flash);
+  const tgz = rel && (rel.files || []).find((f) => f.type === 'update_tgz');
+  if (!rel || !tgz) return;
+  $('#flashTitle').textContent = `install hexfw ${rel.version}`;
+  $('#flashBar').style.width = '0%';
+  setFlash(webSerialSupported() ? 'ready' : 'unsupported', webSerialSupported() ? '' : 'this browser can\'t reach USB devices. open this page in chrome or edge on a computer, or use flipper lab or the manual install below.');
+  dlg.showModal();
+  $('#flashGo').onclick = async () => {
+    setFlash('busy', 'starting');
+    try {
+      await installToFlipper({
+        tgzUrl: new URL(rel.mirror, location.href).href,
+        sha256: tgz.sha256,
+        onStep: (t) => setFlash('busy', t),
+        onProgress: (k) => { $('#flashBar').style.width = `${Math.round(k * 100)}%`; },
+      });
+      setFlash('done', 'your flipper is restarting into the installer. leave it plugged in: the install takes about two minutes and the flipper restarts on its own when it\'s done.');
+    } catch (err) {
+      const msg = err && err.name === 'NotFoundError' ? 'no flipper was selected.' : String(err && err.message ? err.message : err);
+      setFlash('error', `${msg} nothing on your flipper has been changed unless the update was already staged. you can safely try again.`);
+    }
+  };
+});
+$('#flashClose')?.addEventListener('click', () => { if (dlg.dataset.state !== 'busy') dlg.close(); });
+dlg?.addEventListener('cancel', (e) => { if (dlg.dataset.state === 'busy') e.preventDefault(); });
