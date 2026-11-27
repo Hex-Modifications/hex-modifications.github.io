@@ -22,6 +22,12 @@
       "path": "flipper/",
       "live": true,
       "about": "Flipper Zero firmware: downloads, install guide and docs"
+    },
+    "hexward": {
+      "name": "HexWard",
+      "path": "hexward/",
+      "live": true,
+      "about": "Windows and Mac startup watcher: downloads, guide and policies"
     }
   },
   "theme": {

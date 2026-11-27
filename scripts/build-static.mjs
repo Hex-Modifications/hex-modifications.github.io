@@ -130,6 +130,14 @@ const hexcamIndex = path.join(DIST, 'hexcam', 'index.html');
 if (isLive('hexcam')) fs.writeFileSync(hexcamIndex, withTheme(fs.readFileSync(hexcamIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL)));
 else fs.rmSync(path.join(DIST, 'hexcam'), { recursive: true, force: true });
 
+// HexWard, the Windows and Mac startup watcher at /hexward/ (static pages; downloads live on GitHub Releases)
+if (isLive('hexward')) {
+  for (const f of ['index.html', 'privacy.html', 'terms.html']) {
+    const file = path.join(DIST, 'hexward', f);
+    if (fs.existsSync(file)) fs.writeFileSync(file, withTheme(fs.readFileSync(file, 'utf8').replaceAll('__SITE_URL__', SITE_URL)));
+  }
+} else fs.rmSync(path.join(DIST, 'hexward'), { recursive: true, force: true });
+
 // HexFW, the Flipper Zero firmware page at /flipper/. Each listed release's .tgz is mirrored onto the site
 // (checked against its SHA-256) so Flipper Lab can install it: GitHub Pages sends the CORS header Lab needs.
 const firmware = isLive('hexfw') ? read('firmware') : null;
@@ -152,7 +160,7 @@ if (firmware) {
   fs.writeFileSync(fwIndex, withTheme(fs.readFileSync(fwIndex, 'utf8').replaceAll('__SITE_URL__', SITE_URL)));
 } else fs.rmSync(path.join(DIST, 'flipper'), { recursive: true, force: true });
 
-fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [...(isLive('hexcam') ? [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }] : []), ...(firmware ? [{ loc: `${SITE_URL}/flipper/`, priority: '0.8' }] : []), ...gta6.urls]));
+fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap(products, SITE_URL, [...(isLive('hexcam') ? [{ loc: `${SITE_URL}/hexcam/`, priority: '0.8' }] : []), ...(firmware ? [{ loc: `${SITE_URL}/flipper/`, priority: '0.8' }] : []), ...(isLive('hexward') ? [{ loc: `${SITE_URL}/hexward/`, priority: '0.8' }] : []), ...gta6.urls]));
 // IndexNow: search engines (Bing, Yandex, Seznam, Naver) fetch this key to trust the deploy workflow's URL pings
 if (indexnowKey) fs.writeFileSync(path.join(DIST, `${indexnowKey}.txt`), indexnowKey);
 fs.writeFileSync(path.join(DIST, 'robots.txt'), robots(SITE_URL).replace('Disallow: /admin\n', 'Disallow: /hq/\n').replace('Disallow: /api/\n', ''));

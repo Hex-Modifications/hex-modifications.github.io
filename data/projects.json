@@ -14,7 +14,7 @@
     "name": "HexWard",
     "kicker": "free app · windows and mac",
     "text": "see what starts with your computer, the moment something new does. it watches every autostart spot malware and crypto miners hide in, and explains each one in plain english. read-only, offline, no admin.",
-    "url": "https://001hex.github.io/HexWard-Releases/",
+    "url": "hexward/",
     "icon": "img/hexward-icon.png",
     "status": "preview",
     "theme": "indigo"
