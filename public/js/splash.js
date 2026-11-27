@@ -55,7 +55,7 @@
     () => `handshake · ${location.host || 'hex modifications'}`,
     () => `baking palette · ${pick(['coral', 'lilac', 'indigo', 'plum'])}`,
     () => `syncing feeds · ${pick(['gta5-mods', 'cfx.re', 'github'])}`,
-    () => `linking projects · ${pick(['gta6 project', 'hexcam'])}`,
+    () => `linking projects · ${pick(['gta6 project', 'hexcam', 'hexward'])}`,
   ];
   const MILESTONES = [
     [signals.data, () => { const n = window.hexData?.releases?.length; return n ? `fetched latest releases · ${n}` : 'fetched site data'; }],
