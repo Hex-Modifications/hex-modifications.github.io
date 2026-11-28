@@ -1,0 +1,207 @@
+// HexFW page: renders releases, changelog and support links from data/firmware.json.
+// Release entries are copies of the firmware pipeline's release.json; the site build adds `mirror`
+// (a same-origin copy of the .tgz) so Flipper Lab can fetch it.
+
+import { installToFlipper, webSerialSupported } from './flasher.js';
+
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const mb = (n) => (n ? `${(n / 1048576).toFixed(1)} MB` : '');
+const day = (d) => { const t = Date.parse(d); return Number.isNaN(t) ? '' : new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); };
+const safeUrl = (u) => (/^(https:\/\/|fw\/)/.test(String(u || '')) ? String(u) : '');
+
+function labUrl(rel, tgz) {
+  const src = rel.mirror ? new URL(rel.mirror, location.href).href : tgz.url;
+  const q = new URLSearchParams({ url: src, target: rel.target || 'f7', channel: 'release-cfw', version: rel.version });
+  return `https://lab.flipper.net/?${q}`;
+}
+
+function card(rel) {
+  const tgz = (rel.files || []).find((f) => f.type === 'update_tgz');
+  if (!tgz) return '';
+  const dl = safeUrl(rel.mirror) || safeUrl(tgz.url);
+  const notes = (rel.notes || []).slice(0, 6).map((n) => `<li>${esc(n)}</li>`).join('');
+  return `<article class="rel">
+    <div class="rel-top"><span class="rel-v">${esc(rel.version)}</span><span class="rel-meta">${esc(day(rel.date))}${tgz.size ? ` · ${mb(tgz.size)}` : ''}</span>
+      <span class="rel-hw${rel.hardwareTested ? '' : ' no'}">${rel.hardwareTested ? 'tested on hardware' : 'not hardware tested'}</span></div>
+    ${notes ? `<ul class="rel-notes">${notes}</ul>` : ''}
+    <div class="rel-actions">
+      ${rel.mirror ? `<button class="btn btn-sun btn-sm" type="button" data-flash="${esc(rel.version)}">install to flipper</button>` : ''}
+      <a class="btn btn-ghost btn-sm" href="${esc(labUrl(rel, tgz))}" rel="noopener">install with flipper lab</a>
+      ${dl ? `<a class="btn btn-ghost btn-sm" href="${esc(dl)}" download>download .tgz</a>` : ''}
+    </div>
+    <div class="hash"><code title="SHA-256">${esc(tgz.sha256)}</code><button type="button" data-copy="${esc(tgz.sha256)}">copy sha-256</button></div>
+  </article>`;
+}
+
+let RELEASES = [];
+
+function render(data) {
+  const rels = (data.releases || []).filter((r) => r && r.version).sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+  RELEASES = rels;
+  const by = (ch) => rels.filter((r) => r.channel === ch);
+  const panel = $('#panel');
+  const show = (ch) => {
+    document.querySelectorAll('.tabs [role=tab]').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.ch === ch)));
+    const list = by(ch).slice(0, 3);
+    if (list.length) panel.innerHTML = list.map(card).join('');
+    else panel.innerHTML = ch === 'stable' && by('experimental').length
+      ? '<div class="empty"><p class="empty-t">no stable release yet</p><p>the current beta is under <b>experimental</b>. a stable build follows once it has been tested on real hardware.</p></div>'
+      : '<div class="empty"><p class="empty-t">the first beta is in the works</p><p>there\'s no download yet. it\'ll appear here as soon as a build has been tested on a real flipper.</p></div>';
+  };
+  const tabs = [...document.querySelectorAll('.tabs [role=tab]')];
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => show(t.dataset.ch));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      n.focus(); show(n.dataset.ch);
+    });
+  });
+  show(by('stable').length || !by('experimental').length ? 'stable' : 'experimental');
+
+  const stable = by('stable')[0], beta = by('experimental')[0];
+  $('#statusChip').textContent = stable ? `stable ${stable.version}` : beta ? `beta ${beta.version}` : (data.status || 'in development');
+
+  if (rels.length) {
+    $('#log').innerHTML = rels.map((r) => `<article><h3>${esc(r.version)} <span>${esc(r.channel)} · ${esc(day(r.date))}</span></h3>${(r.notes || []).length ? `<ul>${r.notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}</article>`).join('');
+  }
+
+  const kofi = String(data.support?.kofi || '').trim();
+  if (kofi) {
+    const url = /^https:\/\//.test(kofi) ? kofi : `https://ko-fi.com/${encodeURIComponent(kofi)}`;
+    $('#supportLinks').insertAdjacentHTML('beforeend', `<a class="btn btn-ghost" href="${esc(url)}" rel="noopener">tip on ko-fi</a>`);
+  }
+  const pp = String(data.support?.paypal || '');
+  if (/^https:\/\//.test(pp)) $('#supportLinks a').href = pp;
+}
+
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-copy]');
+  if (!b) return;
+  try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'copied'; } catch { b.textContent = 'select and copy'; }
+  setTimeout(() => { b.textContent = 'copy sha-256'; }, 1800);
+});
+
+// the hero screen cycles through the previews (skipped for reduced motion)
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const img = $('#heroScreen');
+  const frames = [['img/screen-boot.png', 'boot screen'], ['img/screen-home.png', 'home screen'], ['img/screen-control.png', 'control centre']];
+  frames.forEach(([src]) => { new Image().src = src; });
+  let i = 0;
+  setInterval(() => {
+    i = (i + 1) % frames.length;
+    img.src = frames[i][0];
+    img.alt = `HexFW ${frames[i][1]} design preview`;
+    img.closest('figure').querySelector('figcaption').textContent = `${frames[i][1]} · design preview, 128×64 1-bit`;
+  }, 3800);
+}
+
+fetch('../data/firmware.json', { cache: 'no-cache' }).then((r) => r.json()).then(render).catch(() => { /* static empty state stays */ });
+
+// ---------- in-browser install (Web Serial) ----------
+const dlg = $('#flashDialog');
+const setFlash = (state, text) => {
+  dlg.dataset.state = state;
+  if (text !== undefined) $('#flashStep').textContent = text;
+};
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-flash]');
+  if (!b) return;
+  const rel = RELEASES.find((r) => r.version === b.dataset.flash);
+  const tgz = rel && (rel.files || []).find((f) => f.type === 'update_tgz');
+  if (!rel || !tgz) return;
+  $('#flashTitle').textContent = `install hexfw ${rel.version}`;
+  $('#flashBar').style.width = '0%';
+  setFlash(webSerialSupported() ? 'ready' : 'unsupported', webSerialSupported() ? '' : 'this browser can\'t reach USB devices. open this page in chrome or edge on a computer, or use flipper lab or the manual install below.');
+  dlg.showModal();
+  $('#flashGo').onclick = async () => {
+    setFlash('busy', 'starting');
+    try {
+      await installToFlipper({
+        tgzUrl: new URL(rel.mirror, location.href).href,
+        sha256: tgz.sha256,
+        onStep: (t) => setFlash('busy', t),
+        onProgress: (k) => { $('#flashBar').style.width = `${Math.round(k * 100)}%`; },
+      });
+      setFlash('done', 'your flipper is restarting into the installer. leave it plugged in: the install takes about two minutes and the flipper restarts on its own when it\'s done.');
+    } catch (err) {
+      const msg = err && err.name === 'NotFoundError' ? 'no flipper was selected.' : String(err && err.message ? err.message : err);
+      setFlash('error', `${msg} nothing on your flipper has been changed unless the update was already staged. you can safely try again.`);
+    }
+  };
+});
+$('#flashClose')?.addEventListener('click', () => { if (dlg.dataset.state !== 'busy') dlg.close(); });
+dlg?.addEventListener('cancel', (e) => { if (dlg.dataset.state === 'busy') e.preventDefault(); });
+
+// ---------- editions: hexfw / hexfw pro, one page, seamless switch ----------
+const root = document.documentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const edTabs = [...document.querySelectorAll('.edition [role=tab]')];
+const panel = (ed) => document.getElementById(`ed-${ed}`);
+const markTabs = (ed) => edTabs.forEach((t) => { t.setAttribute('aria-selected', String(t.dataset.edition === ed)); t.tabIndex = t.dataset.edition === ed ? 0 : -1; });
+const setEdition = (ed, { animate = true, push = true } = {}) => {
+  const cur = root.dataset.edition || 'std';
+  if (ed === cur && !panel(ed).hidden) return;
+  markTabs(ed);
+  if (push) history.replaceState(null, '', ed === 'pro' ? '#pro' : location.pathname + location.search);
+  const from = panel(cur), to = panel(ed);
+  const swap = () => {
+    from.hidden = true;
+    from.classList.remove('is-leaving');
+    root.dataset.edition = ed;
+    to.hidden = false;
+    if (animate && !reduce) {
+      to.classList.add('is-entering');
+      requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove('is-entering')));
+    }
+    document.title = ed === 'pro' ? 'HexFW Pro: Flipper Zero firmware by Hex Modifications' : 'HexFW: Flipper Zero firmware by Hex Modifications';
+  };
+  if (animate && !reduce && from !== to) {
+    from.classList.add('is-leaving');
+    if (scrollY > 200) scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(swap, 240);
+  } else swap();
+};
+edTabs.forEach((t, i) => {
+  t.addEventListener('click', () => setEdition(t.dataset.edition));
+  t.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const n = edTabs[(i + 1) % edTabs.length];
+    n.focus(); setEdition(n.dataset.edition);
+  });
+});
+root.dataset.edition = 'std';
+if (/^#pro/.test(location.hash)) setEdition('pro', { animate: false, push: false });
+addEventListener('hashchange', () => { if (/^#pro/.test(location.hash)) setEdition('pro', { push: false }); });
+
+// pro hero screen cycles through the pro previews
+if (!reduce) {
+  const img = $('#proScreen');
+  const frames = [['img/screen-pro-boot.png', 'hexfw pro'], ['img/screen-pro-logic.png', 'logic lab'], ['img/screen-pro-vault.png', 'signal vault'], ['img/screen-pro-sensors.png', 'sensors']];
+  frames.forEach(([src]) => { new Image().src = src; });
+  let k = 0;
+  setInterval(() => {
+    if (root.dataset.edition !== 'pro') return;
+    k = (k + 1) % frames.length;
+    img.src = frames[k][0];
+    img.alt = `HexFW Pro ${frames[k][1]} design preview`;
+    img.closest('figure').querySelector('figcaption').textContent = `${frames[k][1]} · design preview, 128×64 1-bit`;
+  }, 3200);
+}
+
+// ---------- trailer ----------
+const tDlg = $('#trailerDialog'), tVid = $('#trailerVideo');
+$('#trailerOpen')?.addEventListener('click', () => { film?.pause(); tDlg.showModal(); tVid.play().catch(() => {}); });
+$('#trailerClose')?.addEventListener('click', () => tDlg.close());
+tDlg?.addEventListener('close', () => { tVid.pause(); if (film && !reduce) film.play().catch(() => {}); });
+tDlg?.addEventListener('click', (e) => { if (e.target === tDlg) tDlg.close(); });
+
+// background film: plays muted while on screen, pauses off screen, and stays still for reduced motion
+const film = $('#filmLoop');
+if (film && !reduce) {
+  const play = () => film.play().catch(() => {});
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([en]) => { if (en.isIntersecting && root.dataset.edition !== 'pro') play(); else film.pause(); }, { threshold: 0.15 }).observe(film);
+  } else play();
+}

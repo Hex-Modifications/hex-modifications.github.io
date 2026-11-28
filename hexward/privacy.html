@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en-GB" data-phase="night">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy Policy – HexWard by Hex Modifications</title>
+<meta name="description" content="HexWard collects no data, makes no network connections and needs no admin rights.">
+<link rel="canonical" href="https://hex-modifications.github.io/hexward/privacy.html">
+<meta name="theme-color" content="#0b0614">
+<link rel="icon" href="img/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hexward.css">
+</head>
+<body>
+<a class="skip" href="#doc">skip to content</a>
+
+<header class="site-head">
+  <a class="sh-word" href="../" aria-label="Hex Modifications home"><img class="sh-badge" src="../img/logo-badge.png" alt="" width="42" height="42"><span class="sh-text"><span class="sh-hex">hex</span><span class="sh-sub">modifications</span></span></a>
+  <a class="sh-here" href="./" aria-hidden="true" tabindex="-1">hex<span>ward</span></a>
+  <nav class="sh-pill" aria-label="Hex Modifications"><a href="../#projects">projects</a><a href="../#releases">new</a><a href="../#mods">mods</a><a href="../#software">software</a><a href="./" class="active">hexward</a></nav>
+  <span class="sh-end" aria-hidden="true"></span>
+</header>
+
+<main>
+  <article class="doc" id="doc">
+    <p class="path"><a href="./" style="color:inherit;text-decoration:none">← /HEXWARD</a></p>
+    <h1>Privacy Policy</h1>
+    <p class="dated">last updated 27 november 2026 · hex modifications</p>
+    <p>HexWard is an app for Windows and Mac that watches which programs are set up to start automatically. It is designed to need as little from you as possible.</p>
+<h2>What HexWard collects</h2><p>Nothing. HexWard has no accounts, no analytics, no crash reporting and no telemetry. Hex Modifications does not receive any information about you or your computer.</p>
+<h2>Network use</h2><p>HexWard makes no network connections and contains no networking features such as an updater or analytics. Code signatures are checked offline, with online revocation checks switched off. You can confirm this yourself with a firewall such as GlassWire (Windows) or LuLu (Mac).</p>
+<h2>What it reads and stores</h2><p>To do its job, HexWard reads the places programs use to start automatically: on Windows, registry Run keys, Startup folders, scheduled tasks, services, drivers, sign-in hooks and WMI subscriptions; on Mac, launch agents and daemons, app helpers, cron jobs and shell startup files. It reads them; it never changes them.</p>
+<p>It saves one thing: a list of the startup items it has seen (their names, locations, commands and a fingerprint of each) plus your "mark OK" decisions and a short activity log, so it can tell you when something is new or has changed. This is stored only on your computer, in <code>%LOCALAPPDATA%\HexWard</code> on Windows and <code>~/Library/Application Support/HexWard</code> on Mac, along with your settings. Delete that folder to remove it. Reports are only created if you choose "Export report", and are saved where you choose.</p>
+<h2>Permissions</h2><p>HexWard runs as a normal user. It does not ask for administrator rights, Full Disk Access, or access to your camera, microphone, location, contacts or notifications. If you turn on "Start HexWard when I sign in", it adds one entry for itself, which you can turn off at any time.</p>
+<h2>Downloads</h2><p>The app is distributed through GitHub Releases. GitHub has its own privacy policy and may log download requests.</p>
+<h2>Changes</h2><p>If this policy changes, the new version will be published on this page with an updated date.</p>
+    <p class="small" style="margin-top:2em">questions: <a href="https://github.com/001Hex/HexWard-Releases/issues" rel="noopener">open an issue</a>.</p>
+  </article>
+</main>
+
+<footer class="foot">
+  <p>hexward by <a href="../">hex modifications</a> · <a href="./">hexward</a> · <a href="privacy.html">privacy</a> · <a href="terms.html">terms</a></p>
+</footer>
+</body>
+</html>

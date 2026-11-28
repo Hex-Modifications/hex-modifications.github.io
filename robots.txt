@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /hq/
+
+Sitemap: https://hex-modifications.github.io/sitemap.xml
